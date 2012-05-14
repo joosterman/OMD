@@ -1,5 +1,5 @@
 <div data-theme="a" data-role="header">
-	<h3>OPD Delft</h3>
+	<h3>OMD Delft</h3>
 </div>
 <div data-role="content">
 	<ul data-role="listview" data-divider-theme="b" data-inset="true">
