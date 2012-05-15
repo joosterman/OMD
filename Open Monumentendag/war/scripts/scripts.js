@@ -32,6 +32,11 @@ $(document).bind("mobileinit", function() {
 			}
 		});
 	});
+	
+	$("#locations").live("pagebeforeshow", function(event, ui) {
+		if (navigator.geolocation)
+			 navigator.geolocation.getCurrentPosition(calculateDistancesTo, displayError);
+	});
 
 });
 
@@ -131,6 +136,41 @@ function drawPolyLine(map, locations){
 	 
 	 path.setMap(map);
 }
+
+function calculateDistancesTo(location){
+	var lat1 = location.coords.latitude, lon1 = location.coords.longitude
+	//TODO: fix this with a foreach
+	var lat2 = 52.010903, lon2 = 4.356808;
+	
+	$('#location-1 span.ui-li-count').html(calculateDistance(lat1, lon1, lat2, lon2));
+	$('#location-1 span.ui-li-count').show();
+}
+
+function calculateDistance(lat1, lon1, lat2, lon2){
+	
+	/*var R = 6371; // km
+	var d = Math.acos(Math.sin(lat1)*Math.sin(lat2) + 
+	                  Math.cos(lat1)*Math.cos(lat2) *
+	                  Math.cos(lon2-lon1)) * R;*/
+	
+	var R = 6371;
+	var lat1 = lat1.toRad(), lon1 = lon1.toRad();
+	var lat2 = lat2.toRad(), lon2 = lon2.toRad();
+	var dLat = lat2 - lat1;
+	var dLon = lon2 - lon1;
+	
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+				Math.cos(lat1) * Math.cos(lat2) * 
+				Math.sin(dLon/2) * Math.sin(dLon/2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+	var d = R * c;
+	return d.toFixed(2) + " km";
+}
+
+Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+}
+
 
 function displayError(error) {
 
