@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns="http://java.sun.com/xml/ns/javaee"
-xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
 	<servlet>
 		<servlet-name>Open_Monumentendag</servlet-name>
-		<servlet-class>com.openmonumentendag.Open_MonumentendagServlet</servlet-class>
+		<servlet-class>org.omp.Open_MonumentendagServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>StorageDemo</servlet-name>
+		<servlet-class>org.omp.test.StorageDemo</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>BlobDemo</servlet-name>
+		<servlet-class>org.omp.test.BlobDemo</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ServeDemo</servlet-name>
+		<servlet-class>org.omp.test.ServeDemo</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Open_Monumentendag</servlet-name>
-		<url-pattern>/location</url-pattern>
+		<servlet-name>StorageDemo</servlet-name>
+		<url-pattern>/demo</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>BlobDemo</servlet-name>
+		<url-pattern>/upload2</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ServeDemo</servlet-name>
+		<url-pattern>/serve</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>app.jsp</welcome-file>

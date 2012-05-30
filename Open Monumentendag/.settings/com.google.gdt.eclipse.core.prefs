@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
+jarsExcludedFromWebInfLib=I\:/git/OMD/Open Monumentendag/json-rpc-1.0.jar|I\:/git/OMD/Open Monumentendag/objectify-3.1.jar
 warSrcDir=war
 warSrcDirIsOutput=true
