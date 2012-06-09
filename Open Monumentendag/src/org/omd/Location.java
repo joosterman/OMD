@@ -4,8 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Id;
 
-import com.google.appengine.api.blobstore.BlobKey;
-
 public class Location {
 
 	@Id

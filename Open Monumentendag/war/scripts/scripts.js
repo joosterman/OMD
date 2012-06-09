@@ -1,76 +1,70 @@
 //Make sure we can use the url parameters on anchors.
-$(document)
-		.bind(
-				"pagebeforechange",
-				function(event, data) {
-					$.mobile.pageData = (data && data.options && data.options.pageData) ? data.options.pageData
-							: null;
-				});
+$(document).bind("pagebeforechange", function(event, data) {
+	$.mobile.pageData = (data && data.options && data.options.pageData) ? data.options.pageData : null;
+});
 
 // apply triggers/events
 $(document).bind("mobileinit", function() {
 	$('#detail').live('pagebeforeshow', function(event, ui) {
-		$.getJSON("/location", {
-			id : $.mobile.pageData.id
-		}, function(data) {
-			$('#locationName').html(data.name);
-			$('#locationImageURL').attr("src", data.imageURL);
-			$('#locationDescription').html(data.description);
-		});
+		if(supports_local_storage()){
+			//assumption made that localStrage capable browsers also support WebSQL
+			ziedelft.webdb.getLocation(loadLocation, $.mobile.pageData.id);
+		}else{
+			//TODO: ASK DB
+		}		
+		
 	});
+	
 	// ask location permission on first screen
 	$('#home').live('pageshow', function(event, ui) {
 		// if (navigator.geolocation)
 		// navigator.geolocation.getCurrentPosition(displayLocation,
 		// displayError);
+		$('[data-role=content]').height('100%');
 	});
-	$("#map").live("pagebeforeshow", function(event, ui) {
-		$("#map_canvas").gmap({
-			'callback' : function() {
+	
+	$("#map").live("pagebeforeshow", function(event, ui) {		
+		//$("#map_canvas").gmap({'callback' : function() {
 				if (navigator.geolocation)
 					 navigator.geolocation.getCurrentPosition(displayCurrentLocation, displayError);
-			}
-		});
+			//}
+		//});
+		
+		//set map height
+		$('[data-role=content]').height($(window).height() - (42 + $('[data-role=header]').last().height()));
+		
+		ziedelft.webdb.getAllLocations(setMarkers);
+		//drawPolyLine(monuments);
+		//$("#map_canvas").gmap("refresh");
+	});
+	
+	$("#map").live("pageshow", function(event, ui) {
+		$("#map_canvas").gmap("refresh");
 	});
 	
 	$("#locations").live("pagebeforeshow", function(event, ui) {
-		if (navigator.geolocation)
-			 navigator.geolocation.getCurrentPosition(calculateDistancesTo, displayError);
+		ziedelft.webdb.getAllLocations(loadLocations);
+		console.log("loaded Locations");
+		if (navigator.geolocation){
+			console.log("found gps");
+			navigator.geolocation.getCurrentPosition(calculateDistancesTo, displayError);
+		}
 	});
 
 });
 
 function displayCurrentLocation(location){
+	console.log("setting current position");
 	var loc = new google.maps.LatLng(location.coords.latitude,location.coords.longitude);
-	var options = {
-	          center: loc,
-	          zoom: 18,
-	          mapTypeId: google.maps.MapTypeId.ROADMAP
-	        };
-	var map = new google.maps.Map(document.getElementById("map_canvas"), options);
 	
-	var marker = new google.maps.Marker({
-	    position: loc,
-	    title:"You are here!"
-	});
-
-	// To add the marker to the map, call setMap();
-	marker.setMap(map);
-	
-	//var map = new google.maps.Map(document.getElementById("map_canvas"));
-	setMarkers(map, monuments);
-	drawPolyLine(map, locations);
+	$("#map_canvas").gmap("addMarker",{"position":loc, "bounds":true, "title":"You are here!"});
+	//$("#map_canvas").gmap("option","center", loc);
+	//$("#map_canvas").gmap("option","zoom", 44);
+	$("#map_canvas").gmap("option","mapTypeId", google.maps.MapTypeId.ROADMAP);
+	//$("#map_canvas").gmap("refresh");
 }
 
-var monuments = [
-               ['Het meisjeshuis', 52.010903, 4.356808, 4, 1],
-               ['Prinsenhof', 52.011667, 4.354444, 5, 1],
-               ['TU Delft', 52.001667, 4.3725, 3, 1],
-               ['Kruithuis', 51.992795, 4.368932, 2, 0],
-               ['Oude Kerk', 52.0125, 4.355278, 1, 0]
-             ];
-
-function setMarkers(map, locations) {
+function setMarker(id, title, lat, lon, top) {
   // Add markers to the map
 
   // Marker sizes are expressed as a Size of X,Y
@@ -104,22 +98,21 @@ function setMarkers(map, locations) {
       coord: [1, 1, 1, 20, 18, 20, 18 , 1],
       type: 'poly'
   };
-  for (var i = 0; i < locations.length; i++) {
-    var monument = locations[i];
-    var myLatLng = new google.maps.LatLng(monument[1], monument[2]);
-    var marker = new google.maps.Marker({
-        position: myLatLng,
-        map: map,
-        shadow: shadow,
-        icon: (monument[4] == 1) ? image : image2,
-        shape: shape,
-        title: monument[0],
-        zIndex: monument[3]
-    });
-  }
+
+    var myLatLng = new google.maps.LatLng(lat, lon);
+    
+    $('#map_canvas').gmap('addMarker', { 
+		'position': myLatLng,
+		'shadow': shadow,
+		'icon': (top == 1) ? image : image2,
+		'shape': shape,
+		'title': title,
+		'zIndex': id,
+		'bounds': true
+	});
 }
 
-function drawPolyLine(map, locations){
+function drawPolyLine(){
 	 var coordinates = [
       new google.maps.LatLng(52.010903, 4.356808),
       new google.maps.LatLng(52.011667, 4.354444),
@@ -134,16 +127,16 @@ function drawPolyLine(map, locations){
 	    strokeWeight: 2
 	  });
 	 
-	 path.setMap(map);
+	 path.setMap( $('#map_canvas').gmap('get', 'map') );
 }
 
 function calculateDistancesTo(location){
+	console.log("location");
 	var lat1 = location.coords.latitude, lon1 = location.coords.longitude
-	//TODO: fix this with a foreach
-	var lat2 = 52.010903, lon2 = 4.356808;
+	sessionStorage.setItem("lat", lat1);
+	sessionStorage.setItem("lon", lon1);
 	
-	$('#location-1 span.ui-li-count').html(calculateDistance(lat1, lon1, lat2, lon2));
-	$('#location-1 span.ui-li-count').show();
+	ziedelft.webdb.getAllLocations(updateDistances);
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2){
@@ -194,5 +187,13 @@ function displayError(error) {
 	default:
 		locationElement.innerHTML = "Who knows what happened...";
 		break;
+	}
+}
+
+function supports_local_storage() {
+	try {
+		return 'localStorage' in window && window['localStorage'] !== null;
+	}catch(e){
+		return false;
 	}
 }
