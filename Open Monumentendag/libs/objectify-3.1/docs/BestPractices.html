@@ -1,0 +1,232 @@
+
+ 
+
+
+
+ 
+
+
+
+<html>
+ <head>
+ <title>BestPractices</title>
+ </head>
+ <body>
+ 
+
+
+
+
+<div id="wikipage">
+<table>
+ <tr>
+ 
+ 
+ <td style="vertical-align:top; padding-left:5px">
+ 
+ <div id="wikiheader">
+ 
+ <span style="font-size:120%;font-weight:bold">BestPractices</span>
+ &nbsp;
+ <div> 
+ 
+ <i>Patterns and best practices for using Objectify</i>
+ 
+ 
+ <br/>
+ 
+ <a class="label" style="padding-top: 2px"
+ href="/p/objectify-appengine/w/list?q=label:Featured"
+ title="Listed on project home page"
+ >Featured</a>
+ 
+ 
+ 
+ <br/>
+ 
+ 
+ <b>en</b>, 
+ 
+ 
+ 
+ <a href="BestPractices.html?wl=fr" 
+ title="fr">fr</a>
+ 
+ 
+ 
+ 
+ <div id="wikiauthor" style="float:right">
+ Updated <span title="Mon Oct  3 21:16:54 2011">
+ Oct 3, 2011</span>
+ 
+ by <a style="white-space: nowrap" href="/u/118411191005855432292/">lhori...@gmail.com</a>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id="wikicontent">
+ <div class="vt" id="wikimaincol">
+ <p><ul><li><a href="#Registering_Your_Entities">Registering Your Entities</a></li><ul><li><a href="#Use_a_DAO">Use a DAO</a></li><li><a href="#How_NOT_To_Register_Entities">How NOT To Register Entities</a></li><li><a href="#Automatic_Scanning">Automatic Scanning</a></li></ul><li><a href="#Use_Batch_Gets_Instead_of_Queries">Use Batch Gets Instead of Queries</a></li><li><a href="#Use_Indexes_Sparingly">Use Indexes Sparingly</a></li><li><a href="#Avoid_@Parent">Avoid @Parent</a></li><li><a href="#Use_Pythonic_Transactions">Use Pythonic Transactions</a></li><li><a href="#Interesting_discussions_related_to_Objectify">Interesting discussions related to Objectify</a></li></ul> </p><h1><a name="Registering_Your_Entities"></a>Registering Your Entities<a href="#Registering_Your_Entities" class="section_anchor"></a></h1><p>The first question you will have is &quot;when and how should I register my entity classes?&quot;  The obvious answer is to do it at application startup in a servlet context listener or an init servlet - wherever your application starts running.  However, there is an easier way: </p><h2><a name="Use_a_DAO"></a>Use a DAO<a href="#Use_a_DAO" class="section_anchor"></a></h2><p>By accessing Objectify through your own DAO class, you can register your entities in a static initializer and also add domain-specific helper methods.  Create a DAO class extending DAOBase: </p><pre class="prettyprint">public class DAO extends DAOBase
+{
+    static {
+        ObjectifyService.register(YourEntity.class);
+        ObjectifyService.register(YourOtherEntity.class);
+    }
+
+    /** Your DAO can have your own useful methods */
+    public MyThing getOrCreateMyThing(long id)
+    {
+        MyThing found = ofy().find(clazz, id);
+        if (found == null)
+            return new MyThing(id);
+        else
+            return found;
+    }
+}</pre><p>Now you can use your DAO and any higher-level, application-specific methods: </p><pre class="prettyprint">DAO dao = new DAO();
+
+MyThing thing = dao.getOrCreateThing(123);
+thing.incrementUseCount();
+
+dao.ofy().put(thing);</pre><p>Access the factory by calling <tt>dao.fact()</tt>. </p><h2><a name="How_NOT_To_Register_Entities"></a>How NOT To Register Entities<a href="#How_NOT_To_Register_Entities" class="section_anchor"></a></h2><p>You might think that you could register an entity as a static initializer for the entity class itself: </p><pre class="prettyprint">public class ThingA
+{
+    static { ObjectifyService.factory().register(ThingA.class); }
+    // ... the rest of the entity definition
+}</pre><p>This is dangerous!  Because Java loads (and initializes) classes on-demand, Objectify cannot guarantee that your class will be registered at the time that it is fetched from the database.  For example, suppose you execute a query that might return several different kinds of entities: </p><pre class="prettyprint">Query&lt;Object&gt; lotsOfThingsQuery = ObjectifyService.begin().query();
+lotsOfThingsQuery.ancestor(someParent);    // could find both ThingA and ThingB entities
+lotsOfThingsQuery.get();    // throws IllegalStateException!</pre><p>When Objectify tries to reconstitute an object of type ThingA, it won&#x27;t be able to because the ThingA class will not yet have been loaded and the static initializer will not have been called.  If your application actually does use a ThingA before this query is executed, it will work - and in fact, it may work 99.99% of the time.  But do you really want to hunt down mysterious IllegalStateExceptions 0.01% of the time? </p><h2><a name="Automatic_Scanning"></a>Automatic Scanning<a href="#Automatic_Scanning" class="section_anchor"></a></h2><p>Most J2EE-style frameworks, including Appengine&#x27;s JDO/JPA system, do classpath scanning and can automatically register classes that have @Entity or other relevant annotations.  This is convenient and could easily be added to Objectify without changing a single source file.  There are, however, several reasons why this isn&#x27;t part of the core: </p><ol><li>This feature requires either <a href="http://scannotation.sourceforge.net/" rel="nofollow">Scannotations</a> or <a href="http://code.google.com/p/reflections/" rel="nofollow">Reflections</a>, bringing in 5-6 dependency jars.  Objectify requires zero dependency jars, and we are loathe to change that. </li><li>Developers would need to add a startup hook to your web.xml (a ServletContextListener) in order to trigger this scanning.  Objectify currently requires zero changes to web.xml. </li><li>Classpath scanning is <strong>slow</strong> because it opens each .class and .jar file in your project and processes every single class file with a bytecode manipulator.  For a moderately sized project this easily adds 3-5 seconds to your application initialization time.  That&#x27;s 3-5 additional seconds that real-world users must sit waiting while your application cold-starts. </li></ol><p>Of these issues, the last is the most fatal.  If you think &quot;My application gets a lot of traffic!  I don&#x27;t need to worry about cold starts!&quot;, you are overlooking the fact that App Engine starts and stops instances to meet demand all the time - at least one user somewhere is going to be affected on every spinup.  Plus this happens every time you redeploy your application!  There is no escaping cold-start time. </p><p>Furthermore, classpath scanning costs accumulate.  If you use other tools that perform classpath scanning (Weld, Spring, JAX-RS, etc), they each will also spend 3-5s scanning your jars.  It isn&#x27;t hard to push your cold-start time into the tens of seconds. </p><p>That said, 3-5s might be reasonable for your specific project.  It should be very easy to add as your own ServletContextListener that calls Reflections and registers the @Entity classes.  Spring and other framework users should examine the <a href="Extensions.html">Extensions</a>. </p><h1><a name="Use_Batch_Gets_Instead_of_Queries"></a>Use Batch Gets Instead of Queries<a href="#Use_Batch_Gets_Instead_of_Queries" class="section_anchor"></a></h1><p>In SQL, all data lives in tables and is accessed through queries.  It is best not to imagine the Appengine datastore this way - conceptually shift to thinking of the datastore as a key-value store that happens to also let you index and query some values. </p><p>The reason this shift is important is because your most effective tool when working with chunks of data is the batch get() and put().  A batch get() by key will quickly fetch thousands of entities in parallel; running thousands of queries would take a relative eternity.  Asynchronous queries can only provide limited help because GAE limits you to 10 concurrent requests. </p><p>Furthermore, a batch get() can be efficiently cached.  Use Objectify&#x27;s <tt>@Cached</tt> annotation and your get() may never need a trip to the datastore. </p><p>Of course, batch gets and queries are not necessarily fungible operations - but when they are, use a batch get. </p><h1><a name="Use_Indexes_Sparingly"></a>Use Indexes Sparingly<a href="#Use_Indexes_Sparingly" class="section_anchor"></a></h1><p>If you make no explicit decision, all fields of your objects will be indexed.  This might be convenient if you&#x27;re not sure what you will need to query on later, but comes at a high computational price.  Every single indexed property requires a separate write into a BigTable tablet.  Unindexed properties are almost &quot;free&quot;. </p><p>Consider using @Unindexed on your entities and then only @Indexed the fields you specifically need to query. </p><h1><a name="Avoid_@Parent"></a>Avoid <tt>@Parent</tt><a href="#Avoid_@Parent" class="section_anchor"></a></h1><p><strong>Note:</strong> This was written before the advent of the high-replication datastore.  @Parent is important now to ensure strongly consistent queries, and so this section needs to be revised.  The general advice is still good but there are lots of places you will now need @Parent.  TBD. </p><p>New appengine developers tend to overuse the <tt>@Parent</tt> annotation feature because at first it seems conceptually similar to owned relationships in the world of JPA.  However, they are quite different concepts. </p><p>In JPA, an &quot;owned&quot; entity relationship provides referential integrity checking and cascading deletes/saves.  The appengine datastore does neither of these things!  All entities are simply values in a key/value store.  Relationships are simply fields of type Key.  </p><p><tt>@Parent</tt> defines something different - a relationship that is embedded within an entity&#x27;s Key.  This means that part of what identifies the entity is the parent lineage.  Why would you do this? </p><ul><li>Transactions only work on entity groups, and entity groups are defined by the root parent.  Transactions can only be used across entities with a common root parent. </li></ul><ul><li>Ancestor keys can make some types of <a href="AdvancedPatterns.html#Ancestor_Queries">(exotic) queries</a> easier. </li></ul><p>However, using <tt>@Parent</tt> has several undesirable effects: </p><ul><li>Creating key objects is cumbersome:  <tt>new Key&lt;Comment&gt;(Comment.class, 123)</tt> is a lot easier to type than <tt>new Key&lt;Comment&gt;(new Key&lt;Blog&gt;(Blog.class, 456), Comment.class, 123)</tt> </li></ul><ul><li>Generated ids are only unique within a parent.  Your entities will have duplicate ids (but always unique keys!) </li></ul><ul><li>You cannot reparent an entity without deleting it and recreating it.  If the entity you wish to reparent itself has children, all those must be deleted and recreated. </li></ul><ul><li>Using <tt>@Parent</tt> can <strong>diminish</strong> the performance of your application when there is contention. </li></ul><p>This last point is worth explaining in detail.  All datastore writes are transactional - even if you have not explicitly defined a transaction.  When an entity is put(), a transaction timestamp journal at the root of an entity group is updated, and if a collision is detected, the put() is retried (without an explicit transaction) or rolled back (with an explicit transaction).  This means that writes to all entities in an entity group contend for the same transaction journal, potentially causing numerous retries. </p><p>Unless you specifically require transactional behavior, you should probably avoid using <tt>@Parent</tt> even when when entities have a conceptual parent/child relationship (eg Blog/Comment). </p><h1><a name="Use_Pythonic_Transactions"></a>Use Pythonic Transactions<a href="#Use_Pythonic_Transactions" class="section_anchor"></a></h1><p>Transactions on Appengine are limited to a single entity group, but that doesn&#x27;t make them useless.  In fact, transactions are critical for updating entities when there is possible write contention. </p><p>Let&#x27;s take the example of a counter.  For simplicity&#x27;s sake, we will ignore the fact that you need to <a href="http://code.google.com/appengine/articles/sharding_counters.html" rel="nofollow">shard</a> counters for performance.  The logic for a counter is basically &quot;read value, add one, write value&quot; - leaving a critical section in which two threads can read the same value, add one, and write the same value, missing out on a count. </p><p>The solution is to use transactions.  When the transaction commits, Appengine will check the timestamp of the counter entity and throw a ConcurrentModificationException if the data was updated by a different thread.  This is all fine and good and prevents data corruption, but it leaves our app dealing with pesky exceptions during periods of contention. </p><p>The solution is to retry those transactions.  This is where it helps to build your transactions as little chunks of business logic that can be executed by code.  In Python you use a lambda function; in Java you use an inner class. </p><pre class="prettyprint">DAOT.repeatInTransaction(new Transactable() {
+	@Override
+	public void run(DAOT daot)
+	{
+		Counter count = daot.ofy().find(Counter.class, COUNTER_ID);
+		count.increment();
+		daot.ofy().put(count);
+	}
+});</pre><p>Simple, clean, without endless lines of boilerplate dealing with transaction setup and retries. </p><p>All the boilerplate goes into the DAOT class: </p><pre class="prettyprint">package com.similarity.queen;
+
+import java.util.ConcurrentModificationException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.googlecode.objectify.ObjectifyOpts;
+
+/**
+ * DAO that encapsulates a single transaction.  Create it and forget about it.
+ * Also provides very convenient static methods for making GAE/Python-like transactions.
+ * 
+ * @author Jeff Schnitzer
+ */
+public class DAOT extends DAO  // DAO is your class derived from DAOBase as described above
+{
+	/** */
+	private static final Logger log = LoggerFactory.getLogger(DAOT.class);
+	
+	/** Alternate interface to Runnable for executing transactions */
+	public static interface Transactable
+	{
+		void run(DAOT daot);
+	}
+	
+	/**
+	 * Provides a place to put the result too.  Note that the result
+	 * is only valid if the transaction completes successfully; otherwise
+	 * it should be ignored because it is not necessarily valid.
+	 */
+	abstract public static class Transact&lt;T&gt; implements Transactable
+	{
+		protected T result;
+		public T getResult() { return this.result; }
+	}
+	
+	/** Create a default DAOT and run the transaction through it */
+	public static void runInTransaction(Transactable t)
+	{
+		DAOT daot = new DAOT();
+		daot.doTransaction(t);
+	}
+	
+	/**
+	 * Run this task through transactions until it succeeds without an optimistic
+	 * concurrency failure.
+	 */
+	public static void repeatInTransaction(Transactable t)
+	{
+		while (true)
+		{
+			try
+			{
+				runInTransaction(t);
+				break;
+			}
+			catch (ConcurrentModificationException ex)
+			{
+				if (log.isWarnEnabled())
+					log.warn(&quot;Optimistic concurrency failure for &quot; + t + &quot;: &quot; + ex);
+			}
+		}
+	}
+	
+	/** Starts out with a transaction and session cache */
+	public DAOT()
+	{
+		super(new ObjectifyOpts().setSessionCache(true).setBeginTransaction(true));
+	}
+	
+	/** Adds transaction to whatever you pass in */
+	public DAOT(ObjectifyOpts opts)
+	{
+		super(opts.setBeginTransaction(true));
+	}
+	
+	/**
+	 * Executes the task in the transactional context of this DAO/ofy.
+	 */
+	public void doTransaction(final Runnable task)
+	{
+		this.doTransaction(new Transactable() {
+			@Override
+			public void run(DAOT daot)
+			{
+				task.run();
+			}
+		});
+	}
+
+	/**
+	 * Executes the task in the transactional context of this DAO/ofy.
+	 */
+	public void doTransaction(Transactable task)
+	{
+		try
+		{
+			task.run(this);
+			ofy().getTxn().commit();
+		}
+		finally
+		{
+			if (ofy().getTxn().isActive())
+				ofy().getTxn().rollback();
+		}
+ 	}
+}</pre><p>This is the actual code used in <a href="http://www.similarity.com/" rel="nofollow">Similarity</a> to run all transactions. </p><h1><a name="Interesting_discussions_related_to_Objectify"></a>Interesting discussions related to Objectify<a href="#Interesting_discussions_related_to_Objectify" class="section_anchor"></a></h1><ul><li>IBM developerWorks&#x27; <i>Twitter Mining with Objectify-Appengine</i>, <a href="http://www.ibm.com/developerworks/java/library/j-javadev2-13/index.html" rel="nofollow">part 1</a> and <a href="http://www.ibm.com/developerworks/java/library/j-javadev2-14/index.html" rel="nofollow">part 2</a> </li></ul><ul><li><a href="http://borglin.net/gwt-project/?page_id=604" rel="nofollow">Review of Objectify/Twig/SimpleDS</a> </li><li><a href="http://groups.google.com/group/google-appengine-java/browse_thread/thread/4467986eaf01788b/d3a1678a44242c25" rel="nofollow">Original release  announcement on GAE-Java</a> </li><li><a href="http://sites.google.com/site/io/under-the-covers-of-the-google-app-engine-datastore" rel="nofollow">Google I/O 2008 - Under the Covers of the Google App Engine Datastore</a> (required watching for anyone that uses App Engine!) </li><li><a href="http://www.youtube.com/watch?v=AgaL6NGpkB8" rel="nofollow">Google I/O 2009 - Scalable, Complex Apps on App Engine</a> </li><li><a href="http://groups.google.com/group/google-appengine-java/browse_thread/thread/f20d922ffecb310c" rel="nofollow">Differences between Twig and Objectify plus example of million user fanout</a> </li><li><a href="http://www.answercow.com/2010/03/google-app-engine-cold-start-guide-for.html" rel="nofollow">Reducing start-up time guide</a> </li><li><a href="http://turbomanage.wordpress.com/2010/03/26/appengine-cold-starts-considered/" rel="nofollow">Recucing start-up time blog entry</a> </li><li><a href="http://turbomanage.wordpress.com/2010/01/28/simplify-with-objectify/" rel="nofollow">David M. Chandler&#x27;s blog posting about Objectify</a> and <a href="http://turbomanage.wordpress.com/2010/02/09/generic-dao-for-objectify-2/" rel="nofollow">Objectify 2</a> </li><li><a href="http://iqbalyusuf.wordpress.com/gwt-uibinder-with-jax-rs-jersey/" rel="nofollow">GWT Example App with Objectify</a> </li><li><a href="http://groups.google.com/group/objectify-appengine/msg/14a326058a0870be" rel="nofollow">Example of a Cursor based IteratingTask base class</a> </li><li><a href="http://groups.google.com/group/objectify-appengine/browse_thread/thread/afa0d43de5db483f" rel="nofollow">Controlling user access to data with queries</a> </li><li><a href="http://iqbalyusuf.wordpress.com/jersey-guice-on-google-app-engine-java/" rel="nofollow">Jersey + Guice on Google App Engine Java</a> </li><li><a href="http://groups.google.com/group/objectify-appengine/browse_thread/thread/25a9abfc86f8be51" rel="nofollow">How to emulate @Unique</a> and <a href="http://groups.google.com/group/objectify-appengine/browse_thread/thread/5edec724ca69719e/b7536d44d028ef02" rel="nofollow">a longer discussion</a> of enforcing uniqueness. </li><li><a href="http://www.fishbonecloud.com/2010/11/use-objectify-to-store-data-in-google.html" rel="nofollow">Simple tutorial for &#x27;putting&#x27; data in the datastore using Objectify</a> </li></ul>
+ </div>
+ </div>
+ </td><tr>
+</table>
+ </div>
+
+
+
+ <script src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dwiki_scripts_20081003.js"></script>
+
+
+<script type="text/javascript" src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dit_scripts.js"></script>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+</script>
+
+ </body>
+</html>
+

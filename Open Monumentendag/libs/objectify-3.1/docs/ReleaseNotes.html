@@ -1,0 +1,78 @@
+
+ 
+
+
+
+ 
+
+
+
+<html>
+ <head>
+ <title>ReleaseNotes</title>
+ </head>
+ <body>
+ 
+
+
+
+
+<div id="wikipage">
+<table>
+ <tr>
+ 
+ 
+ <td style="vertical-align:top; padding-left:5px">
+ 
+ <div id="wikiheader">
+ 
+ <span style="font-size:120%;font-weight:bold">ReleaseNotes</span>
+ &nbsp;
+ <div> 
+ 
+ <i>Objectify-Appengine Release Notes</i>
+ 
+ 
+ <br/>
+ 
+ <a class="label" style="padding-top: 2px"
+ href="/p/objectify-appengine/w/list?q=label:Featured"
+ title="Listed on project home page"
+ >Featured</a>
+ 
+ 
+ 
+ <div id="wikiauthor" style="float:right">
+ Updated <span title="Thu Nov 10 17:39:32 2011">
+ Today (91 minutes ago)</span>
+ 
+ by <a style="white-space: nowrap" href="/u/118411191005855432292/">lhori...@gmail.com</a>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id="wikicontent">
+ <div class="vt" id="wikimaincol">
+ <h1><a name="3.1"></a>3.1<a href="#3.1" class="section_anchor"></a></h1><p>2011-11-10 <ul><li>Requires Appengine SDK 1.6.0 or newer </li></ul>  Please read the release notes for 3.1 beta 1.  In addition: </p><ul><li>Always enables XG when starting a transaction on HRD </li><li>Memcache integration now uses SDK 1.6.0 batch CAS operations for efficiency </li><li>Added ObjectifyFactory.allocateIdRange() </li><li>Changed Key&lt;?&gt;.toWebSafeString() (introduced in 3.1b1) to getString() </li><li>Added a Key&lt;?&gt; constructor (and create() method) that takes a web safe string (ie getString()) </li><li>Added optional converters for joda time and money classes </li><li>Added a varargs overload of Objectify.get(Key...) </li></ul><h1><a name="3.1_beta_1"></a>3.1 beta 1<a href="#3.1_beta_1" class="section_anchor"></a></h1><p>2011-10-13 <ul><li>Requires Appengine SDK 1.5.5 or newer </li></ul></p><p><strong>Note</strong>:  The big change in 3.1 is that the memcache integration has been rewritten from scratch.  On the plus side, the new cache will not go out of sync with the datastore, even under severe contention.  On the down side, batch fetches are prohibitively slow.  This will be resolved in a future version by the addition of <a href="http://code.google.com/p/googleappengine/issues/detail?id=4874" rel="nofollow">batch CAS operations</a> to the GAE SDK. </p><ul><li>Added API for XG transactions </li><li>Completely rewritten cache code </li><li>Added Key&lt;?&gt;.toWebSafeString() and a constructor to reconstitute the Key&lt;?&gt; </li><li>Added ObjectifyFactory.allocateId() convenience method </li><li>Several internal API changes. </li></ul><h1><a name="3.0.1"></a>3.0.1<a href="#3.0.1" class="section_anchor"></a></h1><p>2011-09-08 <ul><li>Requires Appengine SDK 1.4.0 or newer </li></ul></p><ul><li>Added methods Query.chunkSize() and Query.prefetchSize() </li><li>Experimental support for @Embedded Maps </li><li>Added a TimeZoneConverter so you can have TimeZone fields </li><li>Added a BigDecimalLongConverter which is not enabled by default </li></ul><h1><a name="3.0"></a>3.0<a href="#3.0" class="section_anchor"></a></h1><p>2011-04-22 <ul><li>Requires Appengine SDK 1.4.0 or newer </li></ul></p><blockquote>IMPORTANT!  Read the release notes for beta1 and beta2, in particular the note about breaking Key&lt;?&gt; serialization.  If you have <strong>serialized</strong> Key&lt;?&gt; objects into persistent stores, this will affect you.  Also, you will not be able to construct Key&lt;?&gt; objects from client-side GWT. 
+</blockquote><ul><li>Fixed NPE when fetching polymorphic entities not in the database. </li><li>Fixed NPE when fetching collection field with raw type (missing generics). </li></ul><h1><a name="3.0_beta_2"></a>3.0 beta 2<a href="#3.0_beta_2" class="section_anchor"></a></h1><p>2011-04-04 <ul><li>Requires Appengine SDK 1.4.0 or newer </li></ul></p><ul><li>Implemented Polymorphic persistence </li><li>Key&lt;?&gt; implementation changed - this WILL BREAK KEY SERIALIZATION.  If you have serialized keys in a persistent structure, read the discussion of this issue on the mailing list.  This only affects Key&lt;?&gt; in @Serialized fields; simple Key&lt;?&gt; properties and @Embedded Key&lt;?&gt;s are fine. </li><li>Fields now receive their @Indexed/@Unindexed default state from the class they are declared on rather than the final class in the inheritance hierarchy.  This is a potential breaking change, although previous behavior was undocumented. </li><li>Added a Query.fetch() method to produce an async Iterable </li><li>Better error message if you try to register a nonstatic inner class </li><li>Loading embedded collections with a null value for the property itself no longer throws an exception. </li><li>Added IfEmpty and IfNotEmpty conditions </li><li>A number of internal APIs changed to support polymorphism. </li></ul><h1><a name="3.0_beta_1"></a>3.0 beta 1<a href="#3.0_beta_1" class="section_anchor"></a></h1><p>2011-02-28 <ul><li>Requires Appengine SDK 1.4.0 or newer </li></ul></p><ul><li>Implemented asynchronous operations on <tt>AsyncObjectify</tt> </li><li><strong>Breaking change</strong>: Moved all classes in <tt>com.googlecode.objectify.helper</tt> to <tt>com.googlecode.objectify.util</tt>, including <tt>DAOBase</tt> </li><li>Significant internal changes to support async API. </li></ul><h1><a name="2.2.3"></a>2.2.3<a href="#2.2.3" class="section_anchor"></a></h1><p>2010-12-13 <ul><li>Requires Appengine SDK 1.4.0 or newer </li></ul></p><ul><li>Added pluggable system for managing type conversions </li><li>Unwraps InvocationTargetExceptions in lifecycle callbacks </li><li>Made ObjectifyOpts.clone() public </li><li>Fixed bug when filtering by enums </li><li>Added a &quot;Monotonic&quot; helper class </li></ul><h1><a name="2.2.2"></a>2.2.2<a href="#2.2.2" class="section_anchor"></a></h1><p>2010-10-21 <ul><li>Requires Appengine SDK 1.3.8 or newer </li></ul></p><ul><li>Deprecated Query.countAll(), added Query.count() method which behaves better. </li><li>Deprecated Query.cursor(); added Query.startCursor() and Query.endCursor(). </li><li>Added Query.clone() </li><li>Allows null @Parent keys. </li><li>Now handles java.sql.Date </li><li>Ignores synthetic fields (should make Groovy happier) </li><li>Now respects @Indexed/@Unindexed on entity base classes. </li><li>Added overrideable createDefaultOpts() method to ObjectifyFactory. Added clone() method to ObjectifyOpts. </li><li>@Id and @Parent fields are now included when you embed an entity in another entity. </li><li>Fixed a bug related to fields whose type base class name overlapped with entity names (eg, User) </li></ul><h1><a name="2.2.1"></a>2.2.1<a href="#2.2.1" class="section_anchor"></a></h1><p>2010-06-01 <ul><li>Requires Appengine SDK 1.3.2 or newer </li></ul></p><ul><li>Added typesafe ObjectifyFactory.allocateIds() methods. </li><li>Enums are persisted using the .name() method rather than .toString() </li><li>Added varargs versions of Objectify.put() and Objectify.get() </li><li>DAOBase now lets you use ObjectifyOpts </li></ul><h1><a name="2.2"></a>2.2<a href="#2.2" class="section_anchor"></a></h1><p>2010-04-22 <ul><li>Requires Appengine SDK 1.3.2 or newer </li></ul></p><ul><li>Added ObjectifyOpts parameter to begin() </li><li>Added optional session cache </li><li>Fixed automatic byte<a href=""></a> to Blob conversion </li><li>Added Query.list() and Query.listKeys() methods </li><li>Fixed filtering with IN operator on key and id columns </li><li>Lifecycle callbacks (@PostLoad and @PrePersist) can now take Objectify and/or Entity parameters </li><li>Removed the datastore retry mechanism - this is now built into the appengine SDK. </li></ul><h1><a name="2.1"></a>2.1<a href="#2.1" class="section_anchor"></a></h1><p>2010-03-25 <ul><li>Requires Appengine SDK 1.3.1 or newer </li></ul></p><ul><li>Changed return type of <tt>Objectify.get(Class&lt;? extends T&gt; clazz, Iterable&lt;S&gt; idsOrNames)</tt> to <tt>Map&lt;S, T&gt;</tt> rather than <tt>Map&lt;Key&lt;T&gt;, T&gt;</tt>.  <strong>This is a breaking change</strong> </li><li>Added support for partial index conditions to @Indexed and @Unindexed </li><li>Added @NotSaved (with conditions) </li><li>Added @AlsoLoad as replacement for @OldName </li><li>Deprecated @OldName </li><li>Added <tt>Objectify.getFactory()</tt> method </li><li>Added wrapper helper classes for Objectify, Query, and QueryResultIterator </li></ul><h1><a name="2.0.2"></a>2.0.2<a href="#2.0.2" class="section_anchor"></a></h1><p>2010-02-25 <ul><li>Requires Appengine SDK 1.3.1 or newer </li></ul></p><ul><li>Added @Unindexed and @Indexed class and field support </li><li>Fixed bugs in query Cursor and limit() support. </li></ul><h1><a name="2.0.1"></a>2.0.1<a href="#2.0.1" class="section_anchor"></a></h1><p>2010-02-18 <ul><li>Requires Appengine SDK 1.3.1 or newer </li></ul></p><ul><li>Added Cursor support </li><li>Added @PostLoad and @PrePersist callbacks </li></ul><h1><a name="2.0"></a>2.0<a href="#2.0" class="section_anchor"></a></h1><p>2010-02-10 <ul><li>Requires Appengine SDK 1.3.0 or newer </li></ul></p><ul><li>See 2.0rc1 and 2.0b1 release notes for significant changes since 1.0.3. </li><li>Changed ObjectifyFactory.createKey() to slightly-different ObjectifyFactory.getKey() and removed createKey() from ObjectifyService. </li></ul><h1><a name="2.0_rc_1"></a>2.0 rc 1<a href="#2.0_rc_1" class="section_anchor"></a></h1><p>2010-02-09 <ul><li>Requires Appengine SDK 1.3.0 or newer </li></ul></p><ul><li>Adds memcache integration (write-through, transaction safe, negative caching, custom class expiration) with a @Cached annotation. </li></ul><h1><a name="2.0_beta_1"></a>2.0 beta 1<a href="#2.0_beta_1" class="section_anchor"></a></h1><p>2010-02-07 <ul><li>Requires Appengine SDK 1.3.0 or newer </li></ul></p><ul><li>Completely new Query API. </li><li>OKey&lt;?&gt; has been renamed to Key&lt;?&gt; </li><li>Added @Embedded classes, collections, and arrays </li><li>Added GWT versions of all basic datastore types (Email, Link, GeoPt, etc) </li><li>Fields using the <tt>transient</tt> keyword <strong>will</strong> now be persisted. The <tt>@Transient</tt> annotation is now the only way to tell Objectify to ignore a field. </li><li>New architecture and many more unit tests! </li></ul><h1><a name="1.0.3"></a>1.0.3<a href="#1.0.3" class="section_anchor"></a></h1><p>2010-01-29 <ul><li>Requires Appengine SDK 1.3.0 or newer </li></ul></p><ul><li>Fixed a bug in batch delete. </li></ul><h1><a name="1.0.2"></a>1.0.2<a href="#1.0.2" class="section_anchor"></a></h1><p>2010-01-26 <ul><li>Requires Appengine SDK 1.3.0 or newer </li></ul></p><ul><li>Entity superclasses now processed correctly. </li><li>OKey now serializes properly in GWT. </li><li>Fixed classloader exception when using FetchOptions with datastore retries. </li><li>Better error msg if entity missing no-args constructor. </li></ul><h1><a name="1.0.1"></a>1.0.1<a href="#1.0.1" class="section_anchor"></a></h1><p>2010-01-22 <ul><li>Requires Appengine SDK 1.3.0 or newer </li></ul></p><ul><li>Added support for Enum types </li><li>Fixed OPreparedQuery.asSingle() when resultset was empty </li><li>Added full support for the common collection types </li></ul><h1><a name="1.0"></a>1.0<a href="#1.0" class="section_anchor"></a></h1><p>2010-01-13 <ul><li>Requires Appengine SDK 1.3.0 or newer </li></ul></p><ul><li>Initial release.  </li></ul>
+ </div>
+ </div>
+ </td><tr>
+</table>
+ </div>
+
+
+
+ <script src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dwiki_scripts_20081003.js"></script>
+
+
+<script type="text/javascript" src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dit_scripts.js"></script>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+</script>
+
+ </body>
+</html>
+

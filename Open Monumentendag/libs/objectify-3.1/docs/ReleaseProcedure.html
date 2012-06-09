@@ -1,0 +1,77 @@
+
+ 
+
+
+
+ 
+
+
+
+<html>
+ <head>
+ <title>ReleaseProcedure</title>
+ </head>
+ <body>
+ 
+
+
+
+
+<div id="wikipage">
+<table>
+ <tr>
+ 
+ 
+ <td style="vertical-align:top; padding-left:5px">
+ 
+ <div id="wikiheader">
+ 
+ <span style="font-size:120%;font-weight:bold">ReleaseProcedure</span>
+ &nbsp;
+ <div> 
+ 
+ <i>What to do for a release.</i>
+ 
+ 
+ <br/>
+ 
+ <a class="label" style="padding-top: 2px"
+ href="/p/objectify-appengine/w/list?q=label:Phase-Deploy"
+ title="How to install and configure the program"
+ >Phase-Deploy</a>
+ 
+ 
+ 
+ <div id="wikiauthor" style="float:right">
+ Updated <span title="Tue Feb  9 17:49:28 2010">
+ Feb 9, 2010</span>
+ 
+ by <a style="white-space: nowrap" href="/u/118411191005855432292/">lhori...@gmail.com</a>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id="wikicontent">
+ <div class="vt" id="wikimaincol">
+ <h1><a name="Release_Procedure"></a>Release Procedure<a href="#Release_Procedure" class="section_anchor"></a></h1><p>When it is time for a release please do the following (in order). </p><p>Requirements: <ul><li>java 1.6 sdk </li><li>ant </li><li>svn checkout of trunk </li><li>svn checkout of maven (<i>recommended</i>) </li></ul></p><h2><a name="Prepare_Documents"></a>Prepare Documents<a href="#Prepare_Documents" class="section_anchor"></a></h2><ul><li>Update wiki <a href="ReleaseNotes.html">ReleaseNotes</a>, mainPage </li><li>Build and commit javadocs </li><ul><li><strong>Ensure you have <a href="http://stuffthathappens.com/blog/2007/11/09/howto-publish-javadoc-on-google-code/" rel="nofollow">correct svn mime type</a> setup, the default is wrong.</strong>  Do not commit javadocs without changing your subversion properties. </li></ul></ul><h2><a name="Build_it"></a>Build it<a href="#Build_it" class="section_anchor"></a></h2><ul><li>Tag it (/tags/2.0) </li><li><tt>ant javadoc dist</tt> (specify version when asked) </li></ul><h2><a name="Upload_it"></a>Upload it<a href="#Upload_it" class="section_anchor"></a></h2><ul><li>Upload to googlecode (title: Objectify-Appengine v2.0 , tags: OsSys-All,Featured) </li><li>Deprecate old versions </li><li>Commit maven checkout </li></ul><h2><a name="Announce_it"></a>Announce it<a href="#Announce_it" class="section_anchor"></a></h2><ul><li>Push an email out to user list, appengine-java list </li><li>Announce on TSS/Other </li></ul>
+ </div>
+ </div>
+ </td><tr>
+</table>
+ </div>
+
+
+
+ <script src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dwiki_scripts_20081003.js"></script>
+
+
+<script type="text/javascript" src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dit_scripts.js"></script>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+</script>
+
+ </body>
+</html>
+

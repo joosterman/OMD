@@ -1,0 +1,94 @@
+
+ 
+
+
+
+ 
+
+
+
+<html>
+ <head>
+ <title>MemcacheStandalone</title>
+ </head>
+ <body>
+ 
+
+
+
+
+<div id="wikipage">
+<table>
+ <tr>
+ 
+ 
+ <td style="vertical-align:top; padding-left:5px">
+ 
+ <div id="wikiheader">
+ 
+ <span style="font-size:120%;font-weight:bold">MemcacheStandalone</span>
+ &nbsp;
+ <div> 
+ 
+ <i>Using memcache outside of Objectify</i>
+ 
+ 
+ 
+ <div id="wikiauthor" style="float:right">
+ Updated <span title="Thu Nov 10 18:58:35 2011">
+ Today (12 minutes ago)</span>
+ 
+ by <a style="white-space: nowrap" href="/u/118411191005855432292/">lhori...@gmail.com</a>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id="wikicontent">
+ <div class="vt" id="wikimaincol">
+ <p>Starting in v3.1, Objectify&#x27;s write-through memcache can be used directly with the low level API, independent of the rest of Objectify.  You can use this to add caching behavior to apps built on the low level API or other datastore APIs that rely on the low level API. </p><p><a href="IntroductionToObjectify.html">IntroductionToObjectify</a> documents how to use memcache with Objectify; this document assumes you are not using Objectify.  It assumes you are familiar with the <a href="http://code.google.com/appengine/docs/java/datastore/" rel="nofollow">low level API</a>. </p><h1><a name="Introduction"></a>Introduction<a href="#Introduction" class="section_anchor"></a></h1><p>Objectify&#x27;s memcache integration provides the <tt>DatastoreService</tt> and <tt>AsyncDatastoreService</tt> interfaces by wrapping the Google-provided objects and adding cache behavior.  By providing these interfaces, memcaching behavior can be added to any code built on top of the low-level API. </p><p>What you should know about the cache: </p><ul><li>get(), put(), and delete() are cached.  query() does not use or affect the cache in any way. </li><li>Explicit transactions work normally - get()s bypass the cache to appear &quot;frozen in time&quot;, put()s and delete()s affect the cache only on successful commit(). </li><li>The cache is near-transactional.  Under normal operation, the cache will not go out of sync with the datastore, even under heavy contention. </li><ul><li>The exception to this is <tt>DeadlineExceededException</tt> at the 30s (10m for tasks) hard deadline.  If Google kills your process before the cache update occurs, there&#x27;s nothing we can do. </li></ul><li>You can control cache expiration on a per-kind basis. </li><li>You can track hit/miss statistics. </li></ul><p><strong>Warnings</strong> about the cache: </p><ul><li>Implicit (thread-local) transactions are not supported.  If you start a transaction, you must pass it explicitly into put(), get(), etc.  You can only use the methods without txn parameter outside of all transactions. </li><li>If you use asynchronous operations, you must install the <a href="http://objectify-appengine.googlecode.com/svn/trunk/javadoc/com/googlecode/objectify/cache/AsyncCacheFilter.html" rel="nofollow">AsyncCacheFilter</a>.  Please <a href="http://code.google.com/p/googleappengine/issues/detail?id=4271" rel="nofollow">star this issue</a>. </li></ul><h1><a name="Setup"></a>Setup<a href="#Setup" class="section_anchor"></a></h1><ol><li>Add objectify-X.X.X.jar to your project.  No other jars are necessary. </li><li>Instead of <tt>DatastoreServiceFactory.getDatastoreService()</tt>, use <strong>Caching</strong><tt>DatastoreServiceFactory.getDatastoreService()</tt> </li></ol><p>That&#x27;s it. </p><h1><a name="Cache_Expiration"></a>Cache Expiration<a href="#Cache_Expiration" class="section_anchor"></a></h1><p>You can control cache expiration for the <tt>DatastoreService</tt> instance by passing it in to the factory method: </p><pre class="prettyprint">// Time is in seconds
+DatastoreService ds = CachingDatastoreServiceFactory.getDatastoreService(600);</pre><p>You can control cache expiration on a key-by-key basis: </p><pre class="prettyprint">MemcacheService mem = CachingDatastoreServiceFactory.getDefaultMemcacheService();
+
+EntityMemcache em = new EntityMemcache(mem, new CacheControl() {
+    @Override
+    public Integer getExpirySeconds(Key key) {
+        if (&quot;SomeEntity&quot;.equals(key.getKind()))
+            return 600;
+        else if (&quot;Permanent&quot;.equals(key.getKind()))
+            return 0;    // cache without limit
+        else
+            return null;    // do not cache
+
+        return expirySeconds;
+    }
+});
+
+DatastoreService ds = CachingDatastoreServiceFactory.getDatastoreService(em);</pre><h1><a name="Tracking_Hits_and_Misses"></a>Tracking Hits and Misses<a href="#Tracking_Hits_and_Misses" class="section_anchor"></a></h1><p>You can construct an <tt>EntityMemcache</tt> which records cache statistics. </p><pre class="prettyprint">MemcacheService mem = ...
+CacheControl cc = ...
+
+EntityMemcache em = new EntityMemcache(mem, cc, new MemcacheStats() {
+    @Override public void recordHit(Key key) { /* do something with the hit */ }
+    @Override public void recordMiss(Key key) { /* do something with the miss */ }
+});
+
+DatastoreService ds = CachingDatastoreServiceFactory.getDatastoreService(em);</pre>
+ </div>
+ </div>
+ </td><tr>
+</table>
+ </div>
+
+
+
+ <script src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dwiki_scripts_20081003.js"></script>
+
+
+<script type="text/javascript" src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dit_scripts.js"></script>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+</script>
+
+ </body>
+</html>
+

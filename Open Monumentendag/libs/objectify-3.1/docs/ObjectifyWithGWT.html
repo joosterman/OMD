@@ -1,0 +1,82 @@
+
+ 
+
+
+
+ 
+
+
+
+<html>
+ <head>
+ <title>ObjectifyWithGWT</title>
+ </head>
+ <body>
+ 
+
+
+
+
+<div id="wikipage">
+<table>
+ <tr>
+ 
+ 
+ <td style="vertical-align:top; padding-left:5px">
+ 
+ <div id="wikiheader">
+ 
+ <span style="font-size:120%;font-weight:bold">ObjectifyWithGWT</span>
+ &nbsp;
+ <div> 
+ 
+ <i>Using Objectify with Google Web Toolkit</i>
+ 
+ 
+ 
+ <br/>
+ 
+ 
+ <b>en</b>, 
+ 
+ 
+ 
+ <a href="ObjectifyWithGWT.html?wl=fr" 
+ title="fr">fr</a>
+ 
+ 
+ 
+ 
+ <div id="wikiauthor" style="float:right">
+ Updated <span title="Mon May  9 15:35:30 2011">
+ May 9, 2011</span>
+ 
+ by <a style="white-space: nowrap" href="/u/118411191005855432292/">lhori...@gmail.com</a>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id="wikicontent">
+ <div class="vt" id="wikimaincol">
+ <h2><a name="Got_CRUD?"></a>Got CRUD?<a href="#Got_CRUD?" class="section_anchor"></a></h2><p>This must be <i>the</i> most common &quot;design pattern&quot; when developing web applications: </p><ol><li>Load some data from the datastore </li><li>Pass this data to the presentation tier via RPC </li><li>Render the data to the user </li></ol><p>However, there is often an impedance mismatch between the data tier and the presentation tier in web development tools.  Because, for example, Hibernate or JDO proxies cannot be passed through GWT RPC, developers are often forced to construct Data Transfer Objects to shuffle data back and forth.  Sometimes this is a good idea (say, when you have sophisticated program logic in your entities) but sometimes this is a laborious pain in the arse. </p><h2><a name="No_More_DTOs"></a>No More DTOs<a href="#No_More_DTOs" class="section_anchor"></a></h2><p>With a tiny amount of care, your <strong>entity objects</strong> can be passed through GWT serialization and used as-is in the presentation layer.  Simply write your entity as if it is a GWT client class! </p><ul><li>Make sure your entity classes are part of your GWT module (typically in a .client package). </li><li>Don&#x27;t call methods which are not part of the JRE emulation. </li><li>All referenced classes must themselves be GWT-safe. </li></ul><p>Simply add this to your module.gwt.xml: </p><pre class="prettyprint">    &lt;inherits name=&quot;com.googlecode.objectify.Objectify&quot; /&gt;</pre><p>You can now manipulate your entity objects in GWT and seamlessly pass them back and forth to the server through GWT-RPC.  Objectify enables you to use Key&lt;?&gt;, Key (the datastore version), and all the datastore basic types (Link, Email, GeoPt, etc) in your client code. </p><h2><a name="Transience"></a>Transience<a href="#Transience" class="section_anchor"></a></h2><p>A careful distinction must be made between <tt>@Transient</tt> (the javax.persistence annotation) fields and <tt>transient</tt> (the Java keyword) fields: </p><ul><li><tt>@Transient</tt> fields are ignored for the purposes of persistence.  They are still serialized in GWT. </li><li><tt>transient</tt> fields <strong>are</strong> persisted as normal.  However, they will NOT be serialized by GWT. </li></ul><h2><a name="Annotations"></a>Annotations<a href="#Annotations" class="section_anchor"></a></h2><p>In general GWT will ignore annotation on your classes. It is not necessary to include them in your gwt include modules.   Annotations like <tt>@Entity</tt>, <tt>@LoadAlso</tt>, and the like will be ignored during GWT serialization.  </p><h2><a name="Client-Side_Access"></a>Client-Side Access<a href="#Client-Side_Access" class="section_anchor"></a></h2><p>None of the Objectify action objects (Objectify, ObjectifyService, ObjectifyFactory, DAO) can be used from GWT client code. Basically only entities (and their associated data (types) are allowed to cross the GWT Service boundaries). </p><p>As of Objectify 3.0, constructing <tt>Key&lt;?&gt;</tt> objects client-side is now considerably more difficult.  You can only use one constructor, the one which takes a native datastore <tt>Key</tt>.  The other constructors do not exist in the <tt>Key&lt;?&gt;</tt> super-source.  See <a href="https://groups.google.com/group/objectify-appengine/browse_thread/thread/5d6171c6a4956719/2d5004df1d7e20ee?hl=en_US&amp;lnk=gst&amp;q=polymorphism+gwt&amp;pli=1#2d5004df1d7e20ee" rel="nofollow">this discussion</a>. </p><h2><a name="Example"></a>Example<a href="#Example" class="section_anchor"></a></h2><p>A <strong>very</strong> simple example can be found <a href="http://code.google.com/p/scratchmonkey/source/browse/#svn/appengine/objectify-gwt" rel="nofollow">here</a>. </p><h2><a name="Request_Factory"></a>Request Factory<a href="#Request_Factory" class="section_anchor"></a></h2><p>David Chandler wrote an article on <a href="http://turbomanage.wordpress.com/2011/03/25/using-gwt-requestfactory-with-objectify/" rel="nofollow">Using Objectify with RequestFactory</a>. </p>
+ </div>
+ </div>
+ </td><tr>
+</table>
+ </div>
+
+
+
+ <script src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dwiki_scripts_20081003.js"></script>
+
+
+<script type="text/javascript" src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dit_scripts.js"></script>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+</script>
+
+ </body>
+</html>
+

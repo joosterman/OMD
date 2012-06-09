@@ -1,0 +1,83 @@
+
+ 
+
+
+
+ 
+
+
+
+<html>
+ <head>
+ <title>FrequentlyAskedQuestions</title>
+ </head>
+ <body>
+ 
+
+
+
+
+<div id="wikipage">
+<table>
+ <tr>
+ 
+ 
+ <td style="vertical-align:top; padding-left:5px">
+ 
+ <div id="wikiheader">
+ 
+ <span style="font-size:120%;font-weight:bold">FrequentlyAskedQuestions</span>
+ &nbsp;
+ <div> 
+ 
+ <i>Frequently Asked Questions</i>
+ 
+ 
+ <br/>
+ 
+ <a class="label" style="padding-top: 2px"
+ href="/p/objectify-appengine/w/list?q=label:Featured"
+ title="Listed on project home page"
+ >Featured</a>
+ 
+ 
+ 
+ <div id="wikiauthor" style="float:right">
+ Updated <span title="Wed Apr 20 13:12:05 2011">
+ Apr 20, 2011</span>
+ 
+ by <a style="white-space: nowrap" href="/u/118411191005855432292/">lhori...@gmail.com</a>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id="wikicontent">
+ <div class="vt" id="wikimaincol">
+ <p><ul><li><a href="#Frequently_Asked_Questions">Frequently Asked Questions</a></li><ul><li><a href="#Why_am_I_getting_exceptions_on_GAE_classes?">Why am I getting exceptions on GAE classes?</a></li><li><a href="#Can_I_use_Dependency_Injection_(Spring,_Guice,_Weld)_with_Object">Can I use Dependency Injection (Spring, Guice, Weld) with Objectify?</a></li><li><a href="#How_do_I_shut_off_the_datanucleus_byte_code_enhancer?">How do I shut off the datanucleus byte code enhancer?</a></li><li><a href="#Can_I_change_data_after_it_is_loaded_or_before_it_is_stored?">Can I change data after it is loaded or before it is stored?</a></li><li><a href="#Should_I_Use_a_String_(Name)_Id?">Should I Use a String (Name) Id?</a></li><li><a href="#How_can_I_integrate_with_memcached?">How can I integrate with memcached?</a></li><li><a href="#How_do_I_do_a_like_query_(LIKE_&quot;foo%&quot;)">How do I do a like query (LIKE &quot;foo%&quot;)</a></li><li><a href="#How_do_I_migrate_from_JDO_to_Objectify?">How do I migrate from JDO to Objectify?</a></li><li><a href="#Does_Objectify_support_JDO_Fetch_Groups?">Does Objectify support JDO Fetch Groups?</a></li><li><a href="#Does_Objectify_support_JDO_detach_copy?">Does Objectify support JDO detach copy?</a></li><li><a href="#Can_I_mix_Low_Level_and_Objectify_writes_in_a_single_Objectify_t">Can I mix Low Level and Objectify writes in a single Objectify transaction?</a></li><li><a href="#Why_can&#x27;t_I_use_@Embedded_on_List&lt;String&gt;_?">Why can't I use @Embedded on List&lt;String&gt; ?</a></li></ul></ul> </p><h1><a name="Frequently_Asked_Questions"></a>Frequently Asked Questions<a href="#Frequently_Asked_Questions" class="section_anchor"></a></h1><h2><a name="Why_am_I_getting_exceptions_on_GAE_classes?"></a>Why am I getting NoSuchMethodError exceptions on GAE classes?<a href="#Why_am_I_getting_exceptions_on_GAE_classes?" class="section_anchor"></a></h2><p>You probably are running an old version of the Google App Engine SDK; check the Objectify <a href="ReleaseNotes.html">ReleaseNotes</a> to see what minimum version is required.  Google is rapidly developing Appengine; as they add new features, we add support to Objectify.  This tends to require up-to-date versions of the SDK. </p><h2><a name="Can_I_use_Dependency_Injection_(Spring,_Guice,_Weld)_with_Object"></a>Can I use Dependency Injection (Spring, Guice, Weld) with Objectify?<a href="#Can_I_use_Dependency_Injection_(Spring,_Guice,_Weld)_with_Object" class="section_anchor"></a></h2><p>Yes!  Objectify was designed with this in mind. <ol><li>Ignore the <tt>ObjectifyService</tt> class and its static methods.  It is merely a static proxy for a single instance of <tt>ObjectifyFactory</tt>.  Instead you will use <tt>ObjectifyFactory</tt> directly. </li><li>Create an application-scoped <tt>ObjectifyFactory</tt> instance, register your classes, and inject it! </li><li>Alternatively, use the DAO pattern (see <a href="BestPractices.html">BestPractices</a>) and inject your DAO. </li></ol></p><h2><a name="How_do_I_shut_off_the_datanucleus_byte_code_enhancer?"></a>How do I shut off the datanucleus byte code enhancer?<a href="#How_do_I_shut_off_the_datanucleus_byte_code_enhancer?" class="section_anchor"></a></h2><ul><li>In Eclipse, go to the Project Properties -&gt; Builders and disable the Enhancer. </li></ul><h2><a name="Can_I_change_data_after_it_is_loaded_or_before_it_is_stored?"></a>Can I change data after it is loaded or before it is stored?<a href="#Can_I_change_data_after_it_is_loaded_or_before_it_is_stored?" class="section_anchor"></a></h2><p>Absolutely: <ul><li>See the <a href="http://code.google.comIntroductionToObjectify.html#Lifecycle_Callbacks" rel="nofollow">Lifecycle Callbacks</a> </li></ul></p><h2><a name="Should_I_Use_a_String_(Name)_Id?"></a>Should I Use a String (Name) Id?<a href="#Should_I_Use_a_String_(Name)_Id?" class="section_anchor"></a></h2><p>If it is a natural key, sure; Objectify allows this no problem. Here is a little more of a discussion <a href="http://groups.google.com/group/google-appengine-java/browse_thread/thread/998289f853f5a688/c50446d98eb90017?#c50446d98eb90017" rel="nofollow">about it.</a> </p><h2><a name="How_can_I_integrate_with_memcached?"></a>How can I integrate with memcached?<a href="#How_can_I_integrate_with_memcached?" class="section_anchor"></a></h2><p>See the <a href="http://code.google.comIntroductionToObjectify.html#Caching" rel="nofollow">Caching</a> documentation. Hint, add @Cached to your (entity) class. </p><h2><a name="How_do_I_do_a_like_query_(LIKE_&quot;foo%&quot;)"></a>How do I do a like query (LIKE &quot;foo%&quot;)<a href="#How_do_I_do_a_like_query_(LIKE_&quot;foo%&quot;)" class="section_anchor"></a></h2><p>You can do something like a startWith, or endWith if you reverse the order when stored and searched. You do a range query with the starting value you want, and a value just above the one you want. </p><pre class="prettyprint">String start = &quot;foo&quot;;
+... = ofy.query(MyEntity.class).filter(&quot;field &gt;=&quot;, start).filter(&quot;field &lt;&quot;, start + &quot;\uFFFD&quot;); </pre><p>See this discussion for <a href="http://groups.google.com/group/objectify-appengine/browse_thread/thread/51cebf7fdf13b9aa/895ddc627ed639cc" rel="nofollow">more background and details</a>   </p><h2><a name="How_do_I_migrate_from_JDO_to_Objectify?"></a>How do I migrate from JDO to Objectify?<a href="#How_do_I_migrate_from_JDO_to_Objectify?" class="section_anchor"></a></h2><p>You should have no trouble using Objectify side-by-side with JDO.  Just don&#x27;t use the <tt>javax.persistence.Entity</tt> annotation on Objectify entities, it will likely make the JDO bytecode enhancer try to enhance it. You can either leave the annotation absent or use the <tt>com.googlecode.objectify.annotation.Entity</tt> substitute annotation instead. </p><p>For the most part, migrating JDO classes to Objectify classes should be pretty straightforward.  The only trick will be mapping the relationships.  Look at the raw Entity objects to see what structure JDO created - relationships are just a Key on one end or both.  If you make this field a Key&lt;?&gt; (or Collection&lt;Key&lt;?&gt;&gt;) in your Objectify entities, it will map just fine. </p><h2><a name="Does_Objectify_support_JDO_Fetch_Groups?"></a>Does Objectify support JDO Fetch Groups?<a href="#Does_Objectify_support_JDO_Fetch_Groups?" class="section_anchor"></a></h2><p>There is no such thing as a fetch group in the GAE datastore; entities are fetched in their entirety or not at all.  Objectify reflects the underlying nature of the datastore so it does not require this JDO-ism. </p><h2><a name="Does_Objectify_support_JDO_detach_copy?"></a>Does Objectify support JDO detach copy?<a href="#Does_Objectify_support_JDO_detach_copy?" class="section_anchor"></a></h2><p>There is no need for this JDO-ism either.  Objectify entities are exactly as you define them.  They are not bytecode-enhanced, proxied, or manipulated in any way.  Want to serialize your entity?  Just make sure it is Serializable. </p><h2><a name="Can_I_mix_Low_Level_and_Objectify_writes_in_a_single_Objectify_t"></a>Can I mix Low Level and Objectify writes in a single Objectify transaction?<a href="#Can_I_mix_Low_Level_and_Objectify_writes_in_a_single_Objectify_t" class="section_anchor"></a></h2><p>Example... </p><pre class="prettyprint">Objectify ofy = ObjectifyService.beginTransaction();
+
+ofy.put(makeSomeObject());
+ofy.getDatastore().put(makeSomeLowLevelEntity());
+
+ofy.getTxn().commit();</pre><p>Yes you can! With a few caveats... </p><ul><li>You&#x27;re still limited by GAE&#x27;s restrictions on transactions (namely, all objects must be part of the same entity group). </li><li>If you have session caching enabled, the direct-datastore put() will bypass the session cache.  If the session cache already held a value for that key, subsequent a get() from the Objectify instance will produce the (now incorrect) cached value. </li><li>The global cache will remain consistent as long as you obtain the DatastoreService from ofy.getDatastore(); if you get it directly from DatastoreServiceFactory it will bypass Objectify&#x27;s global (memcache) cache. </li></ul><p>But yeah, you&#x27;re free to interleave Objectify and Low-Level API calls. </p><h2><a name="Why_can&#x27;t_I_use_@Embedded_on_List&lt;String&gt;_?"></a>Why can&#x27;t I use @Embedded on <tt>List&lt;String&gt;</tt>?<a href="#Why_can&#x27;t_I_use_@Embedded_on_List&lt;String&gt;_?" class="section_anchor"></a></h2><p>@Embedded tells Objectify to break classes down to their component parts based on their fields and store each field separately.  Therefore, this annotation must not be used on primitive types or types that are stored natively by the datastore (eg <tt>String</tt>, <tt>Integer</tt>, <tt>GeoPt</tt>, <tt>User</tt>, <tt>Email</tt>, etc). </p><p>The datastore knows how to persist these native types as-is.  You do not need the @Embedded annotation to persist a <tt>List&lt;String&gt;</tt> - just declare the field normally. </p>
+ </div>
+ </div>
+ </td><tr>
+</table>
+ </div>
+
+
+
+ <script src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dwiki_scripts_20081003.js"></script>
+
+
+<script type="text/javascript" src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dit_scripts.js"></script>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+</script>
+
+ </body>
+</html>
+

@@ -1,0 +1,124 @@
+
+ 
+
+
+
+ 
+
+
+
+<html>
+ <head>
+ <title>AdvancedPatterns</title>
+ </head>
+ <body>
+ 
+
+
+
+
+<div id="wikipage">
+<table>
+ <tr>
+ 
+ 
+ <td style="vertical-align:top; padding-left:5px">
+ 
+ <div id="wikiheader">
+ 
+ <span style="font-size:120%;font-weight:bold">AdvancedPatterns</span>
+ &nbsp;
+ <div> 
+ 
+ <i>Advanced Patterns in Objectify</i>
+ 
+ 
+ 
+ <br/>
+ 
+ 
+ <b>en</b>, 
+ 
+ 
+ 
+ <a href="AdvancedPatterns.html?wl=fr" 
+ title="fr">fr</a>
+ 
+ 
+ 
+ 
+ <div id="wikiauthor" style="float:right">
+ Updated <span title="Wed Sep  1 07:30:08 2010">
+ Sep 1, 2010</span>
+ 
+ by <a style="white-space: nowrap" href="/u/scotthernandez/">scotthernandez</a>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id="wikicontent">
+ <div class="vt" id="wikimaincol">
+ <p><ul><li><a href="#Ancestor_Queries">Ancestor Queries</a></li><li><a href="#@PrePersist">@PrePersist</a></li><ul><li><a href="#Last_Updated">Last Updated</a></li><li><a href="#Revision_History">Revision History</a></li></ul></ul> </p><p><strong>Note:  This section is a work in progress and should be considered experimental</strong> </p><p>These patterns are possible, but are probably specialized and should be used with care. </p><h1><a name="Ancestor_Queries"></a>Ancestor Queries<a href="#Ancestor_Queries" class="section_anchor"></a></h1><p>Using <tt>@Parent</tt> for advanced queries can save you from creating custom indexes which might otherwise be required. Take this example when you might want to get blog entries since some date.  </p><pre class="prettyprint">@Unidexed
+class Blog {
+  @Id Long id;
+  String description;
+  List&lt;User&gt; contributors;
+}
+
+@Unindexed
+class BlogEntry {
+  @Parent Key&lt;Blog&gt; blog;
+  @Id Long id;
+  String title;
+  String body;
+  @Indexed Date dateCreated = new Date();
+  @Indexed Date dateUpdated = new Date();
+}</pre><p>I have a helper which I use that looks like this: </p><pre class="prettyprint">public static &lt;T,V&gt; QueryResultIterable&lt;T&gt; getChildren(V parent, Class&lt;T&gt; clazz, String filt, Object val){
+  if(parent == null) throw new IllegalArgumentException();
+  return begin().query(clazz).ancestor(getKey(parent)).filter(filt, val).fetch();
+}</pre><p>So when I want to get all the blog entries, for a certain blog, since some date, I can write this: </p><pre class="prettyprint">Date since = ...;
+Blog blog = ...;
+Iterable&lt;BlogEntry&gt; blogEntries = getChildren(blog, BlogEntry.class, &quot;dateCreated &gt;&quot;, since);</pre><p>If this was defined without the <tt>@Parent</tt> it would have required a custom index (on dateCreated and blog). This index would be costly in terms of storage and performance (both on the write, and the read). It also means I can just as easily get all the updated blog entries by blog without creating another index. Any single indexed property on <tt>BlogEntry</tt> is now available for any blog. </p><h1><a name="@PrePersist"></a><tt>@PrePersist</tt><a href="#@PrePersist" class="section_anchor"></a></h1><p>There are many reasons to use <tt>@PrePersist</tt> on an entity. </p><h2><a name="Last_Updated"></a>Last Updated<a href="#Last_Updated" class="section_anchor"></a></h2><p>Using the example above, it might makes sense to update the timestamp whenever a <tt>BlogEnty</tt> is updated: </p><pre class="prettyprint">@Unindexed
+class BlogEntry {
+  ...
+  
+  @PrePersist
+  private void PrePersist() {
+    dateUpdated = new Date();
+  }
+}
+</pre><h2><a name="Revision_History"></a>Revision History<a href="#Revision_History" class="section_anchor"></a></h2><p>This is a very simple example, but it shows the flexibility of using <tt>@PrePersist</tt>. </p><pre class="prettyprint">@Unindexed
+class BlogEntry {
+  ...
+  List&lt;String&gt; editHistory = new ArrayList&lt;String&gt;();
+  @Transient
+  User editor;
+
+  @PrePersist
+  private void PrePersist() {
+    dateUpdated = new Date();
+    if (editor != null) editHistory.add(&quot;Edited by &quot; + editor.getName() + &quot; on &quot; + dateUpdated);
+  }
+}
+</pre>
+ </div>
+ </div>
+ </td><tr>
+</table>
+ </div>
+
+
+
+ <script src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dwiki_scripts_20081003.js"></script>
+
+
+<script type="text/javascript" src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dit_scripts.js"></script>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+</script>
+
+ </body>
+</html>
+

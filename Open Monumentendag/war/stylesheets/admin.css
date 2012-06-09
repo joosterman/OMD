@@ -1,0 +1,18 @@
+body
+{
+		
+}
+.selection{
+	margin-bottom: 20px;
+}
+.data
+{
+	position:relative;
+	float:left;
+	margin-right: 50px;
+}
+.image
+{
+	float:left;
+	position:relative;
+}

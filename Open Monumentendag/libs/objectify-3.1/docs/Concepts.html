@@ -1,0 +1,92 @@
+
+ 
+
+
+
+ 
+
+
+
+<html>
+ <head>
+ <title>Concepts</title>
+ </head>
+ <body>
+ 
+
+
+
+
+<div id="wikipage">
+<table>
+ <tr>
+ 
+ 
+ <td style="vertical-align:top; padding-left:5px">
+ 
+ <div id="wikiheader">
+ 
+ <span style="font-size:120%;font-weight:bold">Concepts</span>
+ &nbsp;
+ <div> 
+ 
+ <i>Fundamental Concepts of the Datastore</i>
+ 
+ 
+ <br/>
+ 
+ <a class="label" style="padding-top: 2px"
+ href="/p/objectify-appengine/w/list?q=label:Featured"
+ title="Listed on project home page"
+ >Featured</a>
+ 
+ 
+ 
+ <br/>
+ 
+ 
+ <b>en</b>, 
+ 
+ 
+ 
+ <a href="Concepts.html?wl=fr" 
+ title="fr">fr</a>
+ 
+ 
+ 
+ 
+ <div id="wikiauthor" style="float:right">
+ Updated <span title="Thu Oct  7 10:48:02 2010">
+ Oct 7, 2010</span>
+ 
+ by <a style="white-space: nowrap" href="/u/118411191005855432292/">lhori...@gmail.com</a>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id="wikicontent">
+ <div class="vt" id="wikimaincol">
+ <p>This is a combined introduction to Objectify and to the Appengine datastore. </p><p><ul><li><a href="#Entities">Entities</a></li><li><a href="#Operations">Operations</a></li><li><a href="#Keys">Keys</a></li><li><a href="#Transactions">Transactions</a></li><li><a href="#Indexes">Indexes</a></li></ul> </p><p>So, you want to persist some data.  You&#x27;ve probably looked at the <a href="http://code.google.com/appengine/docs/java/datastore/overview.html" rel="nofollow">datastore documentation</a> and thought &quot;crap, that&#x27;s complicated!&quot;  Entities, query languages, fetch groups, detaching, transactions... hell those things have bloody <i>lifecycles</i>!  However, the complexity of JDO is hiding a lot of simplicity under the covers.   </p><p>The first thing you should do is set aside all your preconceived notions about relational databases.  <strong>The GAE datastore is not an RDBMS</strong>.  In fact, it acts much more like a HashMap that gives you the additional ability to index and query for values.  When you think of the datastore, imagine a persistent HashMap. </p><h1><a name="Entities"></a>Entities<a href="#Entities" class="section_anchor"></a></h1><p>This document will talk a lot about entities.  An <i>entity</i> is an object&#x27;s worth of data in the datastore.  Using Objectify, an entity will correspond to a single POJO class you define.  In the datastore, an entity is a HashMap-like object of type Entity.  Conceptually, they are the same. </p><p>Since the datastore is conceptually a HashMap of keys to entities, and an entity is conceptually a HashMap of name/value pairs, your mental model of the datastore should be a HashMap of HashMaps! </p><h1><a name="Operations"></a>Operations<a href="#Operations" class="section_anchor"></a></h1><p>There are only four basic operations in the datastore, and any persistence API must boil operations down to: </p><ul><li><strong>get()</strong> an entity whole from the datastore.  You can get many at a time. </li><li><strong>put()</strong> an entity whole in the datastore.  You can store many at a time. </li><li><strong>delete()</strong> an entity from the datastore.  (You guessed it) You can delete many at a time. </li><li><strong>query()</strong> for entities matching criteria you define. </li></ul><h1><a name="Keys"></a>Keys<a href="#Keys" class="section_anchor"></a></h1><p>All entities have either a Long <strong>id</strong> or a String <strong>name</strong>, but those values are not unique by themselves.  In the datastore, entities are identified by the id (or name) and a <strong>kind</strong>, which corresponds to the type of object you are storing.  So, to get Car #959 from the datastore, you need to call something equivalent to <tt>get_from_datastore(&quot;Car&quot;, 959)</tt> (not real code yet). </p><p>By the way, I lied.  There is actually a third value which is necessary to uniquely identify an entity, called <strong>parent</strong>.  Parent defines a special kind of relationship, placing the child in the same <a href="http://code.google.com/appengine/docs/python/datastore/keysandentitygroups.html" rel="nofollow">entity group</a> as the parent.  Entity groups will be discussed next in the section on Transactions, but for now what you need to know is that this parent (which is often simply null, creating an unparented, root entity) is also required to uniquely identify an entity.  So, to get Car #959 from the datastore, you actually need to call something equivalent to <tt>get_from_datastore(&quot;Car&quot;, 959, null)</tt> or <tt>get_from_datastore(&quot;Car&quot;, 959, theOwner)</tt>.  Yeech. </p><p>Instead of passing three parameters around all the time, the datastore wraps these values into a single object - a <i>Key</i>.  That&#x27;s all a <tt>Key</tt> is, a holder for the three parts that uniquely identify an entity. </p><p>The native Datastore <tt>Key</tt> class is simple and untyped, like the native <tt>Entity</tt> class.  Objectify provides a generified <tt>Key</tt> that carries type information: </p><pre class="prettyprint">Key&lt;Car&gt; rootKey = new Key&lt;Car&gt;(Car.class, 959);
+Key&lt;Car&gt; keyWithParent = new Key&lt;Car&gt;(parent, Car.class, 959);</pre><p>With a <tt>Key</tt> you can use the most fundamental method on the <tt>Objectify</tt> interface, nearly identical to the <tt>DatastoreService</tt> equivalent.  If the generics are confusing, hold on - there will be examples later. </p><pre class="prettyprint">&lt;T&gt; T get(Key&lt;? extends T&gt; key) throws EntityNotFoundException;</pre><p>In Objectify, you define your object as a Java class with a mandatory identifier (Long, long, or String) and an optional parent.  However, when you look up or reference your object, you do so by <i>Key</i>.  In fact, you can (and should) batch together a variety of requests into a single call, even if it will fetch many different kinds of objects: </p><pre class="prettyprint">Map&lt;Key&lt;Object&gt;, Object&gt; lotsOfThings = objectify.get(carKey, airplaneKey, chairKey, personKey, yourMamaKey);</pre><p>Actually, I lied again.  We don&#x27;t force you to create keys by hand all the time.  There is a convenient shorthand for the very common case of loading a single type of object, but don&#x27;t forget that this is really just creating an <tt>Key</tt> and calling get()! </p><pre class="prettyprint">Car c = objectify.get(Car.class, 959);
+Map&lt;Long, Car&gt; cars = objectify.get(Car.class, 959, 911, 944, 924);</pre><p>By the way, <tt>Key</tt> is used for relationship references as well.  Remember that value that defines a parent entity?  The type of this parent is <tt>Key</tt>: </p><pre class="prettyprint">public Key(Key&lt;?&gt; parent, Class&lt;? extends T&gt; kind, long id)</pre><p>When you create relationships to other entities in your system, the type of the entity relationship should be <tt>Key</tt>. </p><h1><a name="Transactions"></a>Transactions<a href="#Transactions" class="section_anchor"></a></h1><p>The datastore has a lot of odd concepts designed to facilitate building a JTA interface - thread local transactions, implicit transaction management policies, and methods that behave differently whether you pass them a transaction or not.  Forget all that.  Here&#x27;s what you need to know: </p><h2><a name="Entity_Groups"></a>Entity Groups<a href="#Entity_Groups" class="section_anchor"></a></h2><p>When you put() your entity, it gets stored somewhere in a gigantic farm of thousands of machines.  In order to perform an atomic transaction, the datastore (currently) requires that all the data that is a part of that transaction live on the same server.  To give you some control over where your data is stored, the datastore has the concept of an <strong>entity group</strong>. </p><p>Remember the <i>parent</i> that is part of a <tt>Key</tt>?  If an entity has a parent, it belongs to the same entity group as its parent.  If an entity does not have a parent, it is the &quot;root&quot; of an entity group, and may be physically located anywhere in the cluster. </p><p>Within a transaction, you can only access data from a single entity group.  If you try to access data from multiple entity groups, you will get an Exception.  This means you must pick your entity groups carefully, usually to correspond to the data associated with a single user.  Yes, this severely limits the utility of transactions. </p><p>Why not store all your data with a common parent, putting it all in a single entity group?  You can, but it&#x27;s a bad idea.  Google limits the number of requests per second that can be served by a particular entity group. </p><p>It should be worth mentioning that the term <i>parent</i> is somewhat misleading.  There is no &quot;cascading delete&quot; in the datastore; if you delete the parent entity it will NOT delete the child entities.  For that matter, you can create child entites with a parent <tt>Key</tt> (or any other key as a member field) that points to a nonexistant entity!  Parent is only important in that it defines entity groups; if you do not need transactions across several entities, you may wish to use a normal nonparent key relationship - even if the entities have a conceptual parent-child relationship. </p><h2><a name="Executing_Transactions"></a>Executing Transactions<a href="#Executing_Transactions" class="section_anchor"></a></h2><p>When you execute a <tt>get()</tt>, <tt>put()</tt>, <tt>delete()</tt>, or <tt>query()</tt>, you will either be in a <a href="http://code.google.com/appengine/docs/java/datastore/transactions.html" rel="nofollow">transaction</a> or you will not. </p><p>If you execute within a transaction: <ul><li>You must only get/put/delete/query objects within a single entity group. </li><ul><li>Queries must include an ancestor (like the root entity). </li></ul><li>All operations will either succeed completely or fail completely. </li><li>get() and query operations will see the database as if it were frozen in time at the start of the transaction.  They will <strong>not</strong> reflect put()s and delete()s you perform <i>within the transaction</i>. </li><li>If another process modifies your data before you commit, your datastore operations will fail with a <tt>ConcurrentModificationException</tt> </li></ul></p><p>If you execute without a transaction: <ul><li>All individual datastore operations are treated separately. </li><li>Any changes to the datastore made anywhere will have immediate effect - successive get() operations may return different values. </li><li>If there is contention, operations will be automatically retried until the operation succeeds or the system gives up. </li></ul></p><h1><a name="Indexes"></a>Indexes<a href="#Indexes" class="section_anchor"></a></h1><p>When using a  traditional RDBMS, you become accustomed to issuing any ad-hoc SQL query you want and letting the query planner figure out how to obtain the result.  It may take twelve hours to linear scan five tables in the database and sort the 8 gigabyte result set in RAM, but eventually you get your result!  The appengine datastore does NOT work this way. </p><p>Appengine only allows you to run <i>efficient</i> queries.  The exact meaning of this limitation is somewhat arbitrary and changes as Google rolls out more powerful versions of the query planner, but generally this means: </p><ul><li>No table scans </li><li>No joins </li><li>No in-memory sorts </li></ul><p>The datastore query planner really only likes one operation:  Find an index and walk it in-order.  This means that for any query you perform, the datastore must already contain properly ordered index on the field or fields you want to filter by!  And since appengine doesn&#x27;t do joins, queries are limited to what you can stuff into a single index -- you can&#x27;t filter by one property and then sort by a different one. </p><p>Actually, it&#x27;s not quite true that appengine won&#x27;t do joins.  It will do one kind of join - a &quot;zig-zag&quot; merge join which lets you perform equality filters on multiple separate properties.  But this is still an efficient query - it walks each of the property indexes in order without buffering chunks of data in RAM. </p><p>What you should be getting out of this is that <strong>if you want queries, you need indexes tailored to the queries you want to run</strong>. </p><p>To make this easier, the datastore has an innate ability to store each and every (single) property as &quot;indexed&quot; or &quot;unindexed&quot; (<tt>Entity.setProperty()</tt> vs <tt>Entity.setUnindexedProperty()</tt>.  This allows you to easily issue a queries based on single properties.  By default, Objectify defaults to setting all properties as indexed unless you flag the field (or class) with an <tt>@Unindexed</tt> annotation. </p><p>To run queries by filtering or sorting against multiple properties (that is, if it can&#x27;t be satisfied by a zigzag merge on single-property indexes), you must create a multi-value index in your <tt>datastore-indexes.xml</tt>.  There is a great deal written on this subject; we recommend <a href="http://code.google.com/appengine/articles/storage_breakdown.html" rel="nofollow">How Entities and Indexes are Stored</a> and <a href="http://code.google.com/appengine/articles/index_building.html" rel="nofollow">Index Building</a>. </p><p>Note that there are some tricks to creating indexes: </p><ul><li>Single property indexes are created/updated when you save an entity.  Let&#x27;s say you have a <tt>Car</tt> with a <tt>color</tt> property.  If you save a <tt>Car</tt> with <tt>color</tt> unindexed, that entity instance will not appear in queries by color.  To index this entity instance, you must resave the entity. </li></ul><ul><li>Multi-property indexes are built on-the-fly by appengine.  You can add new indexes to your <tt>datastore-indexes.xml</tt> and appengine will slowly build a brand-new index - possibly taking hours or days depending on total system load (index-building is a low-priority task). </li></ul><ul><li>In order for an entity to be included in a multi-property index, <strong>each of the relevant individual properties must have a single-property index</strong>.  If your <tt>Car</tt> has a multi-property index on <tt>color</tt> and <tt>brand</tt>, an individual car will not appear in the multi-property index if it is saved with an unindexed <tt>color</tt>. </li></ul><hr/><p>Now that you are familiar with the underlying concepts of the datastore, read the <a href="IntroductionToObjectify.html">IntroductionToObjectify</a>. </p>
+ </div>
+ </div>
+ </td><tr>
+</table>
+ </div>
+
+
+
+ <script src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dwiki_scripts_20081003.js"></script>
+
+
+<script type="text/javascript" src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dit_scripts.js"></script>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+</script>
+
+ </body>
+</html>
+

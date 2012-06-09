@@ -1,0 +1,605 @@
+
+ 
+
+
+
+ 
+
+
+
+<html>
+ <head>
+ <title>IntroductionToObjectify</title>
+ </head>
+ <body>
+ 
+
+
+
+
+<div id="wikipage">
+<table>
+ <tr>
+ 
+ 
+ <td style="vertical-align:top; padding-left:5px">
+ 
+ <div id="wikiheader">
+ 
+ <span style="font-size:120%;font-weight:bold">IntroductionToObjectify</span>
+ &nbsp;
+ <div> 
+ 
+ <i>Beginner's guide to Objectify-Appengine</i>
+ 
+ 
+ <br/>
+ 
+ <a class="label" style="padding-top: 2px"
+ href="/p/objectify-appengine/w/list?q=label:Featured"
+ title="Listed on project home page"
+ >Featured</a>
+ 
+ 
+ 
+ <div id="wikiauthor" style="float:right">
+ Updated <span title="Thu Nov 10 19:01:33 2011">
+ Today (9 minutes ago)</span>
+ 
+ by <a style="white-space: nowrap" href="/u/118411191005855432292/">lhori...@gmail.com</a>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id="wikicontent">
+ <div class="vt" id="wikimaincol">
+ <p>If you haven&#x27;t read the <a href="Concepts.html">Concepts</a> yet, please do so first. </p><p><ul><li><a href="#Create_Your_Entity_Classes">Create Your Entity Classes</a></li><li><a href="#Registering_Your_Classes">Registering Your Classes</a></li><li><a href="#Basic_Operations:_Get,_Put,_Delete">Basic Operations: Get, Put, Delete</a></li><li><a href="#Querying">Querying</a></li><ul><li><a href="#Cursors">Cursors</a></li></ul><li><a href="#Asynchronous_Calls">Asynchronous Calls</a></li><ul><li><a href="#Asynchronous_Queries">Asynchronous Queries</a></li><li><a href="#Asynchronous_get()/put()/delete()">Asynchronous get()/put()/delete()</a></li><li><a href="#Considerations_of_Asynchronous_Requests">Considerations of Asynchronous Requests</a></li></ul><li><a href="#Optimizing_Storage">Optimizing Storage</a></li><ul><li><a href="#@Indexed_and_@Unindexed">@Indexed and @Unindexed</a></li><li><a href="#Partial_Indexes">Partial Indexes</a></li><li><a href="#@NotSaved">@NotSaved</a></li></ul><li><a href="#Polymorphism">Polymorphism</a></li><ul><li><a href="#Implementation_Considerations">Implementation Considerations</a></li></ul><li><a href="#Relationships">Relationships</a></li><ul><li><a href="#Parent_Relationship">Parent Relationship</a></li><li><a href="#Single-Value_Relationship">Single-Value Relationship</a></li><li><a href="#Multi-Value_Relationship">Multi-Value Relationship</a></li></ul><li><a href="#Transactions">Transactions</a></li><li><a href="#Lifecycle_Callbacks">Lifecycle Callbacks</a></li><li><a href="#Migrating_Schemas">Migrating Schemas</a></li><ul><li><a href="#Adding_Or_Removing_Fields">Adding Or Removing Fields</a></li><li><a href="#Renaming_A_Field">Renaming A Field</a></li><li><a href="#Transforming_Data">Transforming Data</a></li><li><a href="#Changing_Enums">Changing Enums</a></li><li><a href="#Moving_Fields">Moving Fields</a></li></ul><li><a href="#@Embedded">@Embedded</a></li><ul><li><a href="#Embedded_Classes">Embedded Classes</a></li><li><a href="#Embedded_Collections_and_Arrays">Embedded Collections and Arrays</a></li><li><a href="#Indexing_Embedded_Classes">Indexing Embedded Classes</a></li><li><a href="#Querying_By_Embedded_Fields">Querying By Embedded Fields</a></li><li><a href="#Entity_Representation">Entity Representation</a></li><li><a href="#Schema_Migration">Schema Migration</a></li><li><a href="#Embedded_Maps">Embedded Maps</a></li></ul><li><a href="#@Serialized">@Serialized</a></li><li><a href="#Caching">Caching</a></li><ul><li><a href="#Session_Cache">Session Cache</a></li><li><a href="#Global_Cache">Global Cache</a></li></ul><li><a href="#Example">Example</a></li></ul> </p><p>This will explain how to use Objectify to get, put, delete, and query data.  You may find it helpful to open the <a href="http://objectify-appengine.googlecode.com/svn/trunk/javadoc/index.html" rel="nofollow">Objectify javadocs</a> while reading.  These examples omit getter and setter methods for clarity. </p><h1><a name="Create_Your_Entity_Classes"></a>Create Your Entity Classes<a href="#Create_Your_Entity_Classes" class="section_anchor"></a></h1><p>The first step is to define your entity class(es).  Here is an example of a Car: </p><pre class="prettyprint">public class Car
+{
+    @Id Long id;
+    String vin;
+    int color;
+    @Transient String doNotPersist;
+
+    private Car() {}
+    
+    public Car(String vin, int color)
+    {
+        this.vin = vin;
+        this.color = color;
+    }
+}</pre><p>Things to note: </p><ul><li>Objectify persists fields and fields only.  It does not arbitrarily map fields to the datastore; if you want to change the way a field is stored... rename the field. </li></ul><ul><li>Objectify will not persist <tt>static</tt> fields, <tt>final</tt> fields, or fields annotated with <tt>javax.persistence.Transient</tt> (it will persist fields with the <tt>transient</tt> keyword). </li></ul><ul><li>One field must be annotated with <tt>javax.persistence.Id</tt>.  It can be of type <tt>Long</tt>, <tt>long</tt>, or <tt>String</tt>.  If you use <tt>Long</tt> and put() an object with a null id, a value will be generated for you.  If you use <tt>String</tt> or the primitive <tt>long</tt> type, values will never be autogenerated. </li></ul><ul><li>You can persist any of the <a href="http://code.google.com/appengine/docs/java/datastore/dataclasses.html#Core_Value_Types" rel="nofollow">core value types</a>, Collections (ie Lists and Sets) of the core value types, or arrays of the core value types.  You can also persist properties of type <tt>Key</tt>. </li></ul><ul><li>There must be a no-arg constructor (or no constructors - Java creates a default no-arg constructor).  The no-arg constructor can have any protection level (private, public, etc). </li></ul><ul><li>If you are converting entities from a JDO project, note that Objectify uses JPA annotations (<tt>javax.persistence</tt>) and not JDO annotations (<tt>javax.jdo.annotations</tt>).  Of course, Objectify adds several annotations of its own. </li></ul><ul><li><tt>String</tt> fields which store more than 500 characters (the GAE limit) are automatically converted to <tt>Text</tt> internally.  <tt>Text</tt> fields, like <tt>Blob</tt> fields, are never indexed. </li></ul><ul><li><tt>byte[]</tt> fields are automatically converted to <tt>Blob</tt> internally.  However, <tt>Byte[]</tt> is persisted &quot;normally&quot; as an array of (potentially indexed) <tt>Byte</tt> objects.  Note that GAE internally stores all integral values as a 64-bit long. </li></ul><p>More information can be found in the <a href="AnnotationReference.html">AnnotationReference</a>. </p><h1><a name="Registering_Your_Classes"></a>Registering Your Classes<a href="#Registering_Your_Classes" class="section_anchor"></a></h1><p>Before you perform any datastore operations, you must register all your entity classes with the <tt>ObjectifyService</tt>. </p><pre class="prettyprint">ObjectifyService.register(Car.class);
+ObjectifyService.register(Motorcycle.class);</pre><p>Objectify does not scan your classpath for <tt>@Entity</tt> classes.  There are good reasons for and against this - see the  discussion in <a href="BestPractices.html">BestPractices</a>.  If you are using Spring, see the <a href="http://code.google.com/p/objectify-appengine-spring/" rel="nofollow">objectify-appengine-spring</a> project. </p><h1><a name="Basic_Operations:_Get,_Put,_Delete"></a>Basic Operations: Get, Put, Delete<a href="#Basic_Operations:_Get,_Put,_Delete" class="section_anchor"></a></h1><p>You can obtain an <tt>Objectify</tt> interface from the <tt>ObjectifyService</tt>: </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+
+// Simple create
+Car porsche = new Car(&quot;2FAST&quot;, &quot;red&quot;);
+ofy.put(porsche);
+assert porsche.id != null;    // id was autogenerated
+
+// Get it back
+Car fetched1 = ofy.get(new Key&lt;Car&gt;(Car.class, porsche.id));
+Car fetched2 = ofy.get(Car.class, porsche.id);    // equivalent, more convenient
+assert areEqual(porsche, fetched1, fetched2);
+
+// Change some data and write it
+porsche.color = &quot;blue&quot;;
+ofy.put(porsche);
+
+// Delete it
+ofy.delete(porsche);</pre><p>The interface supports batch operations: </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+
+// Create
+Car porsche = new Car(&quot;2FAST&quot;, &quot;red&quot;);
+Car unimog = new Car(&quot;2SLOW&quot;, &quot;green&quot;);
+Car tesla = new Car(&quot;2NEW&quot;, &quot;blue&quot;);
+ofy.put(tesla, unimog, porsche);    //varargs; Car[] and Iterable&lt;Car&gt; also work
+
+// Get the data back
+List&lt;Key&lt;Car&gt;&gt; carKeys = new ArrayList&lt;Key&lt;Car&gt;&gt;();
+carKeys.add(new Key&lt;Car&gt;(Car.class, porsche.id));
+carKeys.add(new Key&lt;Car&gt;(Car.class, unimog.id));
+carKeys.add(new Key&lt;Car&gt;(Car.class, tesla.id)));
+Map&lt;Key&lt;Car&gt;, Car&gt; fetched1 = ofy.get(carKeys);
+
+// More convenient shorthand, note the return type
+Map&lt;Long, Car&gt; fetched2 = ofy.get(Car.class, new Long[] { porsche.id, unimog.id, tesla.id });
+
+// This works too
+Map&lt;Long, Car&gt; fetched3 = ofy.get(Car.class, Arrays.asList(porsche.id, unimog.id, tesla.id));
+
+// Batch operations need not be homogenous:
+List&lt;Key&lt;? extends Vehicle&gt;&gt; vehKeys = new ArrayList&lt;Key&lt;? extends Vehicle&gt;&gt;();
+vehKeys.add(new Key&lt;Car&gt;(Car.class, porsche.id));
+vehKeys.add(new Key&lt;Motorcycle&gt;(Motorcycle.class, ktm.id));
+Map&lt;Key&lt;Vehicle&gt;, Vehicle&gt; fetched4 = ofy.get(vehKeys);
+
+// Delete the data
+ofy.delete(fetched1.values());
+
+// You can delete by key without loading the objects
+ofy.delete(
+    new Key&lt;Car&gt;(Car.class, porsche.id),
+    new Key&lt;Car&gt;(Car.class, unimog.id),
+    new Key&lt;Car&gt;(Car.class, tesla.id));</pre><h1><a name="Querying"></a>Querying<a href="#Querying" class="section_anchor"></a></h1><p>Here are some examples of using queries.  Objectify&#x27;s Query mimics the human-friendly <a href="http://code.google.com/appengine/docs/python/datastore/queryclass.html" rel="nofollow">Query class from GAE/Python</a> rather than the machine-friendly <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/Query.html" rel="nofollow">GAE/Java</a> version. </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+
+Car car = ofy.query(Car.class).filter(&quot;vin&quot;, &quot;123456789&quot;).get();
+
+// The Query itself is Iterable
+Query&lt;Car&gt; q = ofy.query(Car.class).filter(&quot;vin &gt;&quot;, &quot;123456789&quot;);
+for (Car car: q) {
+    System.out.println(car.toString());
+}
+
+// You can query for just keys, which will return Key objects much more efficiently than fetching whole objects
+Iterable&lt;Key&lt;Car&gt;&gt; allKeys = ofy.query(Car.class).fetchKeys();
+
+// Useful for deleting items
+ofy.delete(allKeys);</pre><p>Note that queries are closely related to indexes.  See <a href="http://code.google.com/appengine/docs/java/datastore/queries.html#Introduction_to_Indexes" rel="nofollow">the appengine documentation for indexes</a> for detail about what you can and cannot filter by. </p><h2><a name="Cursors"></a>Cursors<a href="#Cursors" class="section_anchor"></a></h2><p>Cursors let you take a &quot;checkpoint&quot; in a query result set, store the checkpoint elsewhere, and then resume from where you left off later.  This is often used in combination with the Task Queue API to iterate through large datasets that cannot be processed in the 30s limit of a single request.  The algorithm for this is roughly: </p><ol><li>Create a query, using an existing cursor if you have one. </li><li>Iterate through the results, processing as you go. </li><li>If you near the 30s timeout: </li><ol><li>Get the cursor </li><li>Create a new processing task with the cursor </li><li>Break out of the loop </li></ol></ol><h3><a name="Cursor_Example"></a>Cursor Example<a href="#Cursor_Example" class="section_anchor"></a></h3><p>The <tt>Iterable</tt>s provided by Objectify (including the <tt>Query</tt> object) are actually <tt>QueryResultIterable</tt>.  This will produce a <tt>QueryResultIterator</tt>, which allows you to obtain a <tt>Cursor</tt>. </p><p>This is an example of a servlet that will iterate through <strong>all</strong> the Car entities: </p><pre class="prettyprint">public static final long LIMIT_MILLIS = 1000 * 25; // provide a little leeway
+
+@Override
+protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    long startTime = System.currentTimeMillis();
+
+    Objectify ofy = ObjectifyService.begin();
+    Query&lt;Car&gt; query = ofy.query(Car.class);
+
+    String cursorStr = request.getParameter(&quot;cursor&quot;);
+    if (cursorStr != null)
+        query.startCursor(Cursor.fromWebSafeString(cursorStr));
+
+    QueryResultIterator&lt;Car&gt; iterator = query.iterator();
+    while (iterator.hasNext()) {
+        Car car = iterator.next();
+
+        ... // process car
+
+        if (System.currentTimeMillis() - startTime &gt; LIMIT_MILLIS) {
+            Cursor cursor = iterator.getStartCursor();
+            Queue queue = QueueFactory.getDefaultQueue();
+            queue.add(url(&quot;/pathToThisServlet&quot;).param(&quot;cursor&quot;, cursor.toWebSafeString()));
+            break;
+        }
+    }
+}</pre><h1><a name="Asynchronous_Calls"></a>Asynchronous Calls<a href="#Asynchronous_Calls" class="section_anchor"></a></h1><p>The GAE&#x27;s low-level datastore API supports parallel asynchronous operations.  GAE&#x27;s model of asynchrony does not follow Javascript&#x27;s &quot;pass in a callback function&quot; model; rather, when you make an asynchronous call, you get back a reference to the pending operation.  You can create multiple references which will execute in parallel, however, any request to fetch a concrete result will block until the result is available. </p><p>This is better explained by example. </p><h2><a name="Asynchronous_Queries"></a>Asynchronous Queries<a href="#Asynchronous_Queries" class="section_anchor"></a></h2><p>All <strong>queries</strong> are now asynchronous by default.  The &quot;reference&quot; to a query is the <tt>Iterator</tt> object.  For example, these two queries are executed in parallel: </p><pre class="prettyprint">Iterator&lt;Fruit&gt; fruitIt = ofy.query(Fruit.class).filter(&quot;color&quot;, &quot;red&quot;).iterator();
+Iterator&lt;Animal&gt; animalIt = ofy.query(Animal.class).filter(&quot;hair&quot;, &quot;short&quot;).iterator();
+
+// both queries are executing in the backend
+
+while (fruitIt.hasNext()) {    // hasNext() blocks until query results are available
+    ... process fruits
+}</pre><p>Create multiple <tt>Iterator</tt>s, then execute over the iterators. </p><h2><a name="Asynchronous_get()/put()/delete()"></a>Asynchronous get()/put()/delete()<a href="#Asynchronous_get()/put()/delete()" class="section_anchor"></a></h2><p><strong>NOTE: This requires Objectify v3.x</strong> </p><p><strong>NOTE:  If you use Objectify&#x27;s global memcache with asynchronous operations, you MUST install the <tt>com.googlecode.objectify.cache.AsyncCacheFilter</tt>.  If you do not, your cache will not properly synchronize with the datastore.</strong> This is a workaround for a limitation of the GAE SDK; please star <a href="http://code.google.com/p/googleappengine/issues/detail?id=4271" rel="nofollow">this issue</a>. </p><p>Queries require no special interface to parallelize requests because the <tt>Iterator</tt> interface acts as a convenience reference to a pending operation.  However, <tt>get()</tt>, <tt>put()</tt>, and <tt>delete()</tt> return concrete results.  The GAE low-level API provides a parallel set of methods that return results in a layer of indrection, the <tt>java.util.concurrent.Future&lt;?&gt;</tt> class.  However, <tt>Future&lt;?&gt;</tt> is cumbersome to use because it wraps and rethrows all exceptions as checked exceptions. </p><p>Objectify provides a similar set of parallel methods, but they return <tt>Result&lt;?&gt;</tt> -- just like <tt>Future&lt;?&gt;</tt> but with sane exception handling behavior.  Here are the salient parts of Objectify&#x27;s API: </p><pre class="prettyprint">public interface Result&lt;T&gt;
+{
+    T get();
+    Future&lt;T&gt; getFuture();
+}
+
+public interface Objectify
+{
+    ...
+    public AsyncObjectify async();
+}
+
+public interface AsyncObjectify
+{
+    ...
+    &lt;T&gt; Result&lt;T&gt; get(Key&lt;? extends T&gt; key);
+    &lt;T&gt; Result&lt;T&gt; get(Class&lt;? extends T&gt; clazz, long id);
+    ...
+    &lt;T&gt; Result&lt;Key&lt;T&gt;&gt; put(T obj);
+    ...
+    Result&lt;Void&gt; delete(Object... keysOrEntities);
+    ...
+}</pre><p>You get the picture.  The AsyncObjectify interface has methods that parallel the synchronous Objectify methods, but return <tt>Result&lt;?&gt;</tt> instead.  You can issue multiple parallel requests like this: </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+Result&lt;Fruit&gt; fruit = ofy.async().get(Fruit.class, &quot;apple&quot;);
+Result&lt;Map&lt;Long, Animal&gt;&gt; animals = ofy.async().get(Animal.class, listOfAnimalIds);
+Result&lt;Key&lt;Fruit&gt;&gt; key = ofy.async().put(new Fruit(&quot;orange&quot;));
+Iterator&lt;City&gt; citiesIterator = ofy.query(City.class).filter(&quot;population &gt;&quot;, 1000).iterator();
+
+// All requests are executing in parallel
+
+String color = fruit.get().getColor();  // calling Result&lt;?&gt;.get() blocks until request is complete</pre><h2><a name="Considerations_of_Asynchronous_Requests"></a>Considerations of Asynchronous Requests<a href="#Considerations_of_Asynchronous_Requests" class="section_anchor"></a></h2><p>Parallel requests must be used carefully: </p><ul><li>If you use Objectify&#x27;s global memcache (the @Cached annotaiton), you <strong>must</strong> install the <tt>com.googlecode.objectify.cache.AsyncCacheFilter</tt> in your web application. </li><li>You cannot have more than a fixed number of asynchronous requests going simultaneously.  This number is documented in the Low-Level API documentation, currently 10.  Additional requests will block until previous requests complete. </li><li>All pending requests will complete <strong>before</strong> your HTTP request returns data to the caller.  If you return from your <tt>HttpServlet.service()</tt> method while there are async requests pending, the SDK will block and complete these requests for you. </li><li>This does not allow you to work around the 30s limit for requests (or 10m for task queue requests).  Any async requests pending when a <tt>DeadlineExceededException</tt> happens will be aborted.  The datastore may or may not reflect any writes. </li><li>If you run up against <tt>DeadlineExceededException</tt> while using the global memcache, it is very likely that your cache will go out of sync with the datastore - even with the <tt>AsyncCacheFilter</tt>.  Do not do this. </li><li>The synchronous API is no more efficient than the asynchronous API.  In fact, both Objectify&#x27;s synchronous API and Google&#x27;s low level synchronous API are implemented as calls to the respective async API followed by an immediate get().   </li></ul><h1><a name="Optimizing_Storage"></a>Optimizing Storage<a href="#Optimizing_Storage" class="section_anchor"></a></h1><p>Indexes are necessary for queries, but they are very expensive to create and update.  It costs, in api_cpu_ms, about 48ms to put() a single entity with no indexes.  Each standard indexed field adds 17ms to this number.  The indexes are written in parallel, so they do not add real-world time... but you&#x27;ll see the real-world cost on your bill at the end of the week!  Indexes also consume a significant amount of storage space - sometimes many times the amount of original data. </p><h2><a name="@Indexed_and_@Unindexed"></a>@Indexed and @Unindexed<a href="#@Indexed_and_@Unindexed" class="section_anchor"></a></h2><p>By default, all entity fields except <tt>Text</tt> and <tt>Blob</tt> are indexed.  You can control this behavior with <tt>@Indexed</tt> and <tt>@Unindexed</tt> annotations on fields or classes: </p><pre class="prettyprint">// By default, fields are indexed
+public class Car
+{
+    @Id Long id;
+    String vin;
+    @Unindexed String color;
+}
+
+// This has exactly the same effect
+@Unindexed
+public class Car
+{
+    @Id Long id;
+    @Indexed String vin;
+    String color;
+}</pre><h2><a name="Partial_Indexes"></a>Partial Indexes<a href="#Partial_Indexes" class="section_anchor"></a></h2><p>Often you only need to query on a particular subset of values for a field.  If these represent a small percentage of your entities, why index all the rest?  Some examples: </p><ul><li>You might have a boolean &quot;admin&quot; field and only ever need to query for a list of the (very few) admins. </li><li>You might have a &quot;status&quot; field and never need to query for inactive values. </li><li>Your queries might not include null values. </li></ul><p>Objectify gives developers the ability to define arbitrary conditions for any field.  You can create your own <tt>If</tt> classes or use one of the provided ones: </p><pre class="prettyprint">public class Person
+{
+    @Id Long id;
+    String name;
+
+    // The admin field is only indexed when it is true
+    @Unindexed(IfFalse.class) boolean admin;
+
+    // You can provide multiple conditions, any of which will satisfy
+    @Unindexed({IfNull.class, IfEmptyString.class}) String title;
+}</pre><p>These <tt>If</tt> conditions work with both <tt>@Indexed</tt> and <tt>@Unindexed</tt> on fields.  You cannot specify <tt>If</tt> conditions on the class-level annotations. </p><p>Check the <a href="http://objectify-appengine.googlecode.com/svn/trunk/javadoc/com/googlecode/objectify/condition/package-summary.html" rel="nofollow">javadocs</a> for available classes.  Here are some basics to start:  <tt>IfNull.class, IfFalse.class, IfTrue.class, IfZero.class, IfEmptyString.class, IfDefault.class</tt> </p><h3><a name="IfDefault.class"></a><tt>IfDefault.class</tt><a href="#IfDefault.class" class="section_anchor"></a></h3><p><tt>IfDefault.class</tt> is special.  It tests true when the field value is whatever the default value is when you construct an object of your class.  For example: </p><pre class="prettyprint">public class Account
+{
+    @Id Long id;
+
+    // Only indexed when status is something other than INACTIVE
+    @Unindexed(IfDefault.class) StatusType status = StatusType.INACTIVE;
+}</pre><p>Note that you can initialize field values inline (as above) or in your no-arg constructor; either will work. </p><h3><a name="Custom_Conditions"></a>Custom Conditions<a href="#Custom_Conditions" class="section_anchor"></a></h3><p>You can easily create your own custom conditions by extending <tt>ValueIf</tt> or <tt>PojoIf</tt>.  <tt>ValueIf</tt> is a simple test of a field value.  For example: </p><pre class="prettyprint">public static class IfGREEN extends ValueIf&lt;Color&gt;
+{
+    @Override
+    public boolean matches(Color value)
+    {
+        return color == Color.GREEN;
+    }
+}
+
+public class Car
+{
+    @Id Long id;
+    @Unindexed(IfGREEN.class) Color color;
+}</pre><p>You can use <tt>PojoIf</tt> to examine other fields to determine whether or not to index!  This example is inspired by the example in the <a href="http://en.wikipedia.org/wiki/Partial_index" rel="nofollow">Partial Index</a> Wikipedia page, and will use a static inner class for convenience: </p><pre class="prettyprint">// We are modeling:  create index partial_salary on employee(age) where salary &gt; 2100;
+@Unindexed
+public class Employee
+{
+    static class SalaryCheck extends PojoIf&lt;Employee&gt;
+    {
+        @Override
+        public boolean matches(Employee pojo)
+        {
+            return pojo.salary &gt; 2100;
+        }
+    }
+
+    @Id Long id;
+    @Index(SalaryCheck.class) int age;
+    int salary;
+}</pre><p>You can examine the <a href="http://code.google.com/p/objectify-appengine/source/browse/#svn/trunk/src/com/googlecode/objectify/condition" rel="nofollow">source code</a> of the <tt>If</tt> classes to see how to construct your own.  Most are one or two lines of code. </p><h2><a name="@NotSaved"></a><tt>@NotSaved</tt><a href="#@NotSaved" class="section_anchor"></a></h2><p>If you would like to exclude a field value from being stored, you can use the <tt>@NotSaved</tt> annotation.  The field will not be saved and will not occupy any space in the datastore.  This works well in concert with <tt>IfDefault.class</tt>: </p><pre class="prettyprint">@Unindexed
+public class Player
+{
+    @Id Long id;
+    @Indexed String name;
+    @NotSaved(IfDefault.class) RankType rank = RankType.PRIVATE;
+    @NotSaved(IfDefault.class) int health = 100;
+    @NotSaved(IfDefault.class) Date retired = null;
+}</pre><p>Note that <tt>@NotSaved</tt> values are not stored at all, so they aren&#x27;t indexed and you can&#x27;t query for them. </p><h1><a name="Polymorphism"></a>Polymorphism<a href="#Polymorphism" class="section_anchor"></a></h1><p><strong>NOTE: This requires Objectify v3.x</strong> </p><p>Objectify lets you define a polymorphic hierarchy of related entity classes, and then load and query them without knowing the specific subtype.  Here are some examples: </p><pre class="prettyprint">@Entity
+public class Animal {
+    @Id Long id;
+    String name;
+}
+	
+@Subclass
+public class Mammal extends Animal {
+    boolean longHair;
+}
+	
+@Subclass
+public class Cat extends Mammal {
+    boolean hypoallergenic;
+}</pre><p>Things to note: </p><ul><li>The root of your polymorphic hierarchy <strong>must</strong> be annotated with <tt>@Entity</tt>. </li><li>All polymorphic subclasses must be annotated with <tt>@Subclass</tt>. </li><li>You can skip <tt>@Subclass</tt> on intermediate classes which will never be materialized or queried for. </li><li>You should register all classes in the hierarchy separately, but order is not important. </li><li>Polymorphism applies only to entities, not to @Embedded classes. </li></ul><p>In a polymorphic hierarchy, you can <tt>get()</tt> and <tt>query()</tt> without knowing the actual type: </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+
+Animal annie = new Animal();
+annie.name = &quot;Annie&quot;;
+ofy.put(annie);
+
+Mammal mam = new Mammal();
+mam.name = &quot;Mam&quot;;
+m.longHair = true;
+ofy.put(mam);
+
+Cat nyan = new Cat();
+nyan.name = &quot;Nyan&quot;;
+nyan.longHair = true;
+nyan.hypoallergenic = true;
+ofy.put(nyan);
+
+// This will return the Cat
+Animal fetched = ofy.get(Animal.class, nyan.id);
+
+// This query will produce three objects, the Animal, Mammal, and Cat
+Query&lt;Animal&gt; all = ofy.query(Animal.class);
+
+// This query will produce the Mammal and Cat
+Query&lt;Mammal&gt; mammals = ofy.query(Mammal.class);</pre><h2><a name="Implementation_Considerations"></a>Implementation Considerations<a href="#Implementation_Considerations" class="section_anchor"></a></h2><p>When you store a polymorphic entity subclass (but not an instance of the base type), your entity is stored with two additional, hidden synthetic properties: </p><ul><li><i>^d</i> holds a discriminator value for the concrete class type.  This defaults to the class shortname but can be modified with the <tt>@Subclass(name=&quot;alternate&quot;)</tt> annotation. </li><li><i>^i</i> holds an indexed list of all the discriminators relavant to a class; for example a Cat would have [[&quot;Mammal&quot;, &quot;Cat]]. </li></ul><p>The indexed property is what allows polymorphic queries to work.  It also means that you cannot simply change your hierarchy arbitrarily and expect queries to continue to work as expected - you may need to re-put() all affected entities to rewrite the indexed field. </p><p>There are two ways you can affect this: </p><ol><li>You can leave some subclasses unindexed by specifying <tt>@Subclass(unindexed=true)</tt>.  You will not be able to query by these subclasses (although simple <tt>get()</tt>s work, and queries for indexed superclasses will return a properly instantiated instance of the subclass). </li><li>You can use <tt>@Subclass(alsoLoad=&quot;OldDiscriminator&quot;)</tt> to &quot;reclaim&quot; old discriminator values when changing class names.  Note that this will not help with query indexes, which must be re-put(). </li></ol><h1><a name="Relationships"></a>Relationships<a href="#Relationships" class="section_anchor"></a></h1><p>A relationship is simply a <tt>Key</tt> stored as a field in an entity.  Objectify does not provide &quot;managed&quot; relationships in the way that JDO or JPA does; this is both a blessing and a curse.  However, because <tt>Key</tt> is a generified class, it carries type information about what it points to. </p><p>There are fundamentally three different kinds of relationships in Objectify: </p><h2><a name="Parent_Relationship"></a>Parent Relationship<a href="#Parent_Relationship" class="section_anchor"></a></h2><p>An entity can have a single <tt>Key</tt> field annotated with <tt>@Parent</tt>: </p><pre class="prettyprint">public class Person
+{
+    @Id Long id;
+    String name;
+}
+
+public class Car
+{
+    @Id Long id;
+    @Parent Key&lt;Person&gt; owner;
+    String color;
+}</pre><p>Each Car entity is part of the parent owner&#x27;s entity group and both can be accessed within a single transaction.  When loading the child entity, the parent <tt>Key</tt> must be used to generate the child&#x27;s key: </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+
+Key&lt;Person&gt; owner = new Key&lt;Person&gt;(Person.class, somePersonId);
+Car someCar = ofy.get(new Key&lt;Car&gt;(owner, Car.class, someCarId));</pre><p>Note that this is an inappropriate use of the @Parent entity; if a car were to be sold to a new owner, you would need to delete the Car and create a new one.  It is often better to use Single Value Relationships even when there is a conceptual parent-child or owner-object relationship; in that case you could simply change the parent. </p><p><strong>If you get() an entity, change the @Parent key field, and put() the entity, you will create a new entity</strong>.  The old entity (with the old parent) will still exist.  You cannot simply change the value of a @Parent key field.  This is a fundamental aspect of the appengine datastore; @Parent values form part of an entity&#x27;s identity. </p><h2><a name="Single-Value_Relationship"></a>Single-Value Relationship<a href="#Single-Value_Relationship" class="section_anchor"></a></h2><p>In Objectify (and the underlying datastore), Keys are just properties like any other value.  Whether it defines a one-to-one relationship or a many-to-one relationship is up to you.  Furthermore, a <tt>Key</tt> field could refer to any type of entity class. </p><h3><a name="One_To_One"></a>One To One<a href="#One_To_One" class="section_anchor"></a></h3><p>The simplest type of single-value relationship is one-to-one. </p><pre class="prettyprint">public class Person
+{
+    @Id String name;
+    Key&lt;Person&gt; significantOther;
+}
+
+Objectify ofy = ObjectifyService.begin();
+Person bob = ofy.get(Person, &quot;bob&quot;);
+Person bobswife = ofy.get(bob.significantOther);</pre><h3><a name="Many_To_One"></a>Many To One<a href="#Many_To_One" class="section_anchor"></a></h3><p>A <tt>Key</tt> field can represent a many-to-one relationship. </p><pre class="prettyprint">public class Employee
+{
+    @Id String name;
+    Key&lt;Employee&gt; manager;
+}
+
+Objectify ofy = ObjectifyService.begin();
+Employee bob = ofy.get(Employee.class, &quot;bob&quot;);
+Employee fred = ofy.get(bob.manager);</pre><p>It looks identical to the one-to-one relationship because it is.  The only difference is a conceptual one.  What if you want to know all the employees managed by Fred?  You use a query. </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+
+Iterable&lt;Employee&gt; subordinates = ofy.query(Employee.class).filter(&quot;manager&quot;, fred);</pre><h2><a name="Multi-Value_Relationship"></a>Multi-Value Relationship<a href="#Multi-Value_Relationship" class="section_anchor"></a></h2><p>The datastore can persist simple object types (Long, String, etc) and collections of simple object types.  It can also persist collections (and arrays) of <tt>Keys</tt>.  This creates an alternative approach for defining one-to-many (and many-to-many) relationships. </p><pre class="prettyprint">public class Employee
+{
+    @Id String name;
+    Key&lt;Employee&gt;[] subordinates;
+}</pre><p>This is sometimes useful, but should be used with caution for two reasons: </p><ol><li>Every time you <tt>get()</tt> and <tt>put()</tt> an object, it will fetch and store the entire list of subordinate keys.  If you have large numbers of subordinates, this could become a performance problem. </li><li>Appengine limits you to 5,000 entries. </li><li>Because appengine creates an index entry for every value in the collection, you can suffer from <a href="http://code.google.com/appengine/docs/python/datastore/queriesandindexes.html#Big_Entities_and_Exploding_Indexes" rel="nofollow">Exploding Indexes</a>. </li></ol><p>Because appengine stores an index entry for each value in the collection, it is possible to issue queries like this: </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+
+// should contain Fred
+Iterable&lt;Employee&gt; managers = ofy.query(Employee.class).filter(&quot;subordinates&quot;, bob);</pre><p>The decision to use a Multi-Value Relationship will depend heavily upon the shape of your data and the queries you intend to perform. </p><h1><a name="Transactions"></a>Transactions<a href="#Transactions" class="section_anchor"></a></h1><p>Working with transactions is almost the same as working with Objectify normally. </p><pre class="prettyprint">Objectify ofy = ObjectifyService.beginTransaction();  // instead of begin()
+try
+{
+    ClubMembers cm = ofy.get(ClubMembers.class, &quot;k123&quot;);
+    cm.incrementByOne();
+    ofy.put(cm);
+
+    ofy.getTxn().commit();
+}
+finally
+{
+    if (ofy.getTxn().isActive())
+        ofy.getTxn().rollback();
+}</pre><p>All data manipulation methods are the same as you would normally use. </p><p>Since entities in Objectify really are Plain Old Java Objects and transactions are tied to the Objectify object, it&#x27;s easy to work with data inside and outside of transactions (or multiple transactions running in parallel!): </p><pre class="prettyprint">Objectify ofyNoTxn = ObjectifyService.begin();
+Objectify ofyTxn = ObjectifyService.beginTransaction();
+try
+{
+    Foo f = ofyTxn.get(Foo.class, &quot;k123&quot;);
+    Bar b = ofyNoTxn.get(f.barKey);
+
+    if (b.wantsUp())
+        f.increment();
+    else
+        f.decrement();
+
+    ofyTxn.put(f);
+
+    ofyTxn.getTxn().commit();
+}
+finally
+{
+    if (ofyTxn.getTxn().isActive())
+        ofyTxn.getTxn().rollback();
+}</pre><p>You can interleave multiple transactions or nontransactional actions as long as you obey the the cardinal rule:  Within a single transaction (defined by an Objectify object created with beginTransaction()), you may only read or write from a single entity group. </p><p>Yes, this means you can get() objects from a transactional Objectify and put() to a nontrasactional Objectify.  </p><h1><a name="Lifecycle_Callbacks"></a>Lifecycle Callbacks<a href="#Lifecycle_Callbacks" class="section_anchor"></a></h1><p>Objectify supports two of the JPA lifecycle callbacks:  <tt>@PostLoad</tt> and <tt>@PrePersist</tt>.  If you mark methods on your POJO entity class (or any superclasses) with these annotations, they will be called: </p><ul><li><tt>@PostLoad</tt> methods are called after your data has been populated on your POJO class from the datastore. </li><li><tt>@PrePersist</tt> methods are called just before your data is written to the datastore from your POJO class. </li></ul><p>You can have any number of these callback methods in your POJO entity class or its superclasses.  They will be called in order of declaration, with superclass methods called first.  Two parameter types are allowed: </p><ul><li>The instance of <tt>Objectify</tt> which is being used to load/save the entity. </li><li>The datastore <tt>Entity</tt> which is associated with the Java POJO entity. </li></ul><pre class="prettyprint">class MyEntityBase {
+    String foo;
+    String lowercaseFoo;
+    @PrePersist void maintainCaseInsensitiveSearchField() { this.lowercaseFoo = foo.toLowerCase(); }
+}
+
+class MyEntity extends MyEntityBase {
+    @Id Long id;
+
+    @Transient Date loaded;
+    @PostLoad void trackLoadedDate() { this.loaded = new Date(); }
+
+    List&lt;String&gt; stuff = new ArrayList&lt;String&gt;();
+    int stuffSize;   // indexed so we can query by list size
+    @PrePersist void maintainStuffSize() { this.stuffSize = stuff.size(); }
+
+    @PrePersist void doMore(Objectify ofy, Entity ent) { ... }
+}</pre><p><strong>Caution</strong>: You can&#x27;t update @Id or @Parent fields in a @PrePersist callback; by this time, the low-level Entity has already been constructed with a Key so it can be passed in to the callback as an optional parameter.  You can, however, update any other fields and the new values will be persisted. </p><h1><a name="Migrating_Schemas"></a>Migrating Schemas<a href="#Migrating_Schemas" class="section_anchor"></a></h1><p>It is a rare schema that remains unchanged through the life of an application.  BigTable&#x27;s schemaless nature is both a blessing and a curse - you can easily change schemas object-by-object on the fly, but you can&#x27;t easily do it in bulk with an ALTER TABLE.  Objectify provides some simple but powerful tools to help with common types of structure change. </p><p>The basic process of schema migration using Objectify looks like this: </p><ol><li>Change your entity classes to reflect your desired schema. </li><li>Use Objectify&#x27;s annotations to map data in the old schema onto the new schema. </li><li>Deploy your code, which now works with objects in the old schema and the new schema. </li><li>Let your natural get()/put() churn convert objects for as long as you care to wait. </li><li>Run a batch job to get() &amp; put() any remaining entities. </li></ol><p>Here are some common cases. </p><h2><a name="Adding_Or_Removing_Fields"></a>Adding Or Removing Fields<a href="#Adding_Or_Removing_Fields" class="section_anchor"></a></h2><p>This is the easiest - just do it! </p><p>You can add any fields to your classes; if there is no data in the datastore associated with that field, it will be left at its default value when the class is initialized.  This is worlds better than the exceptions you often get from JDO. </p><p>You can remove a field from your classes.  The data in the datastore will be ignored when the entity is get().  When you next put() the entity, the entity will be saved without this field. </p><h2><a name="Renaming_A_Field"></a>Renaming A Field<a href="#Renaming_A_Field" class="section_anchor"></a></h2><p>Let&#x27;s say you have an entity that looks like this: </p><pre class="prettyprint">public class Person
+{
+    @Id Long id;
+    String name;
+}</pre><p>You&#x27;re doing some refactoring and you want to rename the field &quot;name&quot; to &quot;fullName&quot;.  You can! </p><pre class="prettyprint">public class Person
+{
+    @Id Long id;
+    @AlsoLoad(&quot;name&quot;) String fullName;
+}</pre><p>When a Person is get()ed, the <tt>fullName</tt> field will be loaded either the value of <i>fullName</i> or <i>name</i>.  If both fields exist, an IllegalStateException will be thrown.  When put(), only <i>fullName</i> will be written. </p><p>Caveat:  Queries do not know about the rename; if you filter by &quot;fullName&quot;, you will only get entities that have been converted.  You can still filter by &quot;name&quot; to get only the old ones. </p><h2><a name="Transforming_Data"></a>Transforming Data<a href="#Transforming_Data" class="section_anchor"></a></h2><p>Now that you&#x27;ve migrated all of your data to the new Person format, let&#x27;s say you now want to store separate first and last names instead of a single fullName field.  Objectify can help: </p><pre class="prettyprint">public class Person
+{
+    @Id Long id;
+    String firstName;
+    String lastName;
+
+    void importCruft(@AlsoLoad(&quot;fullName&quot;) String full)
+    {
+        String[] names = full.split(&quot; &quot;);
+        this.firstName = names[0];
+        this.lastName = names[1];
+    }
+}</pre><p>You can specify <tt>@AlsoLoad</tt> on the parameter of any method that takes a single parameter.  The parameter must be type-appropriate for what is in the datastore; you can pass Object and use reflection if you aren&#x27;t sure.  Process the data in whatever way you see fit.  When the entity is put() again, it will only have <i>firstName</i> and <i>lastName</i>. </p><p>Caution:  Objectify has no way of knowing that the importCruft() method has loaded the firstName and lastName fields.  If both fullName and firstName/lastName exist in the datastore, the results are undefined. </p><h2><a name="Changing_Enums"></a>Changing Enums<a href="#Changing_Enums" class="section_anchor"></a></h2><p>Changing enum values is just a special case of transforming data.  Enums are actually stored as Strings (and actually, all fields can be converted to String automatically), so you can use an @AlsoLoad method to process the data. </p><p>Let&#x27;s say you wanted to delete the AQUA color and replace it with GREEN: </p><pre class="prettyprint">public enum Color { RED, GREEN }    // AQUA has been removed from code but it still exists in the datastore
+
+public class Car
+{
+    @Id Long id;
+    Color color;
+
+    void importColor(@AlsoLoad(&quot;color&quot;) String colorStr)
+    {
+        if (&quot;AQUA&quot;.equals(colorStr))
+            this.color = Color.GREEN;
+        else
+            this.color = Color.valueOf(colorStr);
+    }
+}</pre><p>The <tt>@AlsoLoad</tt> method automatically overrides the loading of the Color field, but the Color field is what gets written on save.  Note that you cannot have conflicting <tt>@AlsoLoad</tt> values on multiple methods. </p><h2><a name="Moving_Fields"></a>Moving Fields<a href="#Moving_Fields" class="section_anchor"></a></h2><p>Changing the structure of your entities is by far the most challenging kind of schema migration; perhaps you want to combine two entities into one, or perhaps you want to move an <tt>@Embedded</tt> field into a separate entity.  There are many possible scenarios that require many different approaches.  Your essential tools are: </p><ul><li><tt>@AlsoLoad</tt>, which lets you load from a variety of field names (or former field names), and lets you transform data in methods. </li><li><tt>@NotSaved</tt>, which lets you load data into fields without saving them again. </li><li><tt>@PostLoad</tt>, which lets you execute arbitrary code after all fields have been loaded. </li><li><tt>@PrePersist</tt>, which lets you execute arbitrary code before your entity gets written to the datastore. </li></ul><p>Let&#x27;s say you have some embedded address fields and you want to make them into a separate Address entity.  You start with: </p><pre class="prettyprint">public class Person
+{
+    @Id Long id;
+    String name;
+    String street;
+    String city;
+}</pre><p>You can take two general approaches, either of which can be appropriate depending on how you use the data.  You can perform the transformation on save or on load.  Here is how you do it on load: </p><pre class="prettyprint">public class Address
+{
+    @Id Long id;
+    String street;
+    String city;
+}
+
+public class Person
+{
+    @Id Long id;
+    String name;
+
+    @NotSaved String street;
+    @NotSaved String city;
+
+    Key&lt;Address&gt; address;
+
+    @PostLoad void onLoad(Objectify ofy)
+    {
+        if (this.street != null || this.city != null)
+        {
+            this.address = ofy.put(new Address(this.street, this.city));
+            ofy.put(this);
+        }
+    }
+}</pre><p>If changing the data on load is not right for your app, you can change it on save: </p><pre class="prettyprint">public class Address
+{
+    @Id Long id;
+    String street;
+    String city;
+}
+
+public class Person
+{
+    @Id Long id;
+    String name;
+
+    @NotSaved String street;
+    @NotSaved String city;
+
+    Key&lt;Address&gt; address;
+
+    @PrePersist void onSave(Objectify ofy)
+    {
+        if (this.street != null || this.city != null)
+        {
+            this.address = ofy.put(new Address(this.street, this.city));
+        }
+    }
+}</pre><p>If you have an especially difficult transformation, post to the objectify-appengine google group.  We&#x27;re happy to help. </p><h1><a name="@Embedded"></a>@Embedded<a href="#@Embedded" class="section_anchor"></a></h1><p>Objectify supports embedded classes and collections of embedded classes.  This allows you to store structured data within a single POJO entity in a way that that remains queryable.  With a few limitations, this can be an excellent replacement for storing JSON data. </p><h2><a name="Embedded_Classes"></a>Embedded Classes<a href="#Embedded_Classes" class="section_anchor"></a></h2><p>You can nest objects to any arbitrary level. </p><pre class="prettyprint">class LevelTwo {
+    String bar;
+}
+
+class LevelOne {
+    String foo;
+    @Embedded LevelTwo two
+}
+
+class EntityWithEmbedded {
+    @Id Long id;
+    @Embedded LevelOne one;
+}</pre><h2><a name="Embedded_Collections_and_Arrays"></a>Embedded Collections and Arrays<a href="#Embedded_Collections_and_Arrays" class="section_anchor"></a></h2><p>You can use @Embedded on collections or arrays: </p><pre class="prettyprint">class EntityWithEmbeddedCollection {
+    @Id Long id;
+    @Embedded List&lt;LevelOne&gt; ones = new ArrayList&lt;LevelOne&gt;();
+}</pre><p>Some things to keep in mind: </p><ol><li><strong>Do not use @Embedded to store collections or arrays of simple types</strong>.  The datastore knows how to persist <tt>List&lt;String&gt;</tt>, <tt>Set&lt;GeoPt&gt;</tt>, etc without any special annotations. </li><li>You cannot recursively store @Embedded classes.  That is, an @Embedded class cannot contain a field of its own type, either directly or indirectly. </li><li>An @Embedded array/collection cannot be nested inside of another @Embedded array/collection.  It can, however, be nested inside any number of @Embedded classes. </li><li>Likewise, a native array/collection cannot be nested inside an @Embedded array/collection.  The only way to put a collection inside a collection (ie, create a 2D structure) is to make part (or all) of the structure @Serialized (see below). </li><li>You should initialize collections.  Null or empty collections are not written to the datastore and therefore get ignored during load.  Furthermore, the concrete instance will be used as-is, allowing you to initialize collections with Comparators or other state. </li></ol><p>  </p><h2><a name="Indexing_Embedded_Classes"></a>Indexing Embedded Classes<a href="#Indexing_Embedded_Classes" class="section_anchor"></a></h2><p>As with normal entities, all fields within embedded classes are indexed by default.  You can control this: </p><ul><li>Putting <tt>@Indexed</tt> or <tt>@Unindexed</tt> on a class (entity or embedded) will make all of its fields default to indexed or unindexed, respectively. </li><li>Putting <tt>@Indexed</tt> or <tt>@Unindexed</tt> on a field will make it indexed or unindexed, respectively. </li><li><tt>@Indexed</tt> or <tt>@Unindexed</tt> status for nested classes and fields are generally inherited from containing fields and classes, except that: </li><ul><li><tt>@Indexed</tt> or <tt>@Unindexed</tt> on a field overrides the default of the class containing the field. </li><li><tt>@Indexed</tt> or <tt>@Unindexed</tt> on a field of type <tt>@Embedded</tt> will override the default on the class inside the field (be it a single class or a collection). </li></ul></ul><pre class="prettyprint">@Indexed
+class LevelTwo {
+    @Indexed String gamma;
+    String delta;
+}
+
+@Indexed
+class LevelOne {
+    String beta;
+    @Unindexed @Embedded LevelTwo two;
+}
+
+@Unindexed
+class EntityWithComplicatedIndexing {
+    @Id Long id;
+    @Embedded LevelOne one;
+    String alpha;
+}</pre><p>If you persist one of these EntityWithComplicatedIndexing objects, you will find: </p><p><table class="wikitable"><tr><td style="border: 1px solid #ccc; padding: 5px;"> <tt>alpha</tt> </td><td style="border: 1px solid #ccc; padding: 5px;"> not indexed </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <tt>one.beta</tt> </td><td style="border: 1px solid #ccc; padding: 5px;"> indexed </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <tt>one.two.gamma</tt> </td><td style="border: 1px solid #ccc; padding: 5px;"> indexed </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <tt>one.two.delta</tt> </td><td style="border: 1px solid #ccc; padding: 5px;"> not indexed </td></tr> </table></p><p>Note that <tt>one.two.delta</tt> is <strong>not</strong> indexed; the annotation on <tt>LevelOne.two</tt> overrides <tt>LevelTwo</tt>&#x27;s class default. </p><h2><a name="Querying_By_Embedded_Fields"></a>Querying By Embedded Fields<a href="#Querying_By_Embedded_Fields" class="section_anchor"></a></h2><p>For any indexed field, you can query like this: </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+ofy.query(EntityWithEmbedded.class).filter(&quot;one.two.bar =&quot;, &quot;findthis&quot;);</pre><p>Filtering works for embedded collections just as it does for normal collections: </p><pre class="prettyprint">Objectify ofy = ObjectifyService.begin();
+ofy.query(EntityWithEmbeddedCollection.class).filter(&quot;ones.two.bar =&quot;, &quot;findthis&quot;);</pre><h2><a name="Entity_Representation"></a>Entity Representation<a href="#Entity_Representation" class="section_anchor"></a></h2><p>You may wish to know how @Embedded fields are persisted so that you an access them through the Low-Level API.  Here is an example: </p><pre class="prettyprint">class LevelTwo {
+    String bar;
+}
+
+class LevelOne {
+    String foo;
+    @Embedded LevelTwo two
+}
+
+class EntityWithEmbedded {
+    @Id Long id;
+    @Embedded LevelOne one;
+}
+
+EntityWithEmbedded ent = new EntityWithEmbedded();
+ent.one = new LevelOne();
+ent.one.foo = &quot;Foo Value&quot;;
+ent.one.two = new LevelTwo();
+ent.one.two.bar = &quot;Bar Value&quot;;
+
+Objectify ofy = ObjectifyService.begin();
+ofy.put(ent);</pre><p>This will produce an entity that contains: </p><p><table class="wikitable"><tr><td style="border: 1px solid #ccc; padding: 5px;"> one.foo </td><td style="border: 1px solid #ccc; padding: 5px;"> &quot;Foo Value&quot; </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> one.two.bar </td><td style="border: 1px solid #ccc; padding: 5px;"> &quot;Bar Value&quot; </td></tr> </table></p><p>You can see why query filters work the way they do. </p><p>For @Embedded collections and arrays, the storage mechanism is more complicated: </p><pre class="prettyprint">EntityWithEmbeddedCollection ent = new EntityWithEmbeddedCollection();
+for (int i=1; i&lt;=4; i++) {
+    LevelOne one = new LevelOne();
+    one.foo = &quot;foo&quot; + i;
+    one.two = new LevelTwo();
+    one.two.bar = &quot;bar&quot; + i;
+
+    ent.ones.add(one);
+}
+
+Objectify ofy = ObjectifyService.begin();
+ofy.put(ent);</pre><p>This will produce an entity that contains: </p><p><table class="wikitable"><tr><td style="border: 1px solid #ccc; padding: 5px;"> ones.foo </td><td style="border: 1px solid #ccc; padding: 5px;"> <tt> [&quot;foo1&quot;, &quot;foo2&quot;, &quot;foo3&quot;, &quot;foo4&quot;] </tt> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> ones.two.bar </td><td style="border: 1px solid #ccc; padding: 5px;"> <tt> [&quot;bar1&quot;, &quot;bar2&quot;, &quot;bar3&quot;, &quot;bar4&quot;] </tt> </td></tr> </table></p><p>This is what the entity would look like if the second and third values in the <tt>ones</tt> collection were <tt>null</tt>: </p><p><table class="wikitable"><tr><td style="border: 1px solid #ccc; padding: 5px;"> ones.foo^null </td><td style="border: 1px solid #ccc; padding: 5px;"> <tt> [1, 2] </tt> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> ones.foo </td><td style="border: 1px solid #ccc; padding: 5px;"> <tt> [&quot;foo1&quot;, &quot;foo4&quot;] </tt> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> ones.two.bar </td><td style="border: 1px solid #ccc; padding: 5px;"> <tt> [&quot;bar1&quot;, &quot;bar4&quot;] </tt> </td></tr> </table></p><p>The synthetic ^null property only exists if the collection contains nulls.  It is never indexed. </p><h2><a name="Schema_Migration"></a>Schema Migration<a href="#Schema_Migration" class="section_anchor"></a></h2><p>The <tt>@AlsoLoad</tt> annotation can be used on any field, including <tt>@Embedded</tt> fields.  For example, this class will safely read in instances previously saved with <tt>EntityWithEmbeddedCollection</tt>: </p><pre class="prettyprint">class Together {
+    @AlsoLoad(&quot;foo&quot;) String partOne;
+    @AlsoLoad(&quot;two.bar&quot;) String partTwo;
+}
+
+class NextEntity {
+    @Id Long id;
+    @AlsoLoad(&quot;ones&quot;) @Embedded List&lt;Together&gt; stuff = new ArrayList&lt;Together&gt;();
+}</pre><p><tt>@AlsoLoad</tt> methods work as well, however you cannot use <tt>@Embedded</tt> on method parameters. </p><h2><a name="Embedded_Maps"></a>Embedded Maps<a href="#Embedded_Maps" class="section_anchor"></a></h2><p>There is one additional special behavior of <tt>@Embedded</tt>:  If you put it on a <tt>Map</tt> keyed by String, this will allow you to create <a href="http://code.google.com/appengine/docs/python/datastore/datamodeling.html#The_Expando_Class" rel="nofollow">&quot;expando&quot;</a> dynamic properties.  For example: </p><pre class="prettyprint">class MyEntity {
+    @Id Long id;
+    @Embedded Map&lt;String, String&gt; stuff = new HashMap&lt;String, String&gt;();
+}
+
+MyEntity ent = new MyEntity();
+ent.stuff.put(&quot;foo&quot;, &quot;fooValue&quot;);
+ent.stuff.put(&quot;bar&quot;, &quot;barValue&quot;);
+ofy.put(ent);</pre><p>...will produce this entity structure: </p><p><table class="wikitable"><tr><td style="border: 1px solid #ccc; padding: 5px;"> stuff.foo </td><td style="border: 1px solid #ccc; padding: 5px;"> &quot;fooValue&quot; </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> stuff.bar </td><td style="border: 1px solid #ccc; padding: 5px;"> &quot;barValue&quot; </td></tr> </table></p><p>If the Map field is indexed, you can filter by &quot;stuff.foo&quot; or &quot;stuff.bar&quot;. </p><p>Note that while the Map value can be of any type, the Map key <strong>must</strong> be String. </p><h1><a name="@Serialized"></a>@Serialized<a href="#@Serialized" class="section_anchor"></a></h1><p>An alternative to <tt>@Embedded</tt> is to use <tt>@Serialized</tt>, which will let you store nearly any Java object graph. </p><pre class="prettyprint">class EntityWithSerialized {
+    @Id Long id;
+    @Serialized Map&lt;Object, Object&gt; stuff;
+}</pre><p>There are some limitations: </p><ul><li>All objects stored in the graph must follow Java serialization rules, including implement <tt>java.io.Serializable</tt>. </li><li>The total size of an entity cannot exceed 1 megabyte.  If your serialized data exceeds this size, you will get an exception when you try to <tt>put()</tt> it. </li><li>You will not be able to use the field or any child fields in queries. </li><li>As per serializaton rules, <tt>transient</tt> (the java keyword, not the annotation) fields will not be stored. </li><li>All Objectify annotations will be ignored within your serialized data structure.  This means <tt>@Transient</tt> fields within your serialized structure will be stored! </li><li>Java serialization data is opaque to the datastore viewer and other languages (ie GAE/Python).  You will only be able to retrieve your data from Java. </li></ul><p>However, there are significant benefits to storing data this way: </p><ul><li>You can store nearly any object graph - nested collections, circular object references, etc.  If Java can serialize it, you can store it. </li><li>Your field need not be statically typed.  Declare <tt>Object</tt> if you want. </li><li>Collections can be stored in their full state; for example, a SortedSet will remember its Comparator implementation. </li><li><tt>@Serialized</tt> collections can be nested inside <tt>@Embedded</tt> collections. </li></ul><p>You are <strong>strongly</strong> advised to place <tt>serialVersionUID</tt> on all classes that you intend to store as <tt>@Serialized</tt>.  Without this, <strong>any</strong> change to your classes will prevent stored objects from being deserialized on fetch.  Example: </p><pre class="prettyprint">class SomeStuff implements Serializable {
+    /** start with 1 for all classes */
+    private static final long serialVersionUID = 1L;
+
+    String foo;
+    Object bar;
+}
+
+class EntityWithSerialized {
+    @Id Long id;
+    @Serialized SomeStuff stuff;
+}</pre><h1><a name="Caching"></a>Caching<a href="#Caching" class="section_anchor"></a></h1><p>Objectify provides two different types of caches: </p><ul><li>A <i>session cache</i> which holds entity instances inside a specific <tt>Objectify</tt> instance. </li><li>A <i>global cache</i> which holds entity data in the appengine memcache service. </li></ul><p>You must explicitly decide to use these caches.  If you do nothing, every get() will read through to the datastore. </p><h2><a name="Session_Cache"></a>Session Cache<a href="#Session_Cache" class="section_anchor"></a></h2><p>The session cache associates your entity object instances with a specific <tt>Objectify</tt> instance.  You must explicitly enable it by passing in <tt>ObjectifyOpts</tt> to the <tt>ObjectifyService.begin()</tt> method: </p><pre class="prettyprint">    ObjectifyOpts opts = new ObjectifyOpts().setSessionCache(true);
+    Objectify ofy = ObjectifyService.begin(opts);</pre><p>Note: </p><ul><li>The session cache holds your <strong>specific entity object instances</strong>.  If you <tt>get()</tt> or <tt>query()</tt> for the same entity, you will receive the exact same Java entity object instance. </li><li>The session cache is local to the <tt>Objectify</tt> instance.  If you <tt>begin()</tt> a new instance, it will have a separate cache. </li><li>A <tt>get()</tt> (batch or otherwise) operation for a cached entity will return the entity instance <strong>without</strong> a call to the datastore or even to the memcache (if the global cache is enabled).  The operation is a simple hashmap lookup. </li><li>A <tt>query()</tt> will return cached entity instances, however the (potentially expensive) call to the datastore will still be made. </li><li>The session cache is <strong>not</strong> thread-safe.  You should never share an <tt>Objectify</tt> instance between threads. </li><li>The session cache appears to be very similar to a JPA, JDO, or Hibernate session cache with one exception - there is no dirty change detection.  As per standard Objectify behavior, if you wish to change an entity in the datastore, you must explicitly <tt>put()</tt> your entity. </li></ul><h2><a name="Global_Cache"></a>Global Cache<a href="#Global_Cache" class="section_anchor"></a></h2><p>Objectify can cache your entity data globally in the appengine memcache service for improved read performance.  This cache is shared by all running instances of your application. </p><p>The global cache is enabled by default, however you must still annotate your entity classes with <tt>@Cached</tt> to make them cacheable: </p><pre class="prettyprint">@Cached
+public class MyEntity {
+    @Id Long id;
+    ...
+}</pre><p>That&#x27;s it!  Objectify will utilize the memcache service to reduce read load on the datastore. </p><p>What you should know about the global cache: </p><ul><li>The fields of your entity are cached, not your POJO class itself.  Your entity objects will not be serialized (although any @Serialized fields will be). </li><li>Only get(), put(), and delete() interact with the cache.  query() is not cached. </li><li>Writes will &quot;write through&quot; the cache to the datastore.  Performance is only improved on read-heavy applications (which, fortunately, most are). </li><li>Negative results are cached as well as positive results. </li><li>Transactional reads bypass the cache.  Only successful commits modify the cache. </li><li>You can define an expiration time for each entity in the annotation: <tt>@Cached(expirationSeconds=600)</tt>.  By default entities will be cached until memory pressure (or an &#x27;incident&#x27; in the datacenter) evicts them. </li><li>You can disable the global cache for an <tt>Objectify</tt> instance by creating it with the appropriate <tt>ObjectifyOpts</tt>. </li><li>The global cache can work in concert with the session cache. </li><ul><li>Remember:  The session cache caches entity Java object instances, the global cache caches entity data. </li></ul></ul><p><strong>Warning</strong>:  Objectify&#x27;s global cache support prior to v3.1 suffered from synchronization problems under contention.  Do not use it for entities which require transactional integrity, and you are strongly advised to apply an expiration period to all cache values. </p><p>The cache in 3.1 has been rewritten from scratch to provide near-transactional consistency with the datastore.  Only DeadlineExceededException should be able to produce synchronization problems. </p><p>For more commentary about the new v3.1 cache, see <a href="MemcacheStandalone.html">MemcacheStandalone</a>. </p><h1><a name="Example"></a>Example<a href="#Example" class="section_anchor"></a></h1><p>Andrew Glover wrote an excellent article for IBM developerWorks:  <i>Twitter Mining with Objectify-Appengine</i>, <a href="http://www.ibm.com/developerworks/java/library/j-javadev2-13/index.html" rel="nofollow">part 1</a> and <a href="http://www.ibm.com/developerworks/java/library/j-javadev2-14/index.html" rel="nofollow">part 2</a>. </p><hr/><p>Now, read the <a href="BestPractices.html">BestPractices</a>. </p>
+ </div>
+ </div>
+ </td><tr>
+</table>
+ </div>
+
+
+
+ <script src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dwiki_scripts_20081003.js"></script>
+
+
+<script type="text/javascript" src="http://www.gstatic.com/codesite/ph/4349413266511071651/js/dit_scripts.js"></script>
+
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+</script>
+
+ </body>
+</html>
+
