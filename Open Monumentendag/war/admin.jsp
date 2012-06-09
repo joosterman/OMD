@@ -49,7 +49,7 @@
 	String action = request.getParameter("action");
 	if ("opslaan".equals(action)) {
 		Class<Location> cloc = Location.class;
-		Location loc = cloc.newInstance();
+		Location loc = ofy.get(Location.class,  Long.valueOf(request.getParameter("id")));
 		Set<Map.Entry<String, String[]>> fields = request.getParameterMap().entrySet();
 		for (Map.Entry<String, String[]> field : fields) {
 			if (field.getKey().startsWith("field_")) {
@@ -58,7 +58,6 @@
 				cloc.getDeclaredField(f).set(loc, value);
 			}
 		}
-		loc.id = Long.valueOf(request.getParameter("id"));
 		loc.lastChanged = new Date();
 		ofy.put(loc);
 		message = "Locatie opgeslagen";
@@ -120,7 +119,7 @@
 	</p>
 	<div class="selection">
 		<form action="" method="get">
-			<select onchange="this.form.submit()">
+			<select name="selId" onchange="this.form.submit()">
 				<%
 					for (Location l : locations) {
 				%>
