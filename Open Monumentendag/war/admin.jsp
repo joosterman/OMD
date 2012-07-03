@@ -3,7 +3,9 @@
 <%@ page import="com.googlecode.objectify.Objectify"%>
 <%@ page import="com.googlecode.objectify.ObjectifyService"%>
 <%@ page import="com.googlecode.objectify.Query"%>
-<%@ page import="org.omd.Location"%>
+<%@ page import ="org.omd.Location" %>
+<%@ page import ="org.omd.UserField" %>
+<%@ page import ="org.omd.UserField.FieldType" %>
 <%@ page import="java.util.*"%>
 <%@ page
 	import="com.google.appengine.api.blobstore.BlobstoreServiceFactory"%>
@@ -25,7 +27,7 @@
 		else {
 			String value = "";
 			try {
-				value = loc.getClass().getDeclaredField(fieldName).get(loc).toString();
+				value = Location.class.getDeclaredField(fieldName).get(loc).toString();
 			}
 			catch (Exception ex) {
 			}
@@ -49,13 +51,20 @@
 	String action = request.getParameter("action");
 	if ("opslaan".equals(action)) {
 		Class<Location> cloc = Location.class;
-		Location loc = ofy.get(Location.class,  Long.valueOf(request.getParameter("id")));
+		Location loc = ofy.get(Location.class, Long.valueOf(request.getParameter("id")));
 		Set<Map.Entry<String, String[]>> fields = request.getParameterMap().entrySet();
 		for (Map.Entry<String, String[]> field : fields) {
 			if (field.getKey().startsWith("field_")) {
 				String f = field.getKey().replace("field_", "");
 				String value = field.getValue()[0];
-				cloc.getDeclaredField(f).set(loc, value);
+				//check if it is a String or boolean field
+				String type = cloc.getDeclaredField(f).getType().getName();
+				if(type.equals("java.lang.String"))
+					cloc.getDeclaredField(f).set(loc, value);
+				else if (type.equals("boolean")){
+					boolean b = Boolean.parseBoolean(value);
+					cloc.getDeclaredField(f).set(loc, b);
+				}
 			}
 		}
 		loc.lastChanged = new Date();
@@ -112,6 +121,29 @@
 <head>
 <link rel="stylesheet" type="text/css" href="./stylesheets/admin.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="./scripts/tiny_mce/jquery.tinymce.js"></script>
+<script type="text/javascript">
+    $(window).load(function(){
+    	$(".LatLng").click(function(){
+    		var street = $("#street").val();
+    		var streetnr = $("#streetNumber").val();
+    		var city = $("#city").val();
+    		var uri2 = "/admin?action=getLatLng&address="+street+"+"+streetnr+",+"+city;
+    		$.getJSON(uri2, function(data){
+    			$.each(data.results,function(){
+    				$("#longitude").val(this.geometry.location.lng);
+    				$("#latitude").val(this.geometry.location.lat);    				
+    			});
+    		});
+    	});
+    	$("textarea").tinymce({
+            script_url: "./scripts/tiny_mce/tiny_mce.js",
+            theme: "simple"
+    	});
+    });
+    
+</script>
 </head>
 <body>
 	<p>
@@ -124,7 +156,7 @@
 					for (Location l : locations) {
 				%>
 				<option value="<%=l.id%>"
-					<%=l.id == selId ? "selected=\"selected\"" : ""%>>
+					<%=l.id.equals(selId) ? "selected=\"selected\"" : ""%>>
 					<%=l.toString()%></option>
 				<%
 					}
@@ -133,28 +165,58 @@
 		</form>
 	</div>
 	<div class="data">
+		<input type="button" class="LatLng" value="Get LatLng from Google" />
 		<form action="" method="post">
 			<table>
 				<%
 					Class<Location> c = Location.class;
 					Field[] fields = c.getDeclaredFields();
 					for (Field field : fields) {
-						if (Location.isTextField(field.getName())) {
+						UserField uf =field.getAnnotation(UserField.class); 
+						if (uf !=null) {
 				%>
 				<tr>
 					<td><label for="<%=field.getName()%>"><%=field.getName()%></label></td>
-					<td><input type="text" id="<%=field.getName()%>"
-						name="<%="field_" + field.getName()%>"
-						value="<%=GetFieldValue(selLoc, field.getName())%>" /></td>
+					<td>
+						<%
+							
+							if (uf.fieldType() == FieldType.textbox) {
+						%> 
+								<input type="text" id="<%=field.getName()%>"
+								name="<%="field_" + field.getName()%>"
+								value="<%=GetFieldValue(selLoc, field.getName())%>" /> 
+						<%
+ 							}
+ 							else if (uf.fieldType() == FieldType.radiobuttons) {
+ 						%> 
+ 								yes
+ 								<input type="radio" id="<%=field.getName()%>"
+								name="<%="field_" + field.getName()%>"
+								value="true" <%= GetFieldValue(selLoc, field.getName()).equals("true")?"checked=checked":"" %> />
+								no
+								<input type="radio" id="<%=field.getName()%>"
+								name="<%="field_" + field.getName()%>"
+								value="false" <%= GetFieldValue(selLoc, field.getName()).equals("false")?"checked=checked":"" %> />						
+						 <%
+ 							}
+ 							else if (uf.fieldType() == FieldType.textarea){
+						 %>
+						 		<textarea id="<%=field.getName()%>"
+								name="<%="field_" + field.getName()%>">
+								<%=GetFieldValue(selLoc, field.getName())%></textarea>
+						 <%
+ 							}
+						 %>
+					</td>
 				</tr>
 				<%
 					}
-						else if (field.getName().equals("id")) {
+						else if (field.getAnnotation(javax.persistence.Id.class)!=null) {
 				%>
 				<input type="hidden" name="id"
 					value="<%=GetFieldValue(selLoc, field.getName())%>" />
 				<%
-					}
+						}
 					}
 				%>
 				<tr>
@@ -170,16 +232,15 @@
 	<div class="image">
 		<%
 			if (selLoc != null) {
-				if (selLoc.imageBlobKey == null) {
+				if (selLoc.imageBlobKey == null || selLoc.imageBlobKey.length() == 0) {
 		%>
-
 		<p>Er is nog geen afbeelding geupload</p>
 		<%
 			}
 				else {
 		%>
 		<img
-			src="<%=imagesService.getServingUrl(new BlobKey(selLoc.imageBlobKey),400,false)%>" />
+			src="<%=imagesService.getServingUrl(new BlobKey(selLoc.imageBlobKey), 400, false)%>" />
 		<%
 			}
 		%>

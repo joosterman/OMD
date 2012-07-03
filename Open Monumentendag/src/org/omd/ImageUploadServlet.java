@@ -3,6 +3,7 @@ package org.omd;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,13 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
 public class ImageUploadServlet extends HttpServlet {
 
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-
+	private ImagesService imagesService = ImagesServiceFactory.getImagesService();
+	private static final Logger log = Logger.getLogger(ImageUploadServlet.class.getName());
+	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Objectify ofy = ObjectifyService.begin();
 		Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
@@ -33,10 +38,21 @@ public class ImageUploadServlet extends HttpServlet {
 			response.sendRedirect("/admin.jsp");
 		}
 		else {
-			Location loc = ofy.get(Location.class, id);
-			loc.imageBlobKey = blobKeys.get(0).getKeyString();
-			ofy.put(loc);
-			response.sendRedirect("/admin.jsp?selId=" + id);
+			//check if the uploaded file is an image
+			BlobKey key = blobKeys.get(0);
+			try{
+				String url = imagesService.getServingUrl(key);
+				Location loc = ofy.get(Location.class, id);
+				loc.imageBlobKey = key.getKeyString();
+				ofy.put(loc);
+				
+			}
+			catch(Exception ex){
+				//error: it is not an image
+				blobstoreService.delete(key);				
+			}
+			response.sendRedirect("/admin.jsp?selId="+id);
+			
 		}
 
 	}
