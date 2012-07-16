@@ -15,6 +15,7 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ServingUrlOptions;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -41,7 +42,8 @@ public class ImageUploadServlet extends HttpServlet {
 			//check if the uploaded file is an image
 			BlobKey key = blobKeys.get(0);
 			try{
-				String url = imagesService.getServingUrl(key);
+				ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(key);				
+				imagesService.getServingUrl(opts);
 				Location loc = ofy.get(Location.class, id);
 				loc.imageBlobKey = key.getKeyString();
 				ofy.put(loc);
