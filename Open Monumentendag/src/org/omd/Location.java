@@ -10,10 +10,14 @@ public class Location {
 
 	@Id
 	public Long id;
+	@UserField(fieldType=FieldType.radiobuttons)
+	public boolean topLocation;
 	@UserField
 	public String number;
 	@UserField
 	public String name;
+	@UserField(fieldType = FieldType.textarea)
+	public String info;
 	@UserField(fieldType = FieldType.textarea)
 	public String description;
 	@UserField
@@ -28,8 +32,6 @@ public class Location {
 	public String city = "Delft";
 	@UserField
 	public String street;
-	@UserField
-	public String streetNumber;
 	@UserField
 	public String latitude;
 	@UserField

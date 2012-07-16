@@ -139,7 +139,9 @@
     	});
     	$("textarea").tinymce({
             script_url: "./scripts/tiny_mce/tiny_mce.js",
-            theme: "simple"
+            theme: "simple",
+            width: "300",
+            height: "200"
     	});
     });
     
