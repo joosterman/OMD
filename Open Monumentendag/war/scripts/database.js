@@ -6,6 +6,7 @@ function cacheLocations(){
 }
 
 function parseLocations(locations){
+	localStorage.setItem("locArray","");	
 	var locationArray = $.evalJSON($.toJSON([]));
 
 	for (i=0; i<locations.length; i++){
@@ -56,10 +57,6 @@ function loadLocations(){
     	result += '</li>';
     	
     	location.visited = false;
-    	
-    	var key = 'loc-'+id;
-    	localStorage.setItem(key,$.toJSON(locations[i]));
-
 	}
 	
 	locationsList.append(result);
@@ -106,6 +103,7 @@ function updateDistances(location) {
 	  //console.log(locationArray);
 	  for (i=0; i<locationArray.length; i++){
 		  //console.log(locationArray[i].location);
+		  
 		  var location = $.evalJSON(localStorage.getItem(locationArray[i].location));
 
 		  if(location.latitude != null && location.longitude != null){

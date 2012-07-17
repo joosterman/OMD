@@ -46,10 +46,6 @@ $(document).bind("mobileinit", function() {
 		loadLocations();
 		//ziedelft.webdb.getAllLocations(loadLocations);
 		//console.log("loaded Locations");
-		
-	});
-	
-	$("#locations").live("pageshow", function(event, ui) {
 		if (navigator.geolocation){
 			console.log("found gps");
 			navigator.geolocation.watchPosition(updateDistances, displayError);
