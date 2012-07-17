@@ -7,8 +7,8 @@ $(document).bind("pagebeforechange", function(event, data) {
 $(document).bind("mobileinit", function() {
 	$('#detail').live('pagebeforeshow', function(event, ui) {
 		if(supports_local_storage()){
-			//assumption made that localStrage capable browsers also support WebSQL
-			ziedelft.webdb.getLocation(loadLocation, $.mobile.pageData.id);
+			//if the browser if capable of localStorage load cached information
+			loadLocation($.mobile.pageData.id);
 		}else{
 			//TODO: ASK DB
 		}		
@@ -43,12 +43,17 @@ $(document).bind("mobileinit", function() {
 	});
 	
 	$("#locations").live("pagebeforeshow", function(event, ui) {
-		ziedelft.webdb.getAllLocations(loadLocations);
-		console.log("loaded Locations");
+		loadLocations();
+		//ziedelft.webdb.getAllLocations(loadLocations);
+		//console.log("loaded Locations");
 		if (navigator.geolocation){
 			console.log("found gps");
 			navigator.geolocation.getCurrentPosition(calculateDistancesTo, displayError);
 		}
+	});
+	
+	$("#social").live("pagebeforeshow", function(event, ui) {
+		loadTweets('#f1');
 	});
 
 });

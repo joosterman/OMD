@@ -1,6 +1,21 @@
 .text-align-center {
-  text-align: center;
+	text-align: center;
 }
+
 .text-align-right {
-  text-align: right;
+	text-align: right;
+}
+
+.fineprint {
+	font-size: xx-small;
+}
+img.logo
+{
+	width:50%;
+	max-width: 300px;
+}
+.center
+{
+	margin-left: auto;
+	margin-right: auto;
 }

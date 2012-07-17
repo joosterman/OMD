@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="libs/objectify-3.1/objectify-3.1.jar" sourcepath="libs/objectify-3.1/src">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/I:/git/OMD/Open Monumentendag/libs/objectify-3.1/javadoc/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_03"/>
-	<classpathentry kind="lib" path="libs/gson/gson-2.2.2.jar" sourcepath="libs/gson/gson-2.2.2-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Open Monumentendag/libs/gson/gson-2.2.2-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-3.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gson-2.2.2.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

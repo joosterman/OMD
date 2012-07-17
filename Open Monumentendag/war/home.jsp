@@ -20,7 +20,14 @@
 				<a data-role="button" data-transition="fade" href="#info"> Info
 				</a>
 			</div>
-			<div class="ui-block-b"></div>
+			<div class="ui-block-b">
+				<a data-role="button" data-transition="fade" href="#social">
+					Social </a>
+			</div>
+			<div class="ui-block-a">
+				<a data-role="button" data-transition="fade" href="#thema">
+					Thema </a>
+			</div>
 		</div>
 	</div>
 </div>

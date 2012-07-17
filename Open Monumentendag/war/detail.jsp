@@ -13,7 +13,9 @@
 		</div>
 		<div>
 			<p><b>Adres: </b><span id="locationAdres"/></p>
-			<p><b>Geopend: </b><span id="locationOpen"/></p>
+			<p><b>Openingstijden zaterdag: </b><span id="locationOpenSa"/></p>
+			<p id="locationOpenSuLabel"><b>Openingstijden zondag: </b><span id="locationOpenSu"/></p>
+			<p id="locationInformationLabel"><b>Overige informatie:</b><br/><span id="locationInformation"></span></p>
 			<p><b>Omschrijving:</b><br/><span id="locationDescription"></span></p>
 		</div>
 	</div>
