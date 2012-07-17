@@ -33,7 +33,7 @@ $(document).bind("mobileinit", function() {
 		//set map height
 		$('[data-role=content]').height($(window).height() - (42 + $('[data-role=header]').last().height()));
 		
-		ziedelft.webdb.getAllLocations(setMarkers);
+		setMarkers();
 		//drawPolyLine(monuments);
 		//$("#map_canvas").gmap("refresh");
 	});
@@ -46,9 +46,14 @@ $(document).bind("mobileinit", function() {
 		loadLocations();
 		//ziedelft.webdb.getAllLocations(loadLocations);
 		//console.log("loaded Locations");
+		
+	});
+	
+	$("#locations").live("pageshow", function(event, ui) {
 		if (navigator.geolocation){
 			console.log("found gps");
-			navigator.geolocation.getCurrentPosition(calculateDistancesTo, displayError);
+			navigator.geolocation.watchPosition(updateDistances, displayError);
+			
 		}
 	});
 	
@@ -109,7 +114,7 @@ function setMarker(id, title, lat, lon, top) {
     $('#map_canvas').gmap('addMarker', { 
 		'position': myLatLng,
 		'shadow': shadow,
-		'icon': (top == 1) ? image : image2,
+		'icon': (top) ? image : image2,
 		'shape': shape,
 		'title': title,
 		'zIndex': id,
@@ -133,15 +138,6 @@ function drawPolyLine(){
 	  });
 	 
 	 path.setMap( $('#map_canvas').gmap('get', 'map') );
-}
-
-function calculateDistancesTo(location){
-	console.log("location");
-	var lat1 = location.coords.latitude, lon1 = location.coords.longitude
-	sessionStorage.setItem("lat", lat1);
-	sessionStorage.setItem("lon", lon1);
-	
-	ziedelft.webdb.getAllLocations(updateDistances);
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2){
