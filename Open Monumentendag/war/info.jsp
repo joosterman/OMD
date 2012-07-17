@@ -4,7 +4,7 @@
 	</div>
 	<div data-role="content">
 		<img class="logo" alt="Logo van de Open Monumentendag"
-			src="./img/Logo OMD CMYK 300dpi.jpg">
+			src="./img/logo_omd.png">
 		<p>
 			<strong> Zaterdag 8 en zondag 9 september 2012 <br />Thema:
 				Groen van Toen
@@ -16,7 +16,7 @@
 		<footer>
 			De Open Monumenten Dag werd mede mogelijk gemaakt door Jasper & Bas
 			Inc. <br /> <img class="logo" alt="Logo van hoofdsponsor Rabobank"
-				src="./img/Logo Hoofdsponsor Rabo RL CMYK 300dpi.jpg" width="50%">
+				src="./img/logo_rabobank.png" width="50%">
 		</footer>
 	</div>
 </div>

@@ -5,7 +5,7 @@
 	<div data-role="content">
 		<div style="text-align: center">
 			<img style="width: 90%;"
-				src="http://www.openmonumentendag.nl/images/omd-logo.gif" />
+				src="/img/logo_omd.png" />
 		</div>
 		<div class="ui-grid-a">
 			<div class="ui-block-a">
