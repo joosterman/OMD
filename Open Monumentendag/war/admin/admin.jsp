@@ -1,3 +1,4 @@
+<%@page import="com.google.appengine.api.images.ServingUrlOptions"%>
 <%@page import="java.lang.reflect.Modifier"%>
 <%@ page import="java.lang.reflect.Field"%>
 <%@ page import="com.googlecode.objectify.Objectify"%>
@@ -12,7 +13,7 @@
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService"%>
 <%@ page import="com.google.appengine.api.images.ImagesService"%>
 <%@ page import="com.google.appengine.api.images.ImagesServiceFactory"%>
-<%@ page import="com.google.appengine.api.blobstore.BlobKey"%>
+<%@ page import="com.google.appengine.api.blobstore.*"%>
 
 <%!//declarations
 	BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
@@ -127,9 +128,8 @@
     $(window).load(function(){
     	$(".LatLng").click(function(){
     		var street = $("#street").val();
-    		var streetnr = $("#streetNumber").val();
     		var city = $("#city").val();
-    		var uri2 = "/admin?action=getLatLng&address="+street+"+"+streetnr+",+"+city;
+    		var uri2 = "/admin?action=getLatLng&address="+street+",+"+city;
     		$.getJSON(uri2, function(data){
     			$.each(data.results,function(){
     				$("#longitude").val(this.geometry.location.lng);
@@ -234,24 +234,19 @@
 	<div class="image">
 		<%
 			if (selLoc != null) {
-				if (selLoc.imageBlobKey == null || selLoc.imageBlobKey.length() == 0) {
+				if (selLoc.imageBlobKey == null) {
 		%>
-		<p>Er is nog geen afbeelding geupload</p>
+		<p>Er is nog geen afbeelding geupload. Upload <a href="/admin/uploadImage.jsp?locationID<%=selLoc.id %>">hier</a></p>
 		<%
 			}
 				else {
+					ServingUrlOptions op = ServingUrlOptions.Builder.withBlobKey(selLoc.imageBlobKey);
 		%>
 		<img
-			src="<%=imagesService.getServingUrl(new BlobKey(selLoc.imageBlobKey), 400, false)%>" />
+			src="<%=imagesService.getServingUrl(op)%>" />
 		<%
 			}
 		%>
-		<form
-			action="<%=blobstoreService.createUploadUrl("/imageUpload?id=" + selId)%>"
-			method="post" enctype="multipart/form-data">
-			<input type="file" name="locationImage"> <input type="submit"
-				value="upload">
-		</form>
 	</div>
 	<%
 		}
