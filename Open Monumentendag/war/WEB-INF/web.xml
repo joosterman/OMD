@@ -13,7 +13,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ImageUploadServlet</servlet-name>
-		<url-pattern>/imageUpload</url-pattern>
+		<url-pattern>/admin/imageUpload</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>AdminServlet</servlet-name>

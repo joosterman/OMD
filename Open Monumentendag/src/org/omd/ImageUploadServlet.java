@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.blobstore.BlobInfo;
+import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -28,15 +30,17 @@ public class ImageUploadServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Objectify ofy = ObjectifyService.begin();
 		Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
-		Long id = null;
+		Long locationId = null;
+		Long imageId = null;
 		try {
-			id = Long.valueOf(request.getParameter("id"));
+			locationId = Long.valueOf(request.getParameter("selId"));
+			imageId = Long.valueOf(request.getParameter("imageId"));
 		}
 		catch (Exception ex) {
 		}
 		List<BlobKey> blobKeys = blobs.get("locationImage");
-		if (blobKeys == null || blobKeys.size() == 0 || id == null) {
-			response.sendRedirect("/admin.jsp");
+		if (blobKeys == null || blobKeys.size() == 0 || locationId == null || imageId==null) {
+			response.sendRedirect("/uploadImage.jsp");
 		}
 		else {
 			//check if the uploaded file is an image
@@ -44,16 +48,19 @@ public class ImageUploadServlet extends HttpServlet {
 			try{
 				ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(key);				
 				imagesService.getServingUrl(opts);
-				Location loc = ofy.get(Location.class, id);
-				loc.imageBlobKey = key.getKeyString();
-				ofy.put(loc);
+				BlobInfoFactory fac = new BlobInfoFactory();
+				BlobInfo info = fac.loadBlobInfo(key);
+				LocationImage li = ofy.get(LocationImage.class, imageId);
+				li.filename = info.getFilename();
+				li.imageBlobKey = key;
+				ofy.put(li);
 				
 			}
 			catch(Exception ex){
 				//error: it is not an image
 				blobstoreService.delete(key);				
 			}
-			response.sendRedirect("/admin.jsp?selId="+id);
+			response.sendRedirect("/admin/uploadImage.jsp?selId="+locationId+"&imageId="+imageId);
 			
 		}
 

@@ -15,6 +15,7 @@ public class MyListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		ObjectifyService.register(Location.class);
+		ObjectifyService.register(LocationImage.class);
 		
 	}
 

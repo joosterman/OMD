@@ -16,3 +16,12 @@ body
 	float:left;
 	position:relative;
 }
+.images
+{
+clear:both;	
+}
+.imagelist
+{
+	float:left;	
+}
+}

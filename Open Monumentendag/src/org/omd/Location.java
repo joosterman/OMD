@@ -6,6 +6,8 @@ import javax.persistence.Id;
 
 import org.omd.UserField.FieldType;
 
+import com.google.appengine.api.blobstore.BlobKey;
+
 public class Location {
 
 	@Id
@@ -36,7 +38,7 @@ public class Location {
 	public String latitude;
 	@UserField
 	public String longitude;
-	public String imageBlobKey;
+	public BlobKey imageBlobKey;
 	public Date lastChanged;
 
 	public Location() {
