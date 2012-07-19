@@ -3,12 +3,15 @@
 		<h3>Thema</h3>
 	</div>
 	<div data-role="content">
+		<div style="text-align: center">
+			<img class="center" alt="Themabeeld van Groen van Toen"
+			src="./img/Themabeeld-8-9-sept-Groen-van-Toen_800px.jpg" style="width: 95%;"/>
+		</div>
+		<br />
 		<span class="fineprint"> (bron: <a
 			href="http://www.openmonumentendag.nl/bezoeken/bezoek-open-monumentendag/thema-2012-groen-van-toen/">Open
 				Monumentendag</a>)
-		</span><br />
-		<img alt="Themabeeld van Groen van Toen"
-			src="./img/Themabeeld-8-9-sept-Groen-van-Toen_800px.jpg" />
+		</span>
 			<p>
 			<strong>Ooit een houtwal bezocht? Om een terp heen
 				gewandeld? Ziet u het verschil tussen een aangelegd bos en de wilde
