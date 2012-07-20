@@ -39,25 +39,25 @@
 	<div id="fb-root"></div>
 	<script>
 		window.fbAsyncInit = function() {
-			FB.init({
-				appId : '470201716343067', // App ID
-				channelUrl : 'http://openmonumentendag.appspot.com//channel.html', // Channel File
-				status : true, // check login status
-				cookie : true, // enable cookies to allow the server to access the session
-				xfbml : true
-			// parse XFBML
-			});
+			FB
+					.init({
+						appId : '470201716343067', // App ID
+						channelUrl : 'http://openmonumentendag.appspot.com//channel.html', // Channel File
+						status : true, // check login status
+						cookie : true, // enable cookies to allow the server to access the session
+						xfbml : true
+					// parse XFBML
+					});
 			// Additional initialization code here
 			FB.Event.subscribe('auth.authResponseChange', function(response) {
 				if (response.status === "connected") {
-					fbLoggedIn(true);	
-				}
-				else{
+					fbLoggedIn(true);
+				} else {
 					fbLoggedIn(false);
 				}
 			});
-			
-			$(".fbLogout").click(function(){
+
+			$(".fbLogout").click(function() {
 				FB.logout();
 			});
 		};
@@ -74,17 +74,15 @@
 			js.src = "//connect.facebook.net/en_US/all.js";
 			ref.parentNode.insertBefore(js, ref);
 		}(document));
-		
-		function fbLoggedIn(status){
-			if(status===true){
+
+		function fbLoggedIn(status) {
+			if (status === true) {
 				FB.api('/me', function(user) {
-					$(".fbLoginStatus").html("Ingelogd als "+user.email);
+					$(".fbLoginStatus").html("Ingelogd als " + user.email);
 				});
 				$(".fbLogout").show();
 				$(".fbLogin").hide();
-			}
-			else
-			{
+			} else {
 				$(".fbLoginStatus").html("Niet ingelogd");
 				$(".fbLogout").hide();
 				$(".fbLogin").show();
@@ -100,6 +98,7 @@
 	<jsp:include page="social.jsp"></jsp:include>
 	<jsp:include page="thema.jsp"></jsp:include>
 	<jsp:include page="login.jsp"></jsp:include>
+	<jsp:include page="messages.jsp"></jsp:include>
 </body>
 
 </html>
