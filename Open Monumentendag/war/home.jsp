@@ -28,6 +28,10 @@
 				<a data-role="button" data-transition="fade" href="#thema">
 					Thema </a>
 			</div>
+			<div class="ui-block-b">
+				<a data-role="button" data-transition="fade" href="#login">
+					Inloggen </a>
+			</div>
 		</div>
 	</div>
 </div>
