@@ -4,8 +4,7 @@
 		<h3>Berichten</h3>
 	</div>
 	<div data-role="content">
-	<input type="text" class="message" />
-	<input class="sendMessage" type="button" value="Submit message" />
+		<div class="messages"></div>
 	</div>
 
 </div>
@@ -14,28 +13,23 @@
 <script type="text/javascript" src="/_ah/channel/jsapi"></script>
 <script type="text/javascript">
 	var token;
-	var userId = Math.random();
-	$(".sendMessage").click(function(){
-		var m = $(".message").val();
-		$.ajax("/messages?userId="+userId+"&message="+m);
-	});
-
-	//get the channel token
-	
-	$.getJSON("/messages", "userId="+userId, function(data) {
+	//get the channel token	
+	$.getJSON("/messages", "userId="+user.userId, function(data) {
 		token = data;
 		var channel = new goog.appengine.Channel(data);
 		var socket = channel.open();
 		socket.onopen = function() {
+			console.log("Message socket open.");
 		};
 		socket.onmessage = function(message) {
-			alert(message.data);
+			var m = "<p>"+message.data+"</p>";
+			$(".messages").append(m);
 		};
-		socket.onerror = function() {
-			alert("error");
+		socket.onerror = function(data) {
+			alert("error: "+data.description);
 		};
 		socket.onclose = function() {
-			alert("close");
+			alert("closed");
 		};
 	}, function() {
 		alert("failure");

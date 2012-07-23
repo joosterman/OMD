@@ -16,7 +16,8 @@ public class MyListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		ObjectifyService.register(Location.class);
 		ObjectifyService.register(LocationImage.class);
-		
+		ObjectifyService.register(User.class);
+		ObjectifyService.register(UserLocationHistory.class);
 	}
 
 }

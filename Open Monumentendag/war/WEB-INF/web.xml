@@ -7,21 +7,21 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<listener>
 		<listener-class>org.omd.MyListener</listener-class>
 	</listener>
+	 <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
 	<servlet>
-		<servlet-name>ImageUploadServlet</servlet-name>
-		<servlet-class>org.omd.ImageUploadServlet</servlet-class>
+		<servlet-name>UserServlet</servlet-name>
+		<servlet-class>org.omd.UserServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>ImageUploadServlet</servlet-name>
-		<url-pattern>/admin/imageUpload</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>AdminServlet</servlet-name>
-		<servlet-class>org.omd.AdminServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>AdminServlet</servlet-name>
-		<url-pattern>/admin</url-pattern>
+		<servlet-name>UserServlet</servlet-name>
+		<url-pattern>/user</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>LocationsServlet</servlet-name>
@@ -38,6 +38,22 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 		<servlet-name>MessagesServlet</servlet-name>
 		<url-pattern>/messages</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ImageUploadServlet</servlet-name>
+		<servlet-class>org.omd.ImageUploadServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ImageUploadServlet</servlet-name>
+		<url-pattern>/admin/imageUpload</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AdminServlet</servlet-name>
+		<servlet-class>org.omd.AdminServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AdminServlet</servlet-name>
+		<url-pattern>/admin</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>app.jsp</welcome-file>
