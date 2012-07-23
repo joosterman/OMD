@@ -11,6 +11,7 @@ function parseLocations(locations){
 
 	for (i=0; i<locations.length; i++){
     	
+		locations[i].name = locations[i].name.replace('<p>','').replace('</p>','');
     	locations[i].visited = false;
     	
     	var key = 'loc-'+locations[i].id;
@@ -30,16 +31,33 @@ function loadLocations(){
 	locationsList.empty();
 	
 	var topLocationsNotSet = true;
-	var result = '<li data-role="list-divider" role="heading">Top locaties</li>';
+	var result = '<li data-role="list-divider" role="heading">Algemeen</li>';
 	
 	for (i=0; i<locationArray.length; i++){
 		
 		 var location = $.evalJSON(localStorage.getItem(locationArray[i].location));
 		
 		if(location.topLocation && topLocationsNotSet){
-			result += '<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-bar-b">Overige locaties</li>';
+			result += '<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-bar-e">Groen Top 10</li>';
 			topLocationsNotSet = false;
 		}
+		
+		if(location.number == 1 && location.openingHoursSunday == ""){
+			result += '<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-bar-d">Alleen Zaterdag</li>';
+			topSatOnlyNotSet = false;
+		}
+		
+		if(location.number == 19 && location.openingHoursSaturday != "" && location.openingHoursSunday != ""){
+			result += '<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-bar-c">Zaterdag en Zondag</li>';
+			topSatSunyNotSet = false;
+		}
+		
+		if(location.number == 39 && location.openingHoursSaturday == "" && location.openingHoursSunday != ""){
+			result += '<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-bar-a">Alleen Zondag</li>';
+			topSatSunyNotSet = false;
+		}
+		
+		
 		
 		var id = location.id;
 		var text = location.text;
