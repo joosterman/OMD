@@ -67,7 +67,12 @@ public class LocationsServlet extends HttpServlet {
 							try {
 								int nr1 = Integer.valueOf(o1.number);
 								int nr2 = Integer.valueOf(o2.number);
-								return Integer.compare(nr1, nr2);
+								if(nr1<nr2)
+									return -1;
+								else if(nr1>nr2)
+									return 1;
+								else
+									return 0;
 							}
 							catch (NumberFormatException ex) {
 								return 0;
