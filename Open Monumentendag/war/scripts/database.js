@@ -99,7 +99,7 @@ function updateDistances(location) {
 	  var lat1 = location.coords.latitude, lon1 = location.coords.longitude;
 	  console.log(lat1+" "+lon1);
 	  //Update the server with the new location
-	  var url = "/user?userId="+user.userId+"&key="+user.accessKey+"&lng="+lon1+"&lat="+lat1;
+	  var url = "/user?action=update&userId="+user.userId+"&key="+user.accessKey+"&lng="+lon1+"&lat="+lat1;
 	  $.get(url);
 	  
 	  var locationArray = $.evalJSON(localStorage.getItem("locArray"));

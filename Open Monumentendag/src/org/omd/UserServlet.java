@@ -47,7 +47,7 @@ public class UserServlet extends HttpServlet {
 		else {
 			// check validity of key and check key-id combination
 			u = ofy.query(User.class).filter("accessKey", key).get();
-			if (u == null || u.id.equals(id)) {
+			if (u == null || !u.id.equals(id)) {
 				// return non-informative null
 				output = gson.toJson(null);
 			}

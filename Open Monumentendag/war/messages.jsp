@@ -6,7 +6,6 @@
 	<div data-role="content">
 		<div class="messages"></div>
 	</div>
-
 </div>
 
 <!-- enable messages trough a channel -->
@@ -14,24 +13,23 @@
 <script type="text/javascript">
 	var token;
 	//get the channel token	
-	$.getJSON("/messages", "userId="+user.userId, function(data) {
-		token = data;
-		var channel = new goog.appengine.Channel(data);
+	$.getJSON("/messages", "userId=" + user.userId, connectToChannel);
+
+	function connectToChannel(token) {
+		var channel = new goog.appengine.Channel(token);
 		var socket = channel.open();
 		socket.onopen = function() {
 			console.log("Message socket open.");
 		};
 		socket.onmessage = function(message) {
-			var m = "<p>"+message.data+"</p>";
+			var m = "<p>" + message.data + "</p>";
 			$(".messages").append(m);
 		};
 		socket.onerror = function(data) {
-			alert("error: "+data.description);
+			alert("error: " + data.description);
 		};
 		socket.onclose = function() {
-			alert("closed");
+			alert("Message socket closed.");
 		};
-	}, function() {
-		alert("failure");
-	});
+	}
 </script>
