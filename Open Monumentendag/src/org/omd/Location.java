@@ -16,7 +16,7 @@ public class Location {
 	public boolean topLocation;
 	@UserField
 	public String number;
-	@UserField
+	@UserField(fieldType = FieldType.textarea)
 	public String name;
 	@UserField(fieldType = FieldType.textarea)
 	public String info;
