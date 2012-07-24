@@ -6,40 +6,40 @@
 		<h3>Inloggen</h3>
 	</div>
 	<div data-role="content">
-		<h4>Log direct in met</h4>
-		<p>
-			Google:
-			<%
-			//check google login
+		<%
+			//case 1: not logged in: show google and FB buttons
+			//case 2: logged in with google: show loggedin email and logout link
+			//case 3: logged in with FB: show loggedin email and logout link
+
+			//case 1: Google (server-side)
 			if (userService.isUserLoggedIn()) {
 				User u = userService.getCurrentUser();
+				String email = u.getEmail();
 		%>
-			Ingelogd als
-			<%=u.getEmail()%>
-			<%
-				if (userService.isUserAdmin()) {
-			%>(admin) 
-			<%
-				}
-			%>
-			 <a rel="external" class="fineprint"
-				href="<%=userService.createLogoutURL(request.getRequestURI())%>">logout</a>
-			<%
-				}
-				else {
-			%>
-			<a rel="external" href="<%=userService.createLoginURL(request.getRequestURI())%>"><img
-				src="./img/google.png" alt="Google icon" /></a> Niet ingelogd
-			<%
-				}
-			%>
-		</p>
 		<p>
-			Facebook:
-			<span class="fbLogin">
-			<fb:login-button scope="email" show-faces="false" /></span>
-			<span class="fbLoginStatus"></span><a class="fbLogout fineprint"
-				href="#login">logout</a>
+			Ingelogd via Google als
+			<%=email%>
 		</p>
+		<a rel="external" data-role="button" href="<%=userService.createLogoutURL(request.getRequestURI())%>">Log uit</a>
+		<%
+			}
+			else {
+				//case 2 and 3 clientside
+		%>
+		<div class="fbLoggedIn">
+			<p>
+				Ingelogd via Facebook als <span class="fbemail"></span>
+			</p>
+			<a class="fbLogout" href="" data-role="button">Log uit</a>
+		</div>
+		<div class="notLoggedIn">
+			<h4>Log in via</h4>
+			<a href="<%=userService.createLoginURL(request.getRequestURI())%>"><img
+				src="./img/google.png" /></a> of 
+			<fb:login-button scope="email" show-faces="false" />
+		</div>
+		<%
+			}
+		%>
 	</div>
 </div>

@@ -35,7 +35,7 @@
 <script type="text/javascript" src="/scripts/social.js"></script>
 </head>
 <body onload="window.scrollTo(0,1);">
-	<!-- Facebook stuff -->
+	<!-- BEGIN Facebook stuff -->
 	<div id="fb-root"></div>
 	<script>
 		window.fbAsyncInit = function() {
@@ -49,7 +49,7 @@
 					// parse XFBML
 					});
 			// Additional initialization code here
-			FB.Event.subscribe('auth.authResponseChange', function(response) {
+			FB.Event.subscribe('auth.statusChange', function(response) {
 				if (response.status === "connected") {
 					fbLoggedIn(true);
 				} else {
@@ -78,18 +78,17 @@
 		function fbLoggedIn(status) {
 			if (status === true) {
 				FB.api('/me', function(user) {
-					$(".fbLoginStatus").html("Ingelogd als " + user.email);
+					$(".fbemail").html(user.email);
 				});
-				$(".fbLogout").show();
-				$(".fbLogin").hide();
+				$(".fbLoggedIn").show();
+				$(".notLoggedIn").hide();
 			} else {
-				$(".fbLoginStatus").html("Niet ingelogd");
-				$(".fbLogout").hide();
-				$(".fbLogin").show();
+				$(".fbLoggedIn").hide();
+				$(".notLoggedIn").show();
 			}
 		}
 	</script>
-	<!-- Facebook stuff -->
+	<!-- END Facebook stuff -->
 	<jsp:include page="home.jsp"></jsp:include>
 	<jsp:include page="map.jsp"></jsp:include>
 	<jsp:include page="detail.jsp"></jsp:include>
