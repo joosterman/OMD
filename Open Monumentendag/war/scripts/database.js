@@ -95,9 +95,6 @@ function loadLocations() {
 	locationsList.append(result);
 	locationsList.listview("refresh");
 }
-<<<<<<< HEAD
-  
-
   
 function loadLocation(id) {
 	var location = $.evalJSON(localStorage.getItem('loc-'+id));
@@ -109,24 +106,10 @@ function loadLocation(id) {
 	
 	if(location.imageBlobKey.blobKey != "")
 		$('#locationImageURL').attr("src", "_ah/img/"+location.imageBlobKey.blobKey+"=s300");
-=======
-
-function loadLocation(id) {
-	var location = $.evalJSON(localStorage.getItem('loc-' + id));
-
-	$('.locationName').html(location.name);
-	$('#locationNumber').html(location.number /* +', '+location.city */);
-	$('#locationAdres').html(location.street /* +', '+location.city */);
-	$('#locationOpen').html(location.openingstijden);
-	if (location.imageBlobKey == "")
-		$('#locationImageURL').attr("src",
-				"_ah/img/" + location.imageBlobKey + "=s300");
->>>>>>> 343756d8458e12a0983bbab9e312b8b812a40ee5
 	$('#locationDescription').html(location.description);
 	$('#locationOpenSa').html(location.openingHoursSaturday);
 	$('#locationOpenSu').html(location.openingHoursSunday);
 	$('#locationInformation').html(location.info);
-<<<<<<< HEAD
 	  
 	if(location.wheelchairFriendly){
 		$('#locationWheelChair').show();
@@ -184,41 +167,6 @@ function parseLocationImages(locations){
    	galleryList.append(result);
    	$("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
 }  
-=======
-
-	if (location.wheelchairFriendly) {
-		$('#locationWheelChair').show();
-	} else {
-		$('#locationWheelChair').hide();
-	}
-
-	if (location.tourAvailable)
-		$('#locationInformation').append(
-				"<br/>Op deze locatie worden rondleidingen gegeven.");
-
-	if (location.topLocation)
-		$('#locationInformation').append("<br/>Toperrrr");
-
-	if ($('#locationInformation').html() == "") {
-		$('#locationInformationLabel').hide();
-	} else {
-		$('#locationInformationLabel').show();
-	}
-
-	if (location.openingHoursSaturday == "") {
-		$('#locationOpenSaLabel').hide();
-	} else {
-		$('#locationOpenSaLabel').show();
-	}
-
-	if (location.openingHoursSunday == "") {
-		$('#locationOpenSuLabel').hide();
-	} else {
-		$('#locationOpenSuLabel').show();
-	}
-
-}
->>>>>>> 343756d8458e12a0983bbab9e312b8b812a40ee5
 
 function updateDistances(location) {
 	var lat1 = location.coords.latitude, lon1 = location.coords.longitude;
@@ -245,11 +193,7 @@ function updateDistances(location) {
 
 	}
 }
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> 343756d8458e12a0983bbab9e312b8b812a40ee5
 function setMarkers() {
 	// For each location put a marker on a map
 	var locationArray = $.evalJSON(localStorage.getItem("locArray"));
@@ -268,21 +212,12 @@ function setMarkers() {
 }
 
 function setVisited(id) {
-<<<<<<< HEAD
 	
 	var location = $.evalJSON(localStorage.getItem('loc-'+id));
 	location.visited = true;	
 	localStorage.setItem('loc-'+id,$.toJSON(location));
 } 
-  
-=======
 
-	var location = $.evalJSON(localStorage.getItem('loc-' + id));
-	location.visited = true;
-	localStorage.setItem('loc-' + id, $.toJSON(location));
-}
-
->>>>>>> 343756d8458e12a0983bbab9e312b8b812a40ee5
 function init() {
 	// load data
 	cacheLocations();
