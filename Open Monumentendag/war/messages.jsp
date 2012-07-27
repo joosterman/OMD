@@ -13,7 +13,7 @@
 <script type="text/javascript">
 	var token;
 	//get the channel token	
-	$.getJSON("/messages", "userId=" + user.userId, connectToChannel);
+	//$.getJSON("/messages", "userId=" + user.userId, connectToChannel);
 
 	function connectToChannel(token) {
 		var channel = new goog.appengine.Channel(token);

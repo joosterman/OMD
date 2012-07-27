@@ -16,14 +16,20 @@
 				User u = userService.getCurrentUser();
 				String email = u.getEmail();
 		%>
+		<script type="text/javascript">
+		console.log("Updating google email");
+		updateEmail('<%=email%>');
+		</script>
 		<p>
+
 			Ingelogd via Google als
 			<%=email%>
 		</p>
-		<a rel="external" data-role="button" href="<%=userService.createLogoutURL(request.getRequestURI())%>">Log uit</a>
+		<a rel="external" class="googleLogout" data-role="button"
+			href="<%=userService.createLogoutURL(request.getRequestURI())%>">Log
+			uit</a>
 		<%
-			}
-			else {
+			} else {
 				//case 2 and 3 clientside
 		%>
 		<div class="fbLoggedIn">
@@ -35,7 +41,7 @@
 		<div class="notLoggedIn">
 			<h4>Log in via</h4>
 			<a href="<%=userService.createLoginURL(request.getRequestURI())%>"><img
-				src="./img/google.png" /></a> of 
+				src="./img/google.png" /></a> of
 			<fb:login-button scope="email" show-faces="false" />
 		</div>
 		<%

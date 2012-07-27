@@ -39,6 +39,9 @@
 	<div id="fb-root"></div>
 	<script>
 		window.fbAsyncInit = function() {
+			//disable facebook of not allowed on host (localhost for example)
+			fbLoggedIn(false);
+			//Init FB
 			FB
 					.init({
 						appId : '470201716343067', // App ID
@@ -50,7 +53,9 @@
 					});
 			// Additional initialization code here
 			FB.Event.subscribe('auth.statusChange', function(response) {
+				console.debug(response);
 				if (response.status === "connected") {
+					updateFBAccessToken(response.authResponse.accessToken);
 					fbLoggedIn(true);
 				} else {
 					fbLoggedIn(false);
@@ -58,6 +63,8 @@
 			});
 
 			$(".fbLogout").click(function() {
+				updateEmail("");
+				user.fbAccessToken = "";
 				FB.logout();
 			});
 		};
@@ -74,19 +81,6 @@
 			js.src = "//connect.facebook.net/en_US/all.js";
 			ref.parentNode.insertBefore(js, ref);
 		}(document));
-
-		function fbLoggedIn(status) {
-			if (status === true) {
-				FB.api('/me', function(user) {
-					$(".fbemail").html(user.email);
-				});
-				$(".fbLoggedIn").show();
-				$(".notLoggedIn").hide();
-			} else {
-				$(".fbLoggedIn").hide();
-				$(".notLoggedIn").show();
-			}
-		}
 	</script>
 	<!-- END Facebook stuff -->
 	<jsp:include page="home.jsp"></jsp:include>

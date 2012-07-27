@@ -1,37 +1,107 @@
-//global user object
-user = new Object();
-user.userId = "565";
-user.accessKey = "788fca3b-c546-4917-b140-124f01d222b0";
+// global user object
+var user = new Object();
+// global update object
+var updates = [];
+// get persisted or new user
+var pUser = getPersistedUser();
+// if there was something persisted
+if (!(pUser === null)) {
+	// see if the server still knows us
+	getUserById(pUser.id, pUser.accessKey);
+}
+else{
+	getNewUser();
+}
 
-function getNewUser(){
+function getNewUser() {
 	var url = "/user?action=newuser";
-	$.getJSON(url,function(data){
-		//logic
-	});
-}
-function getUserById(id,key){
-	var url = "/user?action=get&userId="+id+"&key="+key;
-	$.getJSON(url,function(data){
-		//logic
-	});
-}
-function getUserByEmail(email,key){
-	var url = "/user?action=get&email="+id+"&key="+key;
-	$.getJSON(url,function(data){
-		//logic
-	});
-}
-function setPropertiesForUser(id,key,data)
-{
-	var url = "/user?action=get&email="+id+"&key="+key;
-	for(p in data){
-		url = url+"&"+p+"="+data[p];
-	}
-	$.getJSON(url,function(data){
-		//logic
+	$.getJSON(url, function(data) {
+		console.log("Got new user: " + data.id);
+		// store the new User
+		setUser(data);	
 	});
 }
 
+function getUserById(id, key) {
+	var url = "/user?action=get&userId=" + id + "&key=" + key;
+	$.getJSON(url, function(data) {
+		// check if the user exists
+		if (typeof data.id !== "undefined" && data.id != null) {
+			console.log("Retrieved existing user");
+			setUser(data);			
+		} else {
+			getNewUser();
+		}
+	});
+}
+
+function setUser(newUser){
+	user = newUser;
+	// check fifo queue of updates
+	while(updates.length>0){
+		console.log("Processing queue... Items left: "+updates.length);
+		var update = updates.shift();
+		setProperties(update);
+	}
+	// persist the new (and updated) user
+	persistUser(user);
+}
+
+
+function updateEmail(e){
+	setProperties({email:e});
+}
+
+function updateLocation(latitude, longitude) {
+	setProperties({
+		lng : longitude,
+		lat : latitude
+	});
+}
+
+function updateFBAccessToken(token){
+	user.fbAccessToken = token;
+}
+
+function setProperties(data) {
+	if (typeof user.id === "undefined" || user.id === null) {
+			console.warn("User is still null, update is queued.");
+			updates.push(data);
+		return;
+	}
+	//update user object
+	for (p in data) {
+		user[p] = data[p];			
+	}
+	//update user object on server
+	var url = "/user?action=update&id=" + user.id + "&key=" + user.accessKey;
+	for (p in data) {
+		url = url + "&" + p + "=" + data[p];
+	}
+	$.getJSON(url, function(data) {
+		if (data) {
+			console.log("User updated on server");
+			persistUser(user);
+		} else {
+			console.warn("User could not be updated on server");
+		}
+	});
+}
+
+function fbLoggedIn(status) {
+	if (status) {
+		FB.api('/me', function(fbuser) {
+			console.log("Updating FB email...");
+			updateEmail(fbuser.email);
+			$(".fbemail").html(fbuser.email);
+		});
+		$(".fbLoggedIn").show();
+		$(".notLoggedIn").hide();
+	} else {
+		$(".fbLoggedIn").hide();
+		$(".notLoggedIn").show();
+	}
+}
 
 // Make sure we can use the url parameters on anchors.
 $(document)
@@ -46,6 +116,9 @@ $(document)
 $(document).bind(
 		"mobileinit",
 		function() {
+			$('.googleLogout').click(function(){
+				updateEmail("");
+			});
 			$('#detail').live('pagebeforeshow', function(event, ui) {
 				if (supports_local_storage()) {
 					// if the browser if capable of localStorage load cached
@@ -57,13 +130,18 @@ $(document).bind(
 
 			});
 
-			// ask location permission on first screen
-			$('#home').live('pageshow', function(event, ui) {
-				// if (navigator.geolocation)
-				// navigator.geolocation.getCurrentPosition(displayLocation,
-				// displayError);
-				$('[data-role=content]').height('100%');
-			});
+			$('#home').live(
+					'pageshow',
+					function(event, ui) {
+						// ask location permission on first screen
+						if (navigator.geolocation) {
+							console.log("found gps");
+							navigator.geolocation.watchPosition(
+									updateDistances, displayError);
+
+						}
+						$('[data-role=content]').height('100%');
+					});
 
 			$("#map").live(
 					"pagebeforeshow",
@@ -90,19 +168,18 @@ $(document).bind(
 				$("#map_canvas").gmap("refresh");
 			});
 
-			$("#locations").live(
-					"pagebeforeshow",
-					function(event, ui) {
-						loadLocations();
-						// ziedelft.webdb.getAllLocations(loadLocations);
-						// console.log("loaded Locations");
-						if (navigator.geolocation) {
-							console.log("found gps");
-							navigator.geolocation.watchPosition(
-									updateDistances, displayError);
+			$("#locations").live("pagebeforeshow", function(event, ui) {
+				loadLocations();
+				// ziedelft.webdb.getAllLocations(loadLocations);
+				// console.log("loaded Locations");
 
-						}
-					});
+				/*
+				 * // Moved to home screen if (navigator.geolocation) {
+				 * console.log("found gps");
+				 * navigator.geolocation.watchPosition( updateDistances,
+				 * displayError); }
+				 */
+			});
 
 			$("#social").live("pagebeforeshow", function(event, ui) {
 				loadTweets('#f1');
