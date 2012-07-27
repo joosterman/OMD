@@ -27,15 +27,10 @@
 				<a data-role="button" data-transition="fade" href="#thema">
 					Thema </a>
 			</div>
-
-			<div class="ui-block-b">
-				<a data-role="button" data-transition="fade" href="#messages">
-					Berichten </a>
-			</div>
 		</div>
 	</div>
 	<div data-role="footer" class="ui-bar">
-		<a data-rel="dialog" data-role="button" data-transition="slidedown" data-mini="true" href="#login">
+		<a id="login" data-rel="dialog" data-role="button" data-transition="slidedown" data-mini="true" href="#login">
 			Inloggen </a>
 	</div>
 </div>

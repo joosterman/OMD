@@ -25,6 +25,7 @@
 		$.mobile.page.prototype.options.addBackBtn = true;
 	});
 </script>
+<script type="text/javascript" src="/_ah/channel/jsapi"></script>
 <script src="/scripts/database.js"></script>
 <script src="/scripts/scripts.js"></script>
 <script
@@ -105,7 +106,6 @@
 	<jsp:include page="social.jsp"></jsp:include>
 	<jsp:include page="thema.jsp"></jsp:include>
 	<jsp:include page="login.jsp"></jsp:include>
-	<jsp:include page="messages.jsp"></jsp:include>
 	<script type="text/javascript">
 		$('[data-role=page]').live('pageshow', function(event, ui) {
 			try {
