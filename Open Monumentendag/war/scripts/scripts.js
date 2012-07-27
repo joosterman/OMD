@@ -8,8 +8,7 @@ var pUser = getPersistedUser();
 if (!(pUser === null)) {
 	// see if the server still knows us
 	getUserById(pUser.id, pUser.accessKey);
-}
-else{
+} else {
 	getNewUser();
 }
 
@@ -18,7 +17,7 @@ function getNewUser() {
 	$.getJSON(url, function(data) {
 		console.log("Got new user: " + data.id);
 		// store the new User
-		setUser(data);	
+		setUser(data);
 	});
 }
 
@@ -28,18 +27,18 @@ function getUserById(id, key) {
 		// check if the user exists
 		if (typeof data.id !== "undefined" && data.id != null) {
 			console.log("Retrieved existing user");
-			setUser(data);			
+			setUser(data);
 		} else {
 			getNewUser();
 		}
 	});
 }
 
-function setUser(newUser){
+function setUser(newUser) {
 	user = newUser;
 	// check fifo queue of updates
-	while(updates.length>0){
-		console.log("Processing queue... Items left: "+updates.length);
+	while (updates.length > 0) {
+		console.log("Processing queue... Items left: " + updates.length);
 		var update = updates.shift();
 		setProperties(update);
 	}
@@ -47,9 +46,10 @@ function setUser(newUser){
 	persistUser(user);
 }
 
-
-function updateEmail(e){
-	setProperties({email:e});
+function updateEmail(e) {
+	setProperties({
+		email : e
+	});
 }
 
 function updateLocation(latitude, longitude) {
@@ -59,21 +59,21 @@ function updateLocation(latitude, longitude) {
 	});
 }
 
-function updateFBAccessToken(token){
+function updateFBAccessToken(token) {
 	user.fbAccessToken = token;
 }
 
 function setProperties(data) {
 	if (typeof user.id === "undefined" || user.id === null) {
-			console.warn("User is still null, update is queued.");
-			updates.push(data);
+		console.warn("User is still null, update is queued.");
+		updates.push(data);
 		return;
 	}
-	//update user object
+	// update user object
 	for (p in data) {
-		user[p] = data[p];			
+		user[p] = data[p];
 	}
-	//update user object on server
+	// update user object on server
 	var url = "/user?action=update&id=" + user.id + "&key=" + user.accessKey;
 	for (p in data) {
 		url = url + "&" + p + "=" + data[p];
@@ -103,6 +103,12 @@ function fbLoggedIn(status) {
 	}
 }
 
+function isLoggedIn() {
+	return typeof user.email !== "undefined" && user.email !== null
+			&& user.email !== "";
+
+}
+
 // Make sure we can use the url parameters on anchors.
 $(document)
 		.bind(
@@ -116,7 +122,7 @@ $(document)
 $(document).bind(
 		"mobileinit",
 		function() {
-			$('.googleLogout').click(function(){
+			$('.googleLogout').click(function() {
 				updateEmail("");
 			});
 			$('#detail').live('pagebeforeshow', function(event, ui) {
