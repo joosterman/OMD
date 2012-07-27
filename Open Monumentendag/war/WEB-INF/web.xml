@@ -32,6 +32,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/data</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>LocationImageServlet</servlet-name>
+		<servlet-class>org.omd.LocationImageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LocationImageServlet</servlet-name>
+		<url-pattern>/images</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>MessagesServlet</servlet-name>
 		<servlet-class>org.omd.MessagesServlet</servlet-class>
 	</servlet>
