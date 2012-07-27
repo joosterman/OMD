@@ -13,10 +13,12 @@
 <meta
 	content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
 	name='viewport' />
+<meta name="apple-mobile-web-app-capable" content="yes" />
 <title>Open Monumentendag Delft</title>
 <link rel="stylesheet"
 	href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
 <link rel="stylesheet" href="/stylesheets/main.css" />
+<link rel="stylesheet" href="/stylesheets/photoswipe.css" />
 <script type="text/javascript"
 	src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
@@ -27,11 +29,13 @@
 </script>
 <script src="/scripts/database.js"></script>
 <script src="/scripts/scripts.js"></script>
+<script type="text/javascript" src="/scripts/klass.min.js"></script>
 <script
 	src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
 <script type="text/javascript" src="/scripts/jquery.ui.map.js"></script>
 <script type="text/javascript" src="/scripts/jquery.json-2.3.min.js"></script>
 <script type="text/javascript" src="/scripts/jqm.page.params.js"></script>
+<script type="text/javascript" src="/scripts/code.photoswipe.jquery-3.0.5.min.js"></script>
 <script type="text/javascript" src="/scripts/social.js"></script>
 </head>
 <body onload="window.scrollTo(0,1);">

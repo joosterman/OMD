@@ -26,5 +26,7 @@
 			<p id="locationInformationLabel"><b style="color: #d06516;">Overige informatie:</b><br/><span id="locationInformation"></span></p>
 			<p><b style="color: #d06516;">Omschrijving:</b><br/><span id="locationDescription"></span></p>
 		</div>
+		<ul id="Gallery" class="gallery">
+		</ul>
 	</div>
 </div>

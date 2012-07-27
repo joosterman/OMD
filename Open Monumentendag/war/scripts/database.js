@@ -83,52 +83,77 @@ function loadLocations(){
   
 
   
-  function loadLocation(id) {
-	  var location = $.evalJSON(localStorage.getItem('loc-'+id));
+function loadLocation(id) {
+	var location = $.evalJSON(localStorage.getItem('loc-'+id));
+	
+	$('.locationName').html(location.name);
+	$('#locationNumber').html(location.number /*+', '+location.city*/);
+	$('#locationAdres').html(location.street /*+', '+location.city*/);
+	$('#locationOpen').html(location.openingstijden);
+	
+	if(location.imageBlobKey.blobKey != "")
+		$('#locationImageURL').attr("src", "_ah/img/"+location.imageBlobKey.blobKey+"=s300");
+	$('#locationDescription').html(location.description);
+	$('#locationOpenSa').html(location.openingHoursSaturday);
+	$('#locationOpenSu').html(location.openingHoursSunday);
+	$('#locationInformation').html(location.info);
 	  
-	  $('.locationName').html(location.name);
-	  $('#locationNumber').html(location.number /*+', '+location.city*/);
-	  $('#locationAdres').html(location.street /*+', '+location.city*/);
-	  $('#locationOpen').html(location.openingstijden);
-	  if(location.imageBlobKey == "")
-		  $('#locationImageURL').attr("src", "_ah/img/"+location.imageBlobKey+"=s300");
-	  $('#locationDescription').html(location.description);
-	  $('#locationOpenSa').html(location.openingHoursSaturday);
-	  $('#locationOpenSu').html(location.openingHoursSunday);
-	  $('#locationInformation').html(location.info);
-	  
-	  if(location.wheelchairFriendly){
-		  $('#locationWheelChair').show();
-	  }else{
-		  $('#locationWheelChair').hide();
-	  }
-	  
+	if(location.wheelchairFriendly){
+		$('#locationWheelChair').show();
+	}else{
+		$('#locationWheelChair').hide();
+	}
+	
+	if(location.tourAvailable)
+		$('#locationInformation').append("<br/>Op deze locatie worden rondleidingen gegeven.");
+	
+	if(location.topLocation)
+		$('#locationInformation').append("<br/>Toperrrr");
+	
+	if($('#locationInformation').html() == ""){
+		$('#locationInformationLabel').hide();
+	}else{
+		$('#locationInformationLabel').show();
+	}
+	
+	if(location.openingHoursSaturday == ""){
+		$('#locationOpenSaLabel').hide();
+	}else{
+		$('#locationOpenSaLabel').show();
+	}
   
-	  if(location.tourAvailable)
-		  $('#locationInformation').append("<br/>Op deze locatie worden rondleidingen gegeven.");
-	  
-	  if(location.topLocation)
-		  $('#locationInformation').append("<br/>Toperrrr");
-	    
-	  if($('#locationInformation').html() == ""){
-		  $('#locationInformationLabel').hide();
-	  }else{
-		  $('#locationInformationLabel').show();
-	  }
-	  
-	  if(location.openingHoursSaturday == ""){
-		  $('#locationOpenSaLabel').hide();
-	  }else{
-		  $('#locationOpenSaLabel').show();
-	  }
-	  
-	  if(location.openingHoursSunday == ""){
-		  $('#locationOpenSuLabel').hide();
-	  }else{
-		  $('#locationOpenSuLabel').show();
-	  }
-	  
-  }
+	if(location.openingHoursSunday == ""){
+		$('#locationOpenSuLabel').hide();
+	}else{
+		$('#locationOpenSuLabel').show();
+	}
+	loadLocationImages(location.id);
+}
+
+function loadLocationImages(id){
+	var jsonObj = $.getJSON("/images?locationID="+id, 
+				{}
+				,parseLocationImages
+	);
+}
+
+function parseLocationImages(locations){
+	//console.log(locations);
+	var galleryList = $("#Gallery");
+	galleryList.empty();
+	
+	var result = "";
+	
+	for (i=0; i<locations.length; i++){
+		result += '<li><a href="_ah/img/'+locations[i].imageBlobKey.blobKey+'"><img src="_ah/img/'+locations[i].imageBlobKey.blobKey+'=s200" alt="#" /></a></li>';
+	}
+		
+   	var key = 'img-'+locations[0].id;
+   	localStorage.setItem(key,$.toJSON(locations));
+	
+   	galleryList.append(result);
+   	$("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
+}  
 
 function updateDistances(location) {
 	  var lat1 = location.coords.latitude, lon1 = location.coords.longitude;
@@ -152,8 +177,7 @@ function updateDistances(location) {
 		  
 	  }
 }
-
-  
+ 
 function setMarkers() {
 	//For each location put a marker on a map
 	var locationArray = $.evalJSON(localStorage.getItem("locArray"));	  
@@ -174,9 +198,7 @@ function setVisited(id) {
 	var location = $.evalJSON(localStorage.getItem('loc-'+id));
 	location.visited = true;	
 	localStorage.setItem('loc-'+id,$.toJSON(location));
-}
-  
-  
+} 
   
 function init() {
 	//load data

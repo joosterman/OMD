@@ -56,6 +56,14 @@ $(document).bind(
 				}
 
 			});
+			
+			$('#detail').live('pageshow', function(event, ui) {
+				//$("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
+			});
+			
+			$('#detail').live('pagehide', function(event, ui) {
+				//$("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
+			});
 
 			// ask location permission on first screen
 			$('#home').live('pageshow', function(event, ui) {
@@ -246,3 +254,9 @@ function supports_local_storage() {
 		return false;
 	}
 }
+
+$(document).ready(function(){
+
+	//var myPhotoSwipe = $("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
+
+});
