@@ -104,7 +104,8 @@ function loadLocation(id) {
 	$('#locationAdres').html(location.street /*+', '+location.city*/);
 	$('#locationOpen').html(location.openingstijden);
 	
-	if(location.imageBlobKey.blobKey != "")
+	console.log(location)
+	if(location.imageBlobKey != undefined)
 		$('#locationImageURL').attr("src", "_ah/img/"+location.imageBlobKey.blobKey+"=s300");
 	$('#locationDescription').html(location.description);
 	$('#locationOpenSa').html(location.openingHoursSaturday);
