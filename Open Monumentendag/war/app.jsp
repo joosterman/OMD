@@ -35,8 +35,6 @@
 <script type="text/javascript" src="/scripts/social.js"></script>
 <script type="text/javascript">
 	var _gaq = _gaq || [];
-	_gaq.push([ '_setAccount', 'UA-33703601-1' ]);
-	_gaq.push([ '_trackPageview' ]);
 
 	(function() {
 		var ga = document.createElement('script');
@@ -111,7 +109,7 @@
 	<script type="text/javascript">
 		$('[data-role=page]').live('pageshow', function(event, ui) {
 			try {
-				_gaq.push([ '_setAccount', 'YOUR_GA_ID' ]);
+				_gaq.push([ '_setAccount', 'UA-33703601-1' ]);
 				hash = location.hash;
 				if (hash) {
 					_gaq.push([ '_trackPageview', hash.substr(1) ]);
