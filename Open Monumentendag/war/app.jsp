@@ -108,6 +108,20 @@
 	<jsp:include page="thema.jsp"></jsp:include>
 	<jsp:include page="login.jsp"></jsp:include>
 	<jsp:include page="messages.jsp"></jsp:include>
+	<script type="text/javascript">
+		$('[data-role=page]').live('pageshow', function(event, ui) {
+			try {
+				_gaq.push([ '_setAccount', 'YOUR_GA_ID' ]);
+				hash = location.hash;
+				if (hash) {
+					_gaq.push([ '_trackPageview', hash.substr(1) ]);
+				} else {
+					_gaq.push([ '_trackPageview' ]);
+				}
+			} catch (err) {
+			}
+		});
+	</script>
 </body>
 
 </html>
