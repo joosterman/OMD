@@ -27,6 +27,7 @@
 		$.mobile.page.prototype.options.addBackBtn = true;
 	});
 </script>
+<script type="text/javascript" src="/_ah/channel/jsapi"></script>
 <script src="/scripts/database.js"></script>
 <script src="/scripts/scripts.js"></script>
 <script type="text/javascript" src="/scripts/klass.min.js"></script>
@@ -37,12 +38,29 @@
 <script type="text/javascript" src="/scripts/jqm.page.params.js"></script>
 <script type="text/javascript" src="/scripts/code.photoswipe.jquery-3.0.5.min.js"></script>
 <script type="text/javascript" src="/scripts/social.js"></script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+</script>
 </head>
 <body onload="window.scrollTo(0,1);">
 	<!-- BEGIN Facebook stuff -->
 	<div id="fb-root"></div>
 	<script>
 		window.fbAsyncInit = function() {
+			//disable facebook of not allowed on host (localhost for example)
+			fbLoggedIn(false);
+			//Init FB
 			FB
 					.init({
 						appId : '470201716343067', // App ID
@@ -54,7 +72,9 @@
 					});
 			// Additional initialization code here
 			FB.Event.subscribe('auth.statusChange', function(response) {
+				console.debug(response);
 				if (response.status === "connected") {
+					updateFBAccessToken(response.authResponse.accessToken);
 					fbLoggedIn(true);
 				} else {
 					fbLoggedIn(false);
@@ -62,6 +82,8 @@
 			});
 
 			$(".fbLogout").click(function() {
+				updateEmail("");
+				user.fbAccessToken = "";
 				FB.logout();
 			});
 		};
@@ -78,19 +100,6 @@
 			js.src = "//connect.facebook.net/en_US/all.js";
 			ref.parentNode.insertBefore(js, ref);
 		}(document));
-
-		function fbLoggedIn(status) {
-			if (status === true) {
-				FB.api('/me', function(user) {
-					$(".fbemail").html(user.email);
-				});
-				$(".fbLoggedIn").show();
-				$(".notLoggedIn").hide();
-			} else {
-				$(".fbLoggedIn").hide();
-				$(".notLoggedIn").show();
-			}
-		}
 	</script>
 	<!-- END Facebook stuff -->
 	<jsp:include page="home.jsp"></jsp:include>
@@ -101,7 +110,20 @@
 	<jsp:include page="social.jsp"></jsp:include>
 	<jsp:include page="thema.jsp"></jsp:include>
 	<jsp:include page="login.jsp"></jsp:include>
-	<jsp:include page="messages.jsp"></jsp:include>
+	<script type="text/javascript">
+		$('[data-role=page]').live('pageshow', function(event, ui) {
+			try {
+				_gaq.push([ '_setAccount', 'UA-33703601-1' ]);
+				hash = location.hash;
+				if (hash) {
+					_gaq.push([ '_trackPageview', hash.substr(1) ]);
+				} else {
+					_gaq.push([ '_trackPageview' ]);
+				}
+			} catch (err) {
+			}
+		});
+	</script>
 </body>
 
 </html>

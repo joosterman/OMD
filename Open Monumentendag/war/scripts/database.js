@@ -1,85 +1,101 @@
-function cacheLocations(){
-	var jsonObj = $.getJSON("/data", 
-			{}
-			,parseLocations
-	);
+function cacheLocations() {
+	var jsonObj = $.getJSON("/data", {}, parseLocations);
 }
 
-function parseLocations(locations){
-	localStorage.setItem("locArray","");	
+function getPersistedUser() {
+	console.error("User storage not implemented");
+	return null;
+}
+
+function persistUser(user) {
+	console.error("User storage not implemented");
+}
+
+function parseLocations(locations) {
+	localStorage.setItem("locArray", "");
 	var locationArray = $.evalJSON($.toJSON([]));
 
-	for (i=0; i<locations.length; i++){
-    	
-		locations[i].name = locations[i].name.replace('<p>','').replace('</p>','');
-    	locations[i].visited = false;
-    	
-    	var key = 'loc-'+locations[i].id;
-    	localStorage.setItem(key,$.toJSON(locations[i]));
-    	
-    	locationArray[i]={location : key, topLocation : locations[i].topLocation};
+	for (i = 0; i < locations.length; i++) {
 
-		}
-	
-	localStorage.setItem("locArray",$.toJSON(locationArray));	
+		locations[i].name = locations[i].name.replace('<p>', '').replace(
+				'</p>', '');
+		locations[i].visited = false;
+
+		var key = 'loc-' + locations[i].id;
+		localStorage.setItem(key, $.toJSON(locations[i]));
+
+		locationArray[i] = {
+			location : key,
+			topLocation : locations[i].topLocation
+		};
+
+	}
+
+	localStorage.setItem("locArray", $.toJSON(locationArray));
 }
 
-function loadLocations(){
+function loadLocations() {
 	var locationArray = $.evalJSON(localStorage.getItem("locArray"));
-	
+
 	var locationsList = $("#locations").find(".locationsList");
 	locationsList.empty();
-	
+
 	var topLocationsNotSet = true;
 	var result = '<li data-role="list-divider" role="heading">Algemeen</li>';
-	
-	for (i=0; i<locationArray.length; i++){
-		
-		 var location = $.evalJSON(localStorage.getItem(locationArray[i].location));
-		
-		if(location.topLocation && topLocationsNotSet){
+
+	for (i = 0; i < locationArray.length; i++) {
+
+		var location = $.evalJSON(localStorage
+				.getItem(locationArray[i].location));
+
+		if (location.topLocation && topLocationsNotSet) {
 			result += '<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-bar-e">Groen Top 10</li>';
 			topLocationsNotSet = false;
 		}
-		
-		if(location.number == 1 && location.openingHoursSunday == ""){
+
+		if (location.number == 1 && location.openingHoursSunday == "") {
 			result += '<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-bar-d">Alleen Zaterdag</li>';
 			topSatOnlyNotSet = false;
 		}
-		
-		if(location.number == 19 && location.openingHoursSaturday != "" && location.openingHoursSunday != ""){
+
+		if (location.number == 19 && location.openingHoursSaturday != ""
+				&& location.openingHoursSunday != "") {
 			result += '<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-bar-c">Zaterdag en Zondag</li>';
 			topSatSunyNotSet = false;
 		}
-		
-		if(location.number == 39 && location.openingHoursSaturday == "" && location.openingHoursSunday != ""){
+
+		if (location.number == 39 && location.openingHoursSaturday == ""
+				&& location.openingHoursSunday != "") {
 			result += '<li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-bar-a">Alleen Zondag</li>';
 			topSatSunyNotSet = false;
 		}
-		
-		
-		
+
 		var id = location.id;
 		var text = location.text;
-		
-		result += '<li id="location-'+id+'" data-corners="false" data-shadow="false" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-count ui-li-has-thumb ui-btn-up-c">';
-    	result += '<div class="ui-btn-inner ui-li">';
-    	result += '<a href="#detail?id='+id+'" class="ui-link-inherit" data-transition="slide">';
-    	result += '<img src="http://jquerymobile.com/test/docs/lists/images/album-bb.jpg" class="ui-li-thumb">';
-    	result += '<h3 class="ui-li-heading">'+location.name+'</h3>';
-    	result += '<p class="ui-li-desc">'+location.street+', '+location.city+'</p>';
-    	result += '<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" style="display: none;"></span>';
-    	result += '</a>';
-    	result += '<span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>';
-    	result += '</div">';
-    	result += '</li>';
-    	
-    	location.visited = false;
+
+		result += '<li id="location-'
+				+ id
+				+ '" data-corners="false" data-shadow="false" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-count ui-li-has-thumb ui-btn-up-c">';
+		result += '<div class="ui-btn-inner ui-li">';
+		result += '<a href="#detail?id=' + id
+				+ '" class="ui-link-inherit" data-transition="slide">';
+		result += '<img src="http://jquerymobile.com/test/docs/lists/images/album-bb.jpg" class="ui-li-thumb">';
+		result += '<h3 class="ui-li-heading">' + location.name + '</h3>';
+		result += '<p class="ui-li-desc">' + location.street + ', '
+				+ location.city + '</p>';
+		result += '<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" style="display: none;"></span>';
+		result += '</a>';
+		result += '<span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>';
+		result += '</div">';
+		result += '</li>';
+
+		location.visited = false;
 	}
-	
+
 	locationsList.append(result);
 	locationsList.listview("refresh");
 }
+<<<<<<< HEAD
   
 
   
@@ -93,10 +109,24 @@ function loadLocation(id) {
 	
 	if(location.imageBlobKey.blobKey != "")
 		$('#locationImageURL').attr("src", "_ah/img/"+location.imageBlobKey.blobKey+"=s300");
+=======
+
+function loadLocation(id) {
+	var location = $.evalJSON(localStorage.getItem('loc-' + id));
+
+	$('.locationName').html(location.name);
+	$('#locationNumber').html(location.number /* +', '+location.city */);
+	$('#locationAdres').html(location.street /* +', '+location.city */);
+	$('#locationOpen').html(location.openingstijden);
+	if (location.imageBlobKey == "")
+		$('#locationImageURL').attr("src",
+				"_ah/img/" + location.imageBlobKey + "=s300");
+>>>>>>> 343756d8458e12a0983bbab9e312b8b812a40ee5
 	$('#locationDescription').html(location.description);
 	$('#locationOpenSa').html(location.openingHoursSaturday);
 	$('#locationOpenSu').html(location.openingHoursSunday);
 	$('#locationInformation').html(location.info);
+<<<<<<< HEAD
 	  
 	if(location.wheelchairFriendly){
 		$('#locationWheelChair').show();
@@ -154,57 +184,110 @@ function parseLocationImages(locations){
    	galleryList.append(result);
    	$("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
 }  
+=======
+
+	if (location.wheelchairFriendly) {
+		$('#locationWheelChair').show();
+	} else {
+		$('#locationWheelChair').hide();
+	}
+
+	if (location.tourAvailable)
+		$('#locationInformation').append(
+				"<br/>Op deze locatie worden rondleidingen gegeven.");
+
+	if (location.topLocation)
+		$('#locationInformation').append("<br/>Toperrrr");
+
+	if ($('#locationInformation').html() == "") {
+		$('#locationInformationLabel').hide();
+	} else {
+		$('#locationInformationLabel').show();
+	}
+
+	if (location.openingHoursSaturday == "") {
+		$('#locationOpenSaLabel').hide();
+	} else {
+		$('#locationOpenSaLabel').show();
+	}
+
+	if (location.openingHoursSunday == "") {
+		$('#locationOpenSuLabel').hide();
+	} else {
+		$('#locationOpenSuLabel').show();
+	}
+
+}
+>>>>>>> 343756d8458e12a0983bbab9e312b8b812a40ee5
 
 function updateDistances(location) {
-	  var lat1 = location.coords.latitude, lon1 = location.coords.longitude;
-	  console.log(lat1+" "+lon1);
-	  //Update the server with the new location
-	  var url = "/user?action=update&userId="+user.userId+"&key="+user.accessKey+"&lng="+lon1+"&lat="+lat1;
-	  $.get(url);
-	  
-	  var locationArray = $.evalJSON(localStorage.getItem("locArray"));
-	  //console.log(locationArray);
-	  for (i=0; i<locationArray.length; i++){
-		  //console.log(locationArray[i].location);
-		  
-		  var location = $.evalJSON(localStorage.getItem(locationArray[i].location));
+	var lat1 = location.coords.latitude, lon1 = location.coords.longitude;
+	console.log(lat1 + " " + lon1);
+	// Update the server with the new location
+	updateLocation(lat1, lon1);
 
-		  if(location.latitude != null && location.longitude != null){
-		  	  $('#location-'+location.id+' span.ui-li-count').html(calculateDistance(lat1, lon1, parseFloat(location.latitude), parseFloat(location.longitude)));
-			  $('#location-'+location.id+' span.ui-li-count').show()
-			  
-		  }
-		  
-	  }
+	var locationArray = $.evalJSON(localStorage.getItem("locArray"));
+	// console.log(locationArray);
+	for (i = 0; i < locationArray.length; i++) {
+		// console.log(locationArray[i].location);
+
+		var location = $.evalJSON(localStorage
+				.getItem(locationArray[i].location));
+
+		if (location.latitude != null && location.longitude != null) {
+			$('#location-' + location.id + ' span.ui-li-count').html(
+					calculateDistance(lat1, lon1,
+							parseFloat(location.latitude),
+							parseFloat(location.longitude)));
+			$('#location-' + location.id + ' span.ui-li-count').show()
+
+		}
+
+	}
 }
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 343756d8458e12a0983bbab9e312b8b812a40ee5
 function setMarkers() {
-	//For each location put a marker on a map
-	var locationArray = $.evalJSON(localStorage.getItem("locArray"));	  
-	
-	for (i=0; i<locationArray.length; i++){
+	// For each location put a marker on a map
+	var locationArray = $.evalJSON(localStorage.getItem("locArray"));
 
-		  var location = $.evalJSON(localStorage.getItem(locationArray[i].location));
+	for (i = 0; i < locationArray.length; i++) {
 
-		  if(location.latitude != null && location.longitude != null){
-			  
-			  setMarker(location.id, location.name, location.latitude, location.longitude, location.toplocation)
-		  }
+		var location = $.evalJSON(localStorage
+				.getItem(locationArray[i].location));
+
+		if (location.latitude != null && location.longitude != null) {
+
+			setMarker(location.id, location.name, location.latitude,
+					location.longitude, location.toplocation)
+		}
 	}
 }
 
 function setVisited(id) {
+<<<<<<< HEAD
 	
 	var location = $.evalJSON(localStorage.getItem('loc-'+id));
 	location.visited = true;	
 	localStorage.setItem('loc-'+id,$.toJSON(location));
 } 
   
+=======
+
+	var location = $.evalJSON(localStorage.getItem('loc-' + id));
+	location.visited = true;
+	localStorage.setItem('loc-' + id, $.toJSON(location));
+}
+
+>>>>>>> 343756d8458e12a0983bbab9e312b8b812a40ee5
 function init() {
-	//load data
+	// load data
 	cacheLocations();
 }
-  
-$(document).ready(function(e){
+
+$(document).ready(function(e) {
 	init();
 });

@@ -19,7 +19,7 @@ public class UserServlet extends HttpServlet {
 		User u = null;
 		String action = request.getParameter("action");
 		String key = request.getParameter("key");
-		String userId = request.getParameter("userId");
+		String userId = request.getParameter("id");
 		Long id = null;
 		String output = null;
 		try {
@@ -49,7 +49,7 @@ public class UserServlet extends HttpServlet {
 			u = ofy.query(User.class).filter("accessKey", key).get();
 			if (u == null || !u.id.equals(id)) {
 				// return non-informative null
-				output = gson.toJson(null);
+				output = gson.toJson(null);//"Key id combination not correct. For this key excpected id: "+ u.id+" but got: "+id);
 			}
 			else {
 				if ("get".equals(action)) {
@@ -75,16 +75,16 @@ public class UserServlet extends HttpServlet {
 							u.location = loc;
 						}
 						catch (NumberFormatException ex) {
-							output = gson.toJson("Location not formatted correctly.");
+							output = gson.toJson(false);
 						}
 					}
 					if(output==null){							
 						ofy.put(u);
-						output = gson.toJson("User updated.");
+						output = gson.toJson(true);
 					}					
 				}
 				else{
-					output=gson.toJson("Unknown action specified.");
+					output=gson.toJson(false);
 				}
 			}
 		}
