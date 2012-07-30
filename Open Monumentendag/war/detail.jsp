@@ -12,18 +12,18 @@
 		<div style="width: 288px; height: 200px; position: relative; margin: auto; background-color: #fbfbfb; border: 1px solid #b8b8b8; overflow: hidden;">
 			<div id="locationImageURL">
 			</div>
-			<div id="locationNumber" 
-				style="background: #d06516; color: #fff; width: 30px; height: 30px; padding: 5px; font-size: x-large; position: absolute; top: 0px; left: 0px;">16</div>
-			<div id="locationWheelChair" 
-				style="width: 30px; height: 30px; font-size: x-large; position: absolute; top: 40px; left: 0px; display:none;"><img src="img/wheelchair.png" width="40px" height="40px"/></div>
+			<div id="locationNumber">16</div>
+			<div id="locationWheelChair">
+				<img src="img/wheelchair.png" width="40" height="40" alt="Rolstoel vriendelijk"/>
+			</div>
 		</div>
 		
 		<div>
 			
-			<p id="locationOpenSaLabel"><i>Zaterdag <span id="locationOpenSa"/></i></p>
-			<p id="locationOpenSuLabel"><i>Zondag <span id="locationOpenSu"/></i></p>
+			<p id="locationOpenSaLabel"><em>Zaterdag <span id="locationOpenSa"></span></em></p>
+			<p id="locationOpenSuLabel"><em>Zondag <span id="locationOpenSu"></span></em></p>
 			<p id="locationInformationLabel"><b style="color: #d06516;">Overige informatie:</b><br/><span id="locationInformation"></span></p>
-			<p><b style="color: #d06516;">Omschrijving:</b><br/><span id="locationDescription"></span></p>
+			<p><strong style="color: #d06516;">Omschrijving:</strong><br/><span id="locationDescription"></span></p>
 		</div>
 		<ul id="Gallery" class="gallery">
 		</ul>

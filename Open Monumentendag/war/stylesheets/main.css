@@ -27,3 +27,6 @@ img.logo
 .gallery li a { display: block; margin: 5px; border: 1px solid #3c3c3c; }
 .gallery li img { display: block; width: 100%; height: auto; }
 #detail .ui-content { overflow: hidden; }
+
+#locationWheelChair{ width: 30px; height: 30px; font-size: x-large; position: absolute; top: 40px; left: 0px; display:none; }
+#locationNumber{ background: #d06516; color: #fff; width: 30px; height: 30px; padding: 5px; font-size: x-large; position: absolute; top: 0px; left: 0px; }
