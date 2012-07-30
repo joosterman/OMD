@@ -216,10 +216,6 @@ $(document).bind(
 			});
 
 			$("#locations").live("pagebeforeshow", function(event, ui) {
-				loadLocations();
-				// ziedelft.webdb.getAllLocations(loadLocations);
-				// console.log("loaded Locations");
-
 				/*
 				 * // Moved to home screen if (navigator.geolocation) {
 				 * console.log("found gps");
