@@ -10,9 +10,8 @@
 		<p style="margin: 0em;"><span id="locationAdres" style="color: #d06516;"/></p>
 		<span style="color: #d06516;"/>&#47;</span>
 		<div style="width: 288px; height: 200px; position: relative; margin: auto; background-color: #fbfbfb; border: 1px solid #b8b8b8; overflow: hidden;">
-			<img id="locationImageURL"
-				src="http://codiqa.com/static/images/v2/image.png" alt="image"
-				 margin-left: -16px; margin-top: -18px" />
+			<div id="locationImageURL">
+			</div>
 			<div id="locationNumber" 
 				style="background: #d06516; color: #fff; width: 30px; height: 30px; padding: 5px; font-size: x-large; position: absolute; top: 0px; left: 0px;">16</div>
 			<div id="locationWheelChair" 

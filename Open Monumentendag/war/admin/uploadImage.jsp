@@ -77,6 +77,8 @@
 				ofy.put(li);
 				//set the correct link to the location
 				l.imageBlobKey = li.imageBlobKey;
+				ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(li.imageBlobKey).imageSize(115);				
+				l.thumbnailURL = imagesService.getServingUrl(opts);
 				ofy.put(l);				
 			}
 		}

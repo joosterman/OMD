@@ -236,7 +236,7 @@
 			if (selLoc != null) {
 				if (selLoc.imageBlobKey == null) {
 		%>
-		<p>Er is nog geen afbeelding geupload. Upload <a href="/admin/uploadImage.jsp?locationID<%=selLoc.id %>">hier</a></p>
+		<p>Er is nog geen afbeelding geupload. Upload <a href="/admin/uploadImage.jsp?locationID=<%=selLoc.id %>">hier</a></p>
 		<%
 			}
 				else {
