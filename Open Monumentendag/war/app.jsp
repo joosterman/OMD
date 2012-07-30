@@ -25,6 +25,18 @@
 <script type="text/javascript">
 	$(document).bind("mobileinit", function() {
 		$.mobile.page.prototype.options.addBackBtn = true;
+		
+		var ua = navigator.userAgent;
+		if( ua.indexOf("Android") >= 0 ){
+			 var androidversion = parseFloat(ua.slice(ua.indexOf("Android")+8));
+			 if (androidversion < 2.3){
+			 	$.mobile.defaultPageTransition = 'none';
+      			$.mobile.defaultDialogTransition = 'none';
+      			$.mobile.useFastClick = true;
+      			$('head').append('<link rel="stylesheet" href="android2.css" type="text/css" />');
+			 }
+		}
+		
 	});
 </script>
 <script type="text/javascript" src="/_ah/channel/jsapi"></script>
