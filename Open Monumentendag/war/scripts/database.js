@@ -80,9 +80,9 @@ function loadLocations() {
 		result += '<div class="ui-btn-inner ui-li">';
 		result += '<a href="#detail?id=' + id + '"';
 		result += ' class="ui-link-inherit"';
-		if(localStorage.getItem('android-v') != 'slow'){
+		/*if(localStorage.getItem('android-v') != 'slow'){
 			result += ' data-transition="slide"';
-		}
+		}*/
 		result += '>';
 		
 		result += '<img src="http://jquerymobile.com/test/docs/lists/images/album-bb.jpg" class="ui-li-thumb">';
@@ -162,7 +162,16 @@ function parseLocationImages(locations){
 	var result = "";
 	
 	for (i=0; i<locations.length; i++){
-		result += '<li><a href="_ah/img/'+locations[i].imageBlobKey.blobKey+'"><img src="_ah/img/'+locations[i].imageBlobKey.blobKey+'=s200" alt="#" /></a></li>';
+		if(locations[i].primary){
+			if(locations[i].imageURL == ""){
+				$('#locationImageURL').html('<img src="http://codiqa.com/static/images/v2/image.png" alt="image" margin-left: -16px; margin-top: -18px" />');
+			}else{
+				$('#locationImageURL').html('<a href="'+locations[i].imageURL+'"><img src="'+locations[i].imageURL+'\u003ds300'+'" alt="'+locations[i].description+'" margin-left: -16px; margin-top: -18px" /></a>');
+				$("#locationImageURL a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
+			}
+		}else{
+			result += '<li><a href="'+locations[i].imageURL+'"><img src="'+locations[i].thumbnailURL+'" alt="'+locations[i].description+'" /></a></li>';
+		}
 	}
 		
    	var key = 'img-'+locations[0].id;
