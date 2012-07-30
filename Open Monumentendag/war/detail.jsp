@@ -6,9 +6,9 @@
 		<h3 style="color: #d06516; margin: 0em;">
 			<span class="locationName"></span>
 		</h3>
-		<span style="color: #d06516;"/>&#47;</span>
-		<p style="margin: 0em;"><span id="locationAdres" style="color: #d06516;"/></p>
-		<span style="color: #d06516;"/>&#47;</span>
+		<span style="color: #d06516;">&#47;</span>
+		<p style="margin: 0em;"><span id="locationAdres" style="color: #d06516;"></span></p>
+		<span style="color: #d06516;">&#47;</span>
 		<div style="width: 288px; height: 200px; position: relative; margin: auto; background-color: #fbfbfb; border: 1px solid #b8b8b8; overflow: hidden;">
 			<div id="locationImageURL">
 			</div>
