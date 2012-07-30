@@ -35,48 +35,6 @@ function parseLocations(locations) {
 }
   
 function loadLocation(id) {
-	var location = $.evalJSON(localStorage.getItem('loc-'+id));
-	
-	$('.locationName').html(location.name);
-	$('#locationNumber').html(location.number /*+', '+location.city*/);
-	$('#locationAdres').html(location.street /*+', '+location.city*/);
-	$('#locationOpen').html(location.openingstijden);
-	
-	//console.log(location)
-	$('#locationDescription').html(location.description);
-	$('#locationOpenSa').html(location.openingHoursSaturday);
-	$('#locationOpenSu').html(location.openingHoursSunday);
-	$('#locationInformation').html(location.info);
-	  
-	if(location.wheelchairFriendly){
-		$('#locationWheelChair').show();
-	}else{
-		$('#locationWheelChair').hide();
-	}
-	
-	if(location.tourAvailable)
-		$('#locationInformation').append("<br/>Op deze locatie worden rondleidingen gegeven.");
-	
-	if(location.topLocation)
-		$('#locationInformation').append("<br/>Toperrrr");
-	
-	if($('#locationInformation').html() == ""){
-		$('#locationInformationLabel').hide();
-	}else{
-		$('#locationInformationLabel').show();
-	}
-	
-	if(location.openingHoursSaturday == ""){
-		$('#locationOpenSaLabel').hide();
-	}else{
-		$('#locationOpenSaLabel').show();
-	}
-  
-	if(location.openingHoursSunday == ""){
-		$('#locationOpenSuLabel').hide();
-	}else{
-		$('#locationOpenSuLabel').show();
-	}
 	loadLocationImages(location.id);
 }
 
