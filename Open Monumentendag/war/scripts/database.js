@@ -73,16 +73,21 @@ function loadLocations() {
 		var id = location.id;
 		var text = location.text;
 
-		result += '<li id="location-'
-				+ id
-				+ '" data-corners="false" data-shadow="false" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-count ui-li-has-thumb ui-btn-up-c">';
+		result += '<li id="location-' + id + '"';
+		result += ' data-corners="false" data-shadow="false" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c"';
+		result += ' class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-count ui-li-has-thumb ui-btn-hover-c ui-btn-up-c">';
+		
 		result += '<div class="ui-btn-inner ui-li">';
-		result += '<a href="#detail?id=' + id
-				+ '" class="ui-link-inherit" data-transition="slide">';
+		result += '<a href="#detail?id=' + id + '"';
+		result += ' class="ui-link-inherit"';
+		if(localStorage.getItem('android-v') != 'slow'){
+			result += ' data-transition="slide"';
+		}
+		result += '>';
+		
 		result += '<img src="http://jquerymobile.com/test/docs/lists/images/album-bb.jpg" class="ui-li-thumb">';
 		result += '<h3 class="ui-li-heading">' + location.name + '</h3>';
-		result += '<p class="ui-li-desc">' + location.street + ', '
-				+ location.city + '</p>';
+		result += '<p class="ui-li-desc">' + location.street + ', ' + location.city + '</p>';
 		result += '<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" style="display: none;"></span>';
 		result += '</a>';
 		result += '<span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>';

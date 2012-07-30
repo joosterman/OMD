@@ -229,7 +229,7 @@ $(document).bind(
 			});
 
 			$("#social").live("pagebeforeshow", function(event, ui) {
-				loadTweets('#f1');
+				loadTweets('delft');
 			});
 
 		});

@@ -19,6 +19,7 @@
 	href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
 <link rel="stylesheet" href="/stylesheets/main.css" />
 <link rel="stylesheet" href="/stylesheets/photoswipe.css" />
+<link rel="stylesheet" href="/stylesheets/android2.css" type="text/css" />
 <script type="text/javascript"
 	src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
@@ -33,7 +34,8 @@
 			 	$.mobile.defaultPageTransition = 'none';
       			$.mobile.defaultDialogTransition = 'none';
       			$.mobile.useFastClick = true;
-      			$('head').append('<link rel="stylesheet" href="android2.css" type="text/css" />');
+      			//$('head').append('<link rel="stylesheet" href="/stylesheets/android2.css" type="text/css" />');
+      			localStorage.setItem('android-v', 'slow');
 			 }
 		}
 		
