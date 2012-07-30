@@ -114,10 +114,10 @@ function setProperties(data) {
 	});
 	
 	if(isLoggedIn()){
-		$("#login .ui-btn-text").text("Ingelogd");
+		$("#loginLink .ui-btn-text").text("Ingelogd");
 	}
 	else{
-		$("#login .ui-btn-text").text("Inloggen");
+		$("#loginLink .ui-btn-text").text("Inloggen");
 	}
 }
 

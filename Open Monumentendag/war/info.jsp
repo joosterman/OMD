@@ -16,7 +16,7 @@
 		<footer>
 			De Open Monumenten Dag werd mede mogelijk gemaakt door Jasper & Bas
 			Inc. <br /> <img class="logo" alt="Logo van hoofdsponsor Rabobank"
-				src="./img/logo_rabobank.png" width="50%">
+				src="./img/logo_rabobank.png">
 		</footer>
 	</div>
 </div>

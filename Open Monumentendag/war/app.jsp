@@ -2,7 +2,7 @@
 <%!UserService userService = UserServiceFactory.getUserService();%>
 
 <!DOCTYPE html>
-<html xmlns:fb="https://www.facebook.com/2008/fbml">
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <!--Apple Icons

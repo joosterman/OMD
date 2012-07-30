@@ -18,7 +18,8 @@
 		%>
 		<script type="text/javascript">
 		console.log("Updating google email");
-		updateEmail('<%=email%>');
+		updateEmail('<%=email%>
+			');
 		</script>
 		<p>
 
@@ -41,8 +42,9 @@
 		<div class="notLoggedIn">
 			<h4>Log in via</h4>
 			<a href="<%=userService.createLoginURL(request.getRequestURI())%>"><img
-				src="./img/google.png" /></a> of
-			<fb:login-button scope="email" show-faces="false" />
+				src="./img/google.png" alt="Google logo" /></a> of
+			<div class="fb-login-button" data-show-faces="false"
+				data-scope="email" data-width="200" data-max-rows="1"></div>
 		</div>
 		<%
 			}

@@ -30,7 +30,7 @@
 		</div>
 	</div>
 	<div data-role="footer" class="ui-bar">
-		<a id="login" data-rel="dialog" data-role="button" data-transition="slidedown" data-mini="true" href="#login">
+		<a id="loginLink" data-rel="dialog" data-role="button" data-transition="slidedown" data-mini="true" href="#login">
 			Inloggen </a>
 	</div>
 </div>
