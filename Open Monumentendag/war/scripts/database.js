@@ -1,10 +1,18 @@
 function getPersistedUser() {
-	console.error("User storage not implemented");
-	return null;
+	if(supports_local_storage){
+		return $.parseJSON(localStorage.getItem("user"));
+	}else{
+		console.error("User storage not implemented");
+		return null;
+	}
 }
 
 function persistUser(user) {
-	console.error("User storage not implemented");
+	if(supports_local_storage){
+		localStorage.setItem("user", $.toJSON(user));
+	}else{
+		console.error("User storage not implemented");
+	}
 }
 
 function cacheLocations() {
@@ -35,6 +43,48 @@ function parseLocations(locations) {
 }
   
 function loadLocation(id) {
+	var location = $.evalJSON(localStorage.getItem('loc-'+id));
+
+	$('.locationName').html(location.name);
+	$('#locationNumber').html(location.number /*+', '+location.city*/);
+	$('#locationAdres').html(location.street /*+', '+location.city*/);
+	$('#locationOpen').html(location.openingstijden);
+
+	//console.log(location)
+	$('#locationDescription').html(location.description);
+	$('#locationOpenSa').html(location.openingHoursSaturday);
+	$('#locationOpenSu').html(location.openingHoursSunday);
+	$('#locationInformation').html(location.info);
+
+	if(location.wheelchairFriendly){
+		$('#locationWheelChair').show();
+	}else{
+		$('#locationWheelChair').hide();
+	}
+
+	if(location.tourAvailable)
+		$('#locationInformation').append("<br/>Op deze locatie worden rondleidingen gegeven.");
+
+	if(location.topLocation)
+		$('#locationInformation').append("<br/>Toperrrr");
+
+	if($('#locationInformation').html() == ""){
+		$('#locationInformationLabel').hide();
+	}else{
+		$('#locationInformationLabel').show();
+	}
+
+	if(location.openingHoursSaturday == ""){
+		$('#locationOpenSaLabel').hide();
+	}else{
+		$('#locationOpenSaLabel').show();
+	}
+  
+	if(location.openingHoursSunday == ""){
+		$('#locationOpenSuLabel').hide();
+	}else{
+		$('#locationOpenSuLabel').show();
+	}
 	loadLocationImages(location.id);
 }
 
@@ -125,6 +175,14 @@ function setVisited(id) {
 function init() {
 	// load data
 	cacheLocations();
+}
+
+function supports_local_storage() {
+	try {
+		return 'localStorage' in window && window['localStorage'] !== null;
+	} catch (e) {
+		return false;
+	}
 }
 
 $(document).ready(function(e) {
