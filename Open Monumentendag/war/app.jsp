@@ -16,37 +16,24 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <title>Open Monumentendag Delft</title>
 <link rel="stylesheet"
-	href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+	href="http://jquerymobile.com/test/css/themes/default/jquery.mobile.css" />
 <link rel="stylesheet" href="/stylesheets/main.css" />
 <link rel="stylesheet" href="/stylesheets/photoswipe.css" />
 <link rel="stylesheet" href="/stylesheets/android2.css" type="text/css" />
 <script type="text/javascript"
 	src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script src="http://jquerymobile.com/test/js/jquery.js"></script>
 <script type="text/javascript">
 	$(document).bind("mobileinit", function() {
 		$.mobile.page.prototype.options.addBackBtn = true;
-		
-		var ua = navigator.userAgent;
-		if( ua.indexOf("Android") >= 0 ){
-			 var androidversion = parseFloat(ua.slice(ua.indexOf("Android")+8));
-			 if (androidversion < 2.3){
-			 	$.mobile.defaultPageTransition = 'none';
-      			$.mobile.defaultDialogTransition = 'none';
-      			$.mobile.useFastClick = true;
-      			//$('head').append('<link rel="stylesheet" href="/stylesheets/android2.css" type="text/css" />');
-      			localStorage.setItem('android-v', 'slow');
-			 }
-		}
-		
 	});
 </script>
-<script type="text/javascript" src="/_ah/channel/jsapi"></script>
+<!--<script type="text/javascript" src="/_ah/channel/jsapi"></script> -->
 <script src="/scripts/database.js"></script>
 <script src="/scripts/scripts.js"></script>
 <script type="text/javascript" src="/scripts/klass.min.js"></script>
 <script
-	src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+	src="http://jquerymobile.com/test/js/jquery.mobile.js"></script>
 <script type="text/javascript" src="/scripts/jquery.ui.map.js"></script>
 <script type="text/javascript" src="/scripts/jquery.json-2.3.min.js"></script>
 <script type="text/javascript" src="/scripts/jqm.page.params.js"></script>

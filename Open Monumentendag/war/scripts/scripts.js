@@ -49,10 +49,10 @@ function setUser(newUser) {
 	persistUser(user);
 	
 	//close existing channel
-	if(socket!=null)
+	/*if(socket!=null)
 		socket.close();
 	//open a channel for this user
-	$.getJSON("/messages", "id=" + user.id, connectToChannel);
+	$.getJSON("/messages", "id=" + user.id, connectToChannel);*/
 }
 
 function connectToChannel(token) {
@@ -216,10 +216,6 @@ $(document).bind(
 			});
 
 			$("#locations").live("pagebeforeshow", function(event, ui) {
-				loadLocations();
-				// ziedelft.webdb.getAllLocations(loadLocations);
-				// console.log("loaded Locations");
-
 				/*
 				 * // Moved to home screen if (navigator.geolocation) {
 				 * console.log("found gps");
@@ -360,14 +356,6 @@ function displayError(error) {
 	default:
 		locationElement.innerHTML = "Who knows what happened...";
 		break;
-	}
-}
-
-function supports_local_storage() {
-	try {
-		return 'localStorage' in window && window['localStorage'] !== null;
-	} catch (e) {
-		return false;
 	}
 }
 

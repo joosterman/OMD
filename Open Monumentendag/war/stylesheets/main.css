@@ -29,4 +29,28 @@ img.logo
 #detail .ui-content { overflow: hidden; }
 
 #locationWheelChair{ width: 30px; height: 30px; font-size: x-large; position: absolute; top: 40px; left: 0px; display:none; }
-#locationNumber{ background: #d06516; color: #fff; width: 30px; height: 30px; padding: 5px; font-size: x-large; position: absolute; top: 0px; left: 0px; }
+#locationNumberDD{ background: #d06516; color: #fff; width: 30px; height: 30px; padding: 5px; font-size: x-large; position: absolute; top: 0px; left: 0px; }
+#locationNumberSD{ background: #d06516; color: #fff; width: 30px; height: 30px; padding: 5px; font-size: x-large; position: absolute; top: 0px; left: 0px; }
+
+div.detail
+#detailHeader{
+	background: #d06516;
+	color: #fff;
+	border-color: #d06516;
+}
+
+#title{
+	margin: 0em;
+}
+
+#image{width: 288px; height: 200px; position: relative; margin: auto; background-color: #fbfbfb; border: 1px solid #b8b8b8; overflow: hidden; }
+
+/* Orange style*/
+.orange{color: #d06516;}
+
+/* OMD KLEURCODES
+ * Oranje: #D06516
+ * Roze:   #D599C1
+ * Blauw:  #3D66B5
+ * Groen:  #4C9C3E
+ */
