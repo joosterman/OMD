@@ -190,26 +190,24 @@ $(document).bind(
 						$('[data-role=content]').height('100%');
 					});
 
-			$("#map").live(
-					"pagebeforeshow",
-					function(event, ui) {
-						// $("#map_canvas").gmap({'callback' : function() {
-						if (navigator.geolocation)
-							navigator.geolocation.getCurrentPosition(
-									displayCurrentLocation, displayError);
-						// }
-						// });
+			$("#map").live("pagebeforeshow", function(event, ui) {
+				// $("#map_canvas").gmap({'callback' : function() {
+				if (navigator.geolocation)
+					navigator.geolocation.getCurrentPosition(
+							displayCurrentLocation, displayError);
+				// }
+				// });
 
-						// set map height
-						$('[data-role=content]').height(
-								$(window).height()
-										- (42 + $('[data-role=header]').last()
-												.height()));
+				// set map height
+				$('[data-role=content]').height(
+						$(window).height()
+								- (42 + $('[data-role=header]').last()
+										.height()));
 
-						setMarkers();
-						// drawPolyLine(monuments);
-						// $("#map_canvas").gmap("refresh");
-					});
+				setMarkers();
+				// drawPolyLine(monuments);
+				// $("#map_canvas").gmap("refresh");
+			});
 
 			$("#map").live("pageshow", function(event, ui) {
 				$("#map_canvas").gmap("refresh");
@@ -237,11 +235,11 @@ function displayCurrentLocation(location) {
 
 	$("#map_canvas").gmap("addMarker", {
 		"position" : loc,
-		"bounds" : true,
+		"bounds" : false,
 		"title" : "You are here!"
 	});
-	// $("#map_canvas").gmap("option","center", loc);
-	// $("#map_canvas").gmap("option","zoom", 44);
+	$("#map_canvas").gmap("option","center", new google.maps.LatLng(52.012443,4.356047));
+	$("#map_canvas").gmap("option","zoom", 10);
 	$("#map_canvas").gmap("option", "mapTypeId", google.maps.MapTypeId.ROADMAP);
 	// $("#map_canvas").gmap("refresh");
 }
@@ -290,7 +288,7 @@ function setMarker(id, title, lat, lon, top) {
 		'shape' : shape,
 		'title' : title,
 		'zIndex' : id,
-		'bounds' : true
+		'bounds' : false
 	});
 }
 
