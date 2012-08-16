@@ -28,7 +28,7 @@
 		$.mobile.page.prototype.options.addBackBtn = true;
 	});
 </script>
-<script type="text/javascript" src="/_ah/channel/jsapi"></script>
+<!--<script type="text/javascript" src="/_ah/channel/jsapi"></script> -->
 <script src="/scripts/database.js"></script>
 <script src="/scripts/scripts.js"></script>
 <script type="text/javascript" src="/scripts/klass.min.js"></script>
