@@ -1,7 +1,6 @@
 package org.omd;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -16,10 +15,6 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
 public class LocationsServlet extends HttpServlet {
-
-	private boolean isNullOrEmpty(String s) {
-		return s == null || s.trim().equals("");
-	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setContentType("application/json; charset=UTF-8");
@@ -49,39 +44,7 @@ public class LocationsServlet extends HttpServlet {
 			Collections.sort(locs, new Comparator<Location>() {
 				@Override
 				public int compare(Location o1, Location o2) {
-					// check special location (no number)
-					boolean o1empty = isNullOrEmpty(o1.number);
-					boolean o2empty = isNullOrEmpty(o2.number);
-					if (o1empty && !o2empty)
-						return -1;
-					else if (!o1empty && o2empty)
-						return 1;
-					else if (o1empty && o2empty)
-						//intentional reverse sort
-						return o2.name.compareTo(o1.name);
-					else {
-						// check top location vs normal location
-						if (o1.topLocation && !o2.topLocation)
-							return -1;
-						else if (!o1.topLocation && o2.topLocation)
-							return 1;
-						else {
-							try {
-								int nr1 = Integer.valueOf(o1.number);
-								int nr2 = Integer.valueOf(o2.number);
-								if(nr1<nr2)
-									return -1;
-								else if(nr1>nr2)
-									return 1;
-								else
-									return 0;
-							}
-							catch (NumberFormatException ex) {
-								return 0;
-							}
-						}
-					}
-
+					return LocationsSort.compareLocations(o1, o2);
 				}
 
 			});
