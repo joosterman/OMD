@@ -185,13 +185,14 @@ function setMarkers() {
 
 		var location = $.evalJSON(localStorage
 				.getItem(locationArray[i].location));
-		console.log(location.latitude);
+		
 		if (location.latitude != undefined && location.longitude != undefined) {
-			if(location.latude > 1 && location.longitude > 1){
+			//if(location.latude > 1 && location.longitude > 1){
+			console.log("Setting marker!");
 
 				setMarker(location.id, location.name, location.latitude,
 						location.longitude, location.toplocation);
-			}
+			//}
 		}
 	}
 }

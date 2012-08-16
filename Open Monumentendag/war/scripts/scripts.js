@@ -205,6 +205,12 @@ $(document).bind(
 										.height()));
 
 				setMarkers();
+				
+				if(localStorage.getItem("mapsUsed") == null){
+					$("#map_canvas").gmap("option","center", new google.maps.LatLng(52.012443,4.356047));
+					$("#map_canvas").gmap("option","zoom", 13);
+					//localStorage.setItem("mapsUsed",true);
+				}
 				// drawPolyLine(monuments);
 				// $("#map_canvas").gmap("refresh");
 			});
@@ -238,10 +244,9 @@ function displayCurrentLocation(location) {
 		"bounds" : false,
 		"title" : "You are here!"
 	});
-	$("#map_canvas").gmap("option","center", new google.maps.LatLng(52.012443,4.356047));
-	$("#map_canvas").gmap("option","zoom", 10);
-	$("#map_canvas").gmap("option", "mapTypeId", google.maps.MapTypeId.ROADMAP);
-	// $("#map_canvas").gmap("refresh");
+	//$("#map_canvas").gmap("option", "mapTypeId", google.maps.MapTypeId.ROADMAP);
+	
+	//$("#map_canvas").gmap("refresh");
 }
 
 function setMarker(id, title, lat, lon, top) {
