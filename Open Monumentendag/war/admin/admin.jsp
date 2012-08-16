@@ -14,6 +14,7 @@
 <%@ page import="com.google.appengine.api.images.ImagesService"%>
 <%@ page import="com.google.appengine.api.images.ImagesServiceFactory"%>
 <%@ page import="com.google.appengine.api.blobstore.*"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 
 <%!//declarations
 	BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();

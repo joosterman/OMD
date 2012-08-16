@@ -1,3 +1,4 @@
+<%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="java.lang.reflect.Modifier"%>
 <%@ page import="java.lang.reflect.Field"%>
 <%@ page import="com.googlecode.objectify.Objectify"%>
@@ -14,6 +15,9 @@
 <%@ page import="com.google.appengine.api.images.ImagesService"%>
 <%@ page import="com.google.appengine.api.images.ImagesServiceFactory"%>
 <%@ page import="com.google.appengine.api.blobstore.BlobKey"%>
+<%@ page import="org.apache.commons.lang3.*"%>
+
+<%@ page contentType="text/html; charset=UTF-8"  %>
 
 <%
 	String locations = request.getParameter("locations");
@@ -30,7 +34,7 @@
 		Location loc;
 		while (line != null && line.length() > 0) {
 			//break up into pieces
-			String[] fields = line.split(";",-1);
+			String[] fields = line.split("\\t",-1);
 			//create and fill location object
 			loc = new Location();
 			loc.topLocation = fields[0].equals("ja");
@@ -58,7 +62,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="./stylesheets/admin.css" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 <script type="text/javascript"
 	src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript"></script>
