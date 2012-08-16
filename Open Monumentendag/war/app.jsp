@@ -27,6 +27,7 @@
 <script type="text/javascript">
 	$(document).bind("mobileinit", function() {
 		$.mobile.page.prototype.options.addBackBtn = true;
+		//$.mobile.page.prototype.options.domCache = true;
 	});
 </script>
 <!--<script type="text/javascript" src="/_ah/channel/jsapi"></script> -->
