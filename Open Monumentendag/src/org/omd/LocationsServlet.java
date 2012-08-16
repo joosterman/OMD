@@ -22,6 +22,8 @@ public class LocationsServlet extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		response.setContentType("application/json; charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");		
 		// initialize
 		Objectify ofy = ObjectifyService.begin();
 		Gson gson = new Gson();
@@ -83,7 +85,8 @@ public class LocationsServlet extends HttpServlet {
 				}
 
 			});
-			response.getWriter().write(gson.toJson(locs));
+			String result = gson.toJson(locs);
+			response.getWriter().write(result);
 		}
 	}
 }
