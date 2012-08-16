@@ -279,28 +279,29 @@
 	<h2>Image preview</h2>
 	<em>Click top-left following by bottom-right to set crop</em><br />
 		<%
+			//System.out.println(selImage);
+			//System.out.println(selImage.imageBlobKey);
 			if (selImage != null) {
-					if (selImage.imageBlobKey == null) {
-		%>
-		<p>Er is nog geen afbeelding geupload.</p>
-		<%
+				if (selImage.imageBlobKey == null) {
+					%>
+					<p>Er is nog geen afbeelding geupload.</p>
+					<%
+				}else{
+					ServingUrlOptions op = ServingUrlOptions.Builder.withBlobKey(selImage.imageBlobKey);
+					%>
+					<img class="measure" src="<%=imagesService.getServingUrl(op)%>" />
+					<%
+				}
+				%>
+				<form
+					action="<%=blobstoreService.createUploadUrl("/admin/imageUpload?selId=" + selId + "&imageId=" + imageId)%>"
+					method="post" enctype="multipart/form-data">
+					<input type="file" name="locationImage"> <input type="submit"
+						<%=(selLoc == null) ? "disabled=disabled" : ""%> value="upload">
+				</form>
+			<%
 			}
-					else {
-						ServingUrlOptions op = ServingUrlOptions.Builder.withBlobKey(selImage.imageBlobKey);
-		%>
-		<img class="measure" src="<%=imagesService.getServingUrl(op)%>" />
-		<%
-			}
-		%>
-		<form
-			action="<%=blobstoreService.createUploadUrl("/admin/imageUpload?selId=" + selId + "&imageId=" + imageId)%>"
-			method="post" enctype="multipart/form-data">
-			<input type="file" name="locationImage"> <input type="submit"
-				<%=(selLoc == null) ? "disabled=disabled" : ""%> value="upload">
-		</form>
-		<%
-			}
-		%>
+			%>
 
 	</div>
 	<div class="images">
