@@ -3,7 +3,6 @@ package org.omd;
 import java.util.Date;
 
 import javax.persistence.Id;
-import javax.persistence.Transient;
 
 import org.omd.UserField.FieldType;
 
@@ -39,7 +38,7 @@ public class Location {
 	public String latitude;
 	@UserField
 	public String longitude;
-	@Transient
+	//@Transient
 	public BlobKey imageBlobKey;
 	public Date lastChanged;
 	public String thumbnailURL;

@@ -1,19 +1,17 @@
 package org.omd;
 
 import javax.persistence.Id;
-import javax.persistence.Transient;
 
 import org.omd.UserField.FieldType;
 
 import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.images.ServingUrlOptions;
 
 public class LocationImage {
 
 	@Id
 	public Long id;
 	public Long locationID;
-	@Transient
+	//@Transient
 	public BlobKey imageBlobKey;
 	@UserField
 	public String filename;
