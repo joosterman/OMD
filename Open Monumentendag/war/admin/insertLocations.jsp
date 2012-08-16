@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="java.lang.reflect.Modifier"%>
 <%@ page import="java.lang.reflect.Field"%>
@@ -15,9 +16,6 @@
 <%@ page import="com.google.appengine.api.images.ImagesService"%>
 <%@ page import="com.google.appengine.api.images.ImagesServiceFactory"%>
 <%@ page import="com.google.appengine.api.blobstore.BlobKey"%>
-<%@ page import="org.apache.commons.lang3.*"%>
-
-<%@ page contentType="text/html; charset=UTF-8"  %>
 
 <%
 	String locations = request.getParameter("locations");

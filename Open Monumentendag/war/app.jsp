@@ -1,4 +1,5 @@
 <%@ page import="com.google.appengine.api.users.*"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%!UserService userService = UserServiceFactory.getUserService();%>
 
 <!DOCTYPE html>

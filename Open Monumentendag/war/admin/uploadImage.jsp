@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@page import="com.google.appengine.api.images.ServingUrlOptions"%>
 <%@page import="java.lang.reflect.Modifier"%>
 <%@ page import="java.lang.reflect.Field"%>
