@@ -9,11 +9,10 @@
 
 <%!//get all locations
 Objectify ofy = ObjectifyService.begin();
-
-List<Location> locs = ofy.query(Location.class).list();
 // sort locations based on toplocation and number
 %>
 <%
+List<Location> locs = ofy.query(Location.class).list();
 Collections.sort(locs, new Comparator<Location>() {
 	public int compare(Location o1, Location o2) {
 		// check special location (no number)
