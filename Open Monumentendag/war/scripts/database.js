@@ -46,9 +46,16 @@ function loadLocation(id) {
 	var location = $.evalJSON(localStorage.getItem('loc-'+id));
 
 	$('.locationName').html(location.name);
-	$('#locationNumber').html(location.number /*+', '+location.city*/);
-	$('#locationAdres').html(location.street /*+', '+location.city*/);
+	$('#locationStreet').html(location.street /*+', '+location.city*/);	
 	$('#locationOpen').html(location.openingstijden);
+	$('#locationNumber').html(location.number);
+	if(parseInt(location.number) < 10 || location.number == "S" ||  location.number == "D"){
+		$('#locationNumber').addClass("locationNumberSD");
+		$('#locationNumber').removeClass("locationNumberDD");
+	}else{
+		$('#locationNumber').addClass("locationNumberDD");
+		$('#locationNumber').removeClass("locationNumberSD");
+	}
 
 	//console.log(location)
 	$('#locationDescription').html(location.description);
@@ -66,7 +73,7 @@ function loadLocation(id) {
 		$('#locationInformation').append("<br/>Op deze locatie worden rondleidingen gegeven.");
 
 	if(location.topLocation)
-		$('#locationInformation').append("<br/>Toperrrr");
+		$('#locationInformation').append("<br/>Dit is een toplocatie.");
 
 	if($('#locationInformation').html() == ""){
 		$('#locationInformationLabel').hide();
@@ -85,6 +92,31 @@ function loadLocation(id) {
 	}else{
 		$('#locationOpenSuLabel').show();
 	}
+	
+	//Set colors
+	var color = "";
+	if(location.number == "S" ||  location.number == "D"){
+		color = "yellow";
+	}else if(location.topLocation){
+		color = "green";
+	}else if(parseInt(location.number) <=18){
+		color = "orange";
+	}else if(parseInt(location.number) <=38){
+		color = "blue";
+	}else{
+		color = "pink";
+	}
+	
+	$('#detailHeader').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
+	$('#locationNumber').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
+	$('#title').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
+	$('#detailInformation').find('strong').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
+	
+	$('#detailHeader').addClass(color+"Background");
+	$('#locationNumber').addClass(color+"Background");
+	$('#title').addClass(color+"Color");
+	$('#detailInformation').find('strong').addClass(color+"Color");
+	
 	loadLocationImages(location.id);
 }
 
@@ -104,14 +136,11 @@ function parseLocationImages(locations){
 	
 	for (i=0; i<locations.length; i++){
 		if(locations[i].primary){
-			if(locations[i].imageURL == ""){
-				$('#locationImageURL').html('<img src="http://codiqa.com/static/images/v2/image.png" alt="image" margin-left: -16px; margin-top: -18px" />');
-			}else{
-				$('#locationImageURL').html('<a href="'+locations[i].imageURL+'"><img src="'+locations[i].imageURL+'\u003ds300'+'" alt="'+locations[i].description+'" margin-left: -16px; margin-top: -18px" /></a>');
-				$("#locationImageURL a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
-			}
+			$('#locationImageURL').html('<a href="'+locations[i].imageURL+'"><img src="'+locations[i].imageURL+'" alt="'+locations[i].description+'" id="primaryImage"/></a>');
+			$("#locationImageURL a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
 		}else{
-			result += '<li><a href="'+locations[i].imageURL+'"><img src="'+locations[i].thumbnailURL+'" alt="'+locations[i].description+'" /></a></li>';
+			if(locations[i].imageURL != undefined)
+				result += '<li><a href="'+locations[i].imageURL+'"><img src="'+locations[i].thumbnailURL+'" alt="'+locations[i].description+'" /></a></li>';
 		}
 	}
 		
@@ -156,11 +185,13 @@ function setMarkers() {
 
 		var location = $.evalJSON(localStorage
 				.getItem(locationArray[i].location));
+		console.log(location.latitude);
+		if (location.latitude != undefined && location.longitude != undefined) {
+			if(location.latude > 1 && location.longitude > 1){
 
-		if (location.latitude != null && location.longitude != null) {
-
-			setMarker(location.id, location.name, location.latitude,
-					location.longitude, location.toplocation)
+				setMarker(location.id, location.name, location.latitude,
+						location.longitude, location.toplocation);
+			}
 		}
 	}
 }
