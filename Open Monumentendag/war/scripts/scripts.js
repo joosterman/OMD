@@ -28,7 +28,7 @@ function getUserById(id, key) {
 	var url = "/user?action=get&userId=" + id + "&key=" + key;
 	$.getJSON(url, function(data) {
 		// check if the user exists
-		if (typeof data.id !== "undefined" && data.id != null) {
+		if (data!=null && typeof data.id !== "undefined" && data.id != null) {
 			console.log("Retrieved existing user");
 			setUser(data);
 		} else {
