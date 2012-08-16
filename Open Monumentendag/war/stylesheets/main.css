@@ -28,29 +28,43 @@ img.logo
 .gallery li img { display: block; width: 100%; height: auto; }
 #detail .ui-content { overflow: hidden; }
 
+
+/* DETAIL PAGE */
+/* Generic*/
 #locationWheelChair{ width: 30px; height: 30px; font-size: x-large; position: absolute; top: 40px; left: 0px; display:none; }
-#locationNumberDD{ background: #d06516; color: #fff; width: 30px; height: 30px; padding: 5px; font-size: x-large; position: absolute; top: 0px; left: 0px; }
-#locationNumberSD{ background: #d06516; color: #fff; width: 30px; height: 30px; padding: 5px; font-size: x-large; position: absolute; top: 0px; left: 0px; }
-
-div.detail
-#detailHeader{
-	background: #d06516;
-	color: #fff;
-	border-color: #d06516;
-}
-
-#title{
+#locationNumber{ height: 30px; font-size: x-large; position: absolute; top: 0px; left: 0px; }
+.locationNumberDD{ width: 30px; padding: 5px; }
+.locationNumberSD{ width: 17px; padding: 5px 10px 5px 13px; }
+#image{margin: auto; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8; overflow: hidden; }
+#primaryImage {width: 100%; margin-bottom: -4px;}
+#title h3 p{
 	margin: 0em;
 }
 
-#image{width: 288px; height: 200px; position: relative; margin: auto; background-color: #fbfbfb; border: 1px solid #b8b8b8; overflow: hidden; }
+/* Orange style */
+.orangeBackground{ background: #d06516; color: #fff; border-color: #d06516; }
+.orangeColor{ color: #d06516; }
 
-/* Orange style*/
-.orange{color: #d06516;}
+/* Pink style */
+.pinkBackground{ background: #D599C1; color: #fff; border-color: #D599C1; }
+.pinkColor{ color: #D599C1; }
+
+/* Ble style */
+.blueBackground{ background: #3D66B5; color: #fff; border-color: #3D66B5; }
+.blueColor{ color: #3D66B5; }
+
+/* Green style */
+.greenBackground{ background: #4C9C3E; color: #fff; border-color: #4C9C3E; }
+.greenColor{ color: #4C9C3E; }
+
+/* Yellow style */
+.yellowBackground{ background: #f8dc00; color: #3070b5; border-color: #f8dc00; }
+.yellowColor{ color: #f8dc00; }
 
 /* OMD KLEURCODES
  * Oranje: #D06516
  * Roze:   #D599C1
  * Blauw:  #3D66B5
  * Groen:  #4C9C3E
+ * Geel:   #f8dc00
  */
