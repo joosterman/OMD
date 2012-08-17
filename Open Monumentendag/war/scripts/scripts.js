@@ -174,7 +174,10 @@ $(document).bind(
 									updateDistances, displayError);
 
 						}
+<<<<<<< HEAD
 
+=======
+>>>>>>> refs/remotes/origin/master
 						$('[data-role=content]').height(
 								$(window).height()
 										- (120 + $('[data-role=header]').last()
