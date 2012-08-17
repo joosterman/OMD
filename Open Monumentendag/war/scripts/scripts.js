@@ -208,7 +208,7 @@ $(document).bind(
 				
 				if(localStorage.getItem("mapsUsed") == null){
 					$("#map_canvas").gmap("option","center", new google.maps.LatLng(52.012443,4.356047));
-					$("#map_canvas").gmap("option","zoom", 13);
+					$("#map_canvas").gmap("option","zoom", 15);
 					//localStorage.setItem("mapsUsed",true);
 				}
 				// drawPolyLine(monuments);

@@ -189,9 +189,10 @@ function setMarkers() {
 		if (location.latitude != undefined && location.longitude != undefined) {
 			//if(location.latude > 1 && location.longitude > 1){
 			console.log("Setting marker!");
+			console.log(location.topLocation);
 
 				setMarker(location.id, location.name, location.latitude,
-						location.longitude, location.toplocation);
+						location.longitude, location.topLocation);
 			//}
 		}
 	}
