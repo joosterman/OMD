@@ -49,6 +49,7 @@ function loadLocation(id) {
 	$('#locationStreet').html(location.street /*+', '+location.city*/);	
 	$('#locationOpen').html(location.openingstijden);
 	$('#locationNumber').html(location.number);
+	$("#comment_LocationID").val(id);
 	if(parseInt(location.number) < 10 || location.number == "S" ||  location.number == "D"){
 		$('#locationNumber').addClass("locationNumberSD");
 		$('#locationNumber').removeClass("locationNumberDD");
@@ -189,9 +190,10 @@ function setMarkers() {
 		if (location.latitude != undefined && location.longitude != undefined) {
 			//if(location.latude > 1 && location.longitude > 1){
 			console.log("Setting marker!");
+			console.log(location.topLocation);
 
 				setMarker(location.id, location.name, location.latitude,
-						location.longitude, location.toplocation);
+						location.longitude, location.topLocation);
 			//}
 		}
 	}

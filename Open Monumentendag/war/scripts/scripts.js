@@ -64,6 +64,19 @@ function updateFBAccessToken(token) {
 	user.fbAccessToken = token;
 }
 
+function checkLoggedInAndShowHideBlocks(){
+	if(isLoggedIn()){
+		$("#loginLink .ui-btn-text").text("Ingelogd");
+		$(".loggedIn").show();
+		$(".notLoggedIn").hide();
+	}
+	else{
+		$("#loginLink .ui-btn-text").text("Inloggen");
+		$(".loggedIn").hide();
+		$(".notLoggedIn").show();
+	}	
+}
+
 function setProperties(data) {
 	if (typeof user.id === "undefined" || user.id === null) {
 		console.warn("User is still null, update is queued.");
@@ -87,13 +100,6 @@ function setProperties(data) {
 			console.warn("User could not be updated on server");
 		}
 	});
-	
-	if(isLoggedIn()){
-		$("#loginLink .ui-btn-text").text("Ingelogd");
-	}
-	else{
-		$("#loginLink .ui-btn-text").text("Inloggen");
-	}
 }
 
 function fbLoggedIn(status) {
@@ -129,9 +135,16 @@ $(document)
 $(document).bind(
 		"mobileinit",
 		function() {
+			//control binds
 			$('.googleLogout').click(function() {
 				updateEmail("");
 			});
+			
+			//Bind on all pageshows
+			$('[data-role=page]').live('pageshow', function(event, ui) {
+				checkLoggedInAndShowHideBlocks();			
+			});
+			
 			$('#detail').live('pagebeforeshow', function(event, ui) {
 				if (supports_local_storage()) {
 					// if the browser if capable of localStorage load cached
@@ -161,7 +174,11 @@ $(document).bind(
 									updateDistances, displayError);
 
 						}
-						$('[data-role=content]').height('100%');
+
+						$('[data-role=content]').height(
+								$(window).height()
+										- (120 + $('[data-role=header]').last()
+												.height()));
 					});
 
 			$("#map").live("pagebeforeshow", function(event, ui) {
@@ -182,7 +199,7 @@ $(document).bind(
 				
 				if(localStorage.getItem("mapsUsed") == null){
 					$("#map_canvas").gmap("option","center", new google.maps.LatLng(52.012443,4.356047));
-					$("#map_canvas").gmap("option","zoom", 13);
+					$("#map_canvas").gmap("option","zoom", 15);
 					//localStorage.setItem("mapsUsed",true);
 				}
 				// drawPolyLine(monuments);
@@ -194,12 +211,7 @@ $(document).bind(
 			});
 
 			$("#locations").live("pagebeforeshow", function(event, ui) {
-				/*
-				 * // Moved to home screen if (navigator.geolocation) {
-				 * console.log("found gps");
-				 * navigator.geolocation.watchPosition( updateDistances,
-				 * displayError); }
-				 */
+
 			});
 
 			$("#social").live("pagebeforeshow", function(event, ui) {
@@ -337,7 +349,6 @@ function displayError(error) {
 }
 
 $(document).ready(function(){
-
 	//var myPhotoSwipe = $("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
 
 });

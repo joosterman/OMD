@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AdminServlet extends HttpServlet {
-
-	private static final Logger log = Logger.getLogger(AdminServlet.class.getName());
 	private String uri = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=";
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
