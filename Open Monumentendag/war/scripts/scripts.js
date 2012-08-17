@@ -187,7 +187,10 @@ $(document).bind(
 									updateDistances, displayError);
 
 						}
-						$('[data-role=content]').height('100%');
+						$('[data-role=content]').height(
+								$(window).height()
+										- (120 + $('[data-role=header]').last()
+												.height()));
 					});
 
 			$("#map").live("pagebeforeshow", function(event, ui) {
