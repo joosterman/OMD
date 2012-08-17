@@ -1,22 +1,17 @@
 <div data-role="page" id="info">
 	<div data-theme="a" data-role="header" data-backbtn="true">
-		<h3>Informatie</h3>
+		<h3>Info</h3>
 	</div>
 	<div data-role="content">
-		<img class="logo" alt="Logo van de Open Monumentendag"
-			src="./img/logo_omd.png">
-		<p>
-			<strong> Zaterdag 8 en zondag 9 september 2012 <br />Thema:
-				Groen van Toen
-			</strong>
-		</p>
-
-		<p>Placeholder voor Delft specifieke OMD info.</p>
-
-		<footer>
-			De Open Monumenten Dag werd mede mogelijk gemaakt door Jasper & Bas
-			Inc. <br /> <img class="logo" alt="Logo van hoofdsponsor Rabobank"
-				src="./img/logo_rabobank.png">
-		</footer>
+	<h4>Over de makers</h4>
+	<p>Deze webapp is gemaakt door Jasper & Bas Inc.</p>
+	<h4>Hoofdsponsor</h4>
+	<p>Rabobank is hoofdsponsor van de Open Monumentendag.</p> 	
+	<img class="logo" alt="Logo van de Open Monumentendag"
+			src="./img/logo_omd.png"> <img class="logo"
+			alt="Logo van hoofdsponsor Rabobank" src="./img/logo_rabobank.png">
+	<h4>Dankwoord</h4>
+		Deze webapp is gefinancierd door ...
 	</div>
+
 </div>

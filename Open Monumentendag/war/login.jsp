@@ -17,12 +17,9 @@
 				String email = u.getEmail();
 		%>
 		<script type="text/javascript">
-		console.log("Updating google email");
-		updateEmail('<%=email%>
-			');
+			updateEmail("<%=email%>");
 		</script>
 		<p>
-
 			Ingelogd via Google als
 			<%=email%>
 		</p>

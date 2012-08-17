@@ -2,8 +2,6 @@
 var user = new Object();
 // global update object
 var updates = [];
-//global socket object
-var socket = null;
 
 // get persisted or new user
 var pUser = getPersistedUser();
@@ -47,29 +45,6 @@ function setUser(newUser) {
 	}
 	// persist the new (and updated) user
 	persistUser(user);
-	
-	//close existing channel
-	/*if(socket!=null)
-		socket.close();
-	//open a channel for this user
-	$.getJSON("/messages", "id=" + user.id, connectToChannel);*/
-}
-
-function connectToChannel(token) {
-	var channel = new goog.appengine.Channel(token);
-	socket = channel.open();
-	socket.onopen = function() {
-		console.log("Message socket open.");
-	};
-	socket.onmessage = function(message) {
-		alert(message.data);
-	};
-	socket.onerror = function(data) {
-		alert("error: " + jQuery.toJSON(data));
-	};
-	socket.onclose = function() {
-		alert("Message socket closed.");
-	};
 }
 
 function updateEmail(e) {
@@ -124,7 +99,6 @@ function setProperties(data) {
 function fbLoggedIn(status) {
 	if (status) {
 		FB.api('/me', function(fbuser) {
-			console.log("Updating FB email...");
 			updateEmail(fbuser.email);
 			$(".fbemail").html(fbuser.email);
 		});

@@ -1,6 +1,6 @@
 <div data-role="page" id="detail">
 	<div data-theme="a" data-role="header" id="detailHeader">
-		<h3 class="locationName">OMD Delft</h3>
+		<h3 class="locationName"></h3>
 	</div>
 	<div data-role="content">
 		<div id="title">
@@ -30,5 +30,9 @@
 			</p>
 		</div>
 		<ul id="Gallery" class="gallery"></ul>
+		<div data-role="collapsible">
+		<h3>Commentaar</h3>
+		<p>Hier komt het commentaar</p>
+		</div>
 	</div>
 </div>

@@ -1,10 +1,11 @@
 <div data-role="page" id="home">
 	<div data-theme="a" data-role="header">
-		<h3>OMD Delft</h3>
+		<h3>Monumentendag</h3>
 	</div>
 	<div data-role="content">
 		<div style="text-align: center">
-			<img style="width: 90%;" src="/img/logo_omd.png" alt="Open Monumenten Dag"/>
+			<img style="width: 90%;" src="/img/logo_omd.png"
+				alt="Open Monumenten Dag" />
 		</div>
 		<div class="ui-grid-a">
 			<div class="ui-block-a">
@@ -16,21 +17,32 @@
 				</a>
 			</div>
 			<div class="ui-block-a">
-				<a data-role="button" data-transition="fade" href="#info"> Info
-				</a>
+				<a data-role="button" data-transition="fade" href="#voorwoord">
+					Voorwoord </a>
+			</div>
+			<div class="ui-block-b">
+				<a data-role="button" data-transition="fade" href="#thema">
+					Thema </a>
+			</div>
+			<div class="ui-block-a">
+				<a data-role="button" data-transition="fade" href="#wandel">
+					Routes </a>
 			</div>
 			<div class="ui-block-b">
 				<a data-role="button" data-transition="fade" href="#social">
 					Social </a>
 			</div>
+		</div>
+		<div class="ui-grid-solo">
 			<div class="ui-block-a">
-				<a data-role="button" data-transition="fade" href="#thema">
-					Thema </a>
+				<a data-role="button" data-icon="info" data-transition="fade" data-mini="true" href="#info"> Info
+				</a>
 			</div>
 		</div>
 	</div>
 	<div data-role="footer" class="ui-bar">
-		<a id="loginLink" data-rel="dialog" data-role="button" data-transition="slidedown" data-mini="true" href="#login">
+		<a id="loginLink" data-rel="dialog" data-role="button"
+			data-transition="slidedown" data-mini="true" href="#login">
 			Inloggen </a>
 	</div>
 </div>

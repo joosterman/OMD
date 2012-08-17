@@ -30,12 +30,10 @@
 		//$.mobile.page.prototype.options.domCache = true;
 	});
 </script>
-<!--<script type="text/javascript" src="/_ah/channel/jsapi"></script> -->
 <script src="/scripts/database.js"></script>
 <script src="/scripts/scripts.js"></script>
 <script type="text/javascript" src="/scripts/klass.min.js"></script>
-<script
-	src="http://jquerymobile.com/test/js/jquery.mobile.js"></script>
+<script src="http://jquerymobile.com/test/js/jquery.mobile.js"></script>
 <script type="text/javascript" src="/scripts/jquery.ui.map.js"></script>
 <script type="text/javascript" src="/scripts/jquery.json-2.3.min.js"></script>
 <script type="text/javascript" src="/scripts/jqm.page.params.js"></script>
@@ -110,9 +108,11 @@
 	<jsp:include page="detail.jsp"></jsp:include>
 	<jsp:include page="locations.jsp"></jsp:include>
 	<jsp:include page="info.jsp"></jsp:include>
+	<jsp:include page="voorwoord.jsp"></jsp:include>
 	<jsp:include page="social.jsp"></jsp:include>
 	<jsp:include page="thema.jsp"></jsp:include>
 	<jsp:include page="login.jsp"></jsp:include>
+	<jsp:include page="wandelroutes.jsp"></jsp:include>
 	<script type="text/javascript">
 		$('[data-role=page]').live('pageshow', function(event, ui) {
 			try {
