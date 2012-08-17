@@ -193,7 +193,7 @@ function setMarkers() {
 			console.log(location.topLocation);
 
 				setMarker(location.id, location.name, location.latitude,
-						location.longitude, location.topLocation);
+						location.longitude, location.topLocation, location.openingHoursSaturday);
 			//}
 		}
 	}

@@ -174,10 +174,6 @@ $(document).bind(
 									updateDistances, displayError);
 
 						}
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/remotes/origin/master
 						$('[data-role=content]').height(
 								$(window).height()
 										- (120 + $('[data-role=header]').last()
@@ -238,7 +234,7 @@ function displayCurrentLocation(location) {
 	//$("#map_canvas").gmap("refresh");
 }
 
-function setMarker(id, title, lat, lon, top) {
+function setMarker(id, title, lat, lon, top, info) {
 	// Add markers to the map
 
 	// Marker sizes are expressed as a Size of X,Y
@@ -276,13 +272,15 @@ function setMarker(id, title, lat, lon, top) {
 	var myLatLng = new google.maps.LatLng(lat, lon);
 
 	$('#map_canvas').gmap('addMarker', {
-		'position' : myLatLng,
-		'shadow' : shadow,
-		'icon' : (top) ? image : image2,
-		'shape' : shape,
-		'title' : title,
-		'zIndex' : id,
-		'bounds' : false
+				'position' : myLatLng,
+				'shadow' : shadow,
+				'icon' : (top) ? image : image2,
+				'shape' : shape,
+				'title' : title,
+				'zIndex' : id,
+				'bounds' : false
+	}).click(function() {
+		$('#map_canvas').gmap('openInfoWindow', { 'content': '<h3>'+title+'</h3><br/>Za: '+info }, this);
 	});
 }
 
