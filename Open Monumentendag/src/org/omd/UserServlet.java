@@ -19,7 +19,7 @@ public class UserServlet extends HttpServlet {
 		User u = null;
 		String action = request.getParameter("action");
 		String key = request.getParameter("key");
-		String userId = request.getParameter("id");
+		String userId = request.getParameter("userID");
 		Long id = null;
 		String output = null;
 		try {
@@ -35,7 +35,7 @@ public class UserServlet extends HttpServlet {
 		if (key == null) {
 			if (action == null || action.trim().equals(""))
 				output = gson.toJson("No action specified.");
-			else if ("newuser".equals(action)) {
+			else if ("new".equals(action)) {
 				u = new User();
 				ofy.put(u);
 				output = gson.toJson(u);
@@ -46,10 +46,10 @@ public class UserServlet extends HttpServlet {
 		}
 		else {
 			// check validity of key and check key-id combination
-			u = ofy.query(User.class).filter("accessKey", key).get();
+			u = ofy.query(User.class).filter("key", key).get();
 			if (u == null || !u.id.equals(id)) {
 				// return non-informative null
-				output = gson.toJson(null);//"Key id combination not correct. For this key excpected id: "+ u.id+" but got: "+id);
+				output = gson.toJson(null);//"Key id combination not correct. For this key expected id: "+ u.id+" but got: "+id);
 			}
 			else {
 				if ("get".equals(action)) {
@@ -69,7 +69,7 @@ public class UserServlet extends HttpServlet {
 							float latitude = Float.valueOf(lat);
 							GeoPt loc = new GeoPt(latitude, longitude); 
 							UserLocationHistory his = new UserLocationHistory();
-							his.userId = id;
+							his.userID = id;
 							his.location = loc;
 							ofy.put(his);
 							u.location = loc;

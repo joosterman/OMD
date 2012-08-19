@@ -11,7 +11,7 @@ public class UserLocationHistory {
 
 	@Id
 	public Long id;
-	public Long userId;
+	public Long userID;
 	public Date date;
 	public GeoPt location;
 	

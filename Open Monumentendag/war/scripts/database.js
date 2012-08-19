@@ -1,16 +1,16 @@
 function getPersistedUser() {
-	if(supports_local_storage){
+	if (supports_local_storage) {
 		return $.parseJSON(localStorage.getItem("user"));
-	}else{
+	} else {
 		console.error("User storage not implemented");
 		return null;
 	}
 }
 
 function persistUser(user) {
-	if(supports_local_storage){
+	if (supports_local_storage) {
 		localStorage.setItem("user", $.toJSON(user));
-	}else{
+	} else {
 		console.error("User storage not implemented");
 	}
 }
@@ -41,116 +41,138 @@ function parseLocations(locations) {
 
 	localStorage.setItem("locArray", $.toJSON(locationArray));
 }
-  
+
 function loadLocation(id) {
-	var location = $.evalJSON(localStorage.getItem('loc-'+id));
+	var location = $.evalJSON(localStorage.getItem('loc-' + id));
 
 	$('.locationName').html(location.name);
-	$('#locationStreet').html(location.street /*+', '+location.city*/);	
+	$('#locationStreet').html(location.street /* +', '+location.city */);
 	$('#locationOpen').html(location.openingstijden);
 	$('#locationNumber').html(location.number);
 	$("#comment_LocationID").val(id);
-	if(parseInt(location.number) < 10 || location.number == "S" ||  location.number == "D"){
+	if (parseInt(location.number) < 10 || location.number == "S"
+			|| location.number == "D") {
 		$('#locationNumber').addClass("locationNumberSD");
 		$('#locationNumber').removeClass("locationNumberDD");
-	}else{
+	} else {
 		$('#locationNumber').addClass("locationNumberDD");
 		$('#locationNumber').removeClass("locationNumberSD");
 	}
 
-	//console.log(location)
+	// console.log(location)
 	$('#locationDescription').html(location.description);
 	$('#locationOpenSa').html(location.openingHoursSaturday);
 	$('#locationOpenSu').html(location.openingHoursSunday);
 	$('#locationInformation').html(location.info);
 
-	if(location.wheelchairFriendly){
+	if (location.wheelchairFriendly) {
 		$('#locationWheelChair').show();
-	}else{
+	} else {
 		$('#locationWheelChair').hide();
 	}
 
-	if(location.tourAvailable)
-		$('#locationInformation').append("<br/>Op deze locatie worden rondleidingen gegeven.");
+	if (location.tourAvailable)
+		$('#locationInformation').append(
+				"<br/>Op deze locatie worden rondleidingen gegeven.");
 
-	if(location.topLocation)
+	if (location.topLocation)
 		$('#locationInformation').append("<br/>Dit is een toplocatie.");
 
-	if($('#locationInformation').html() == ""){
+	if ($('#locationInformation').html() == "") {
 		$('#locationInformationLabel').hide();
-	}else{
+	} else {
 		$('#locationInformationLabel').show();
 	}
 
-	if(location.openingHoursSaturday == ""){
+	if (location.openingHoursSaturday == "") {
 		$('#locationOpenSaLabel').hide();
-	}else{
+	} else {
 		$('#locationOpenSaLabel').show();
 	}
-  
-	if(location.openingHoursSunday == ""){
+
+	if (location.openingHoursSunday == "") {
 		$('#locationOpenSuLabel').hide();
-	}else{
+	} else {
 		$('#locationOpenSuLabel').show();
 	}
-	
-	//Set colors
+
+	// Set colors
 	var color = "";
-	if(location.number == "S" ||  location.number == "D"){
+	if (location.number == "S" || location.number == "D") {
 		color = "yellow";
-	}else if(location.topLocation){
+	} else if (location.topLocation) {
 		color = "green";
-	}else if(parseInt(location.number) <=18){
+	} else if (parseInt(location.number) <= 18) {
 		color = "orange";
-	}else if(parseInt(location.number) <=38){
+	} else if (parseInt(location.number) <= 38) {
 		color = "blue";
-	}else{
+	} else {
 		color = "pink";
 	}
-	
-	$('#detailHeader').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
-	$('#locationNumber').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
-	$('#title').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
-	$('#detailInformation').find('strong').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
-	
-	$('#detailHeader').addClass(color+"Background");
-	$('#locationNumber').addClass(color+"Background");
-	$('#title').addClass(color+"Color");
-	$('#detailInformation').find('strong').addClass(color+"Color");
-	
+
+	$('#detailHeader')
+			.removeClass(
+					"orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
+	$('#locationNumber')
+			.removeClass(
+					"orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
+	$('#title').removeClass(
+			"orangeColor pinkColor blueColor greenColor yellowColor");
+	$('#detailInformation').find('strong').removeClass(
+			"orangeColor pinkColor blueColor greenColor yellowColor");
+
+	$('#detailHeader').addClass(color + "Background");
+	$('#locationNumber').addClass(color + "Background");
+	$('#title').addClass(color + "Color");
+	$('#detailInformation').find('strong').addClass(color + "Color");
+
 	loadLocationImages(location.id);
 }
 
-function loadLocationImages(id){
-	var jsonObj = $.getJSON("/images?locationID="+id, 
-				{}
-				,parseLocationImages
-	);
+function loadLocationImages(id) {
+	var jsonObj = $
+			.getJSON("/images?locationID=" + id, {}, parseLocationImages);
 }
 
-function parseLocationImages(locations){
-	//console.log(locations);
+function parseLocationImages(locations) {
+	// console.log(locations);
 	var galleryList = $("#Gallery");
 	galleryList.empty();
-	
+
 	var result = "";
-	
-	for (i=0; i<locations.length; i++){
-		if(locations[i].primary){
-			$('#locationImageURL').html('<a href="'+locations[i].imageURL+'"><img src="'+locations[i].imageURL+'" alt="'+locations[i].description+'" id="primaryImage"/></a>');
-			$("#locationImageURL a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
-		}else{
-			if(locations[i].imageURL != undefined)
-				result += '<li><a href="'+locations[i].imageURL+'"><img src="'+locations[i].thumbnailURL+'" alt="'+locations[i].description+'" /></a></li>';
+
+	for (i = 0; i < locations.length; i++) {
+		if (locations[i].primary) {
+			$('#locationImageURL').html(
+					'<a href="' + locations[i].imageURL + '"><img src="'
+							+ locations[i].imageURL + '" alt="'
+							+ locations[i].description
+							+ '" id="primaryImage"/></a>');
+			$("#locationImageURL a").photoSwipe({
+				enableMouseWheel : false,
+				enableKeyboard : false
+			});
+		} else {
+			if (locations[i].imageURL != undefined)
+				result += '<li><a href="' + locations[i].imageURL
+						+ '"><img src="' + locations[i].thumbnailURL
+						+ '" alt="' + locations[i].description
+						+ '" /></a></li>';
 		}
 	}
+	if (locations.length > 0) {
+		var key = 'img-' + locations[0].id;
+		localStorage.setItem(key, $.toJSON(locations));
 		
-   	var key = 'img-'+locations[0].id;
-   	localStorage.setItem(key,$.toJSON(locations));
+		galleryList.append(result);
+		$("#Gallery a").photoSwipe({
+			enableMouseWheel : false,
+			enableKeyboard : false
+		});
+	}
+
 	
-   	galleryList.append(result);
-   	$("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
-}  
+}
 
 function updateDistances(location) {
 	var lat1 = location.coords.latitude, lon1 = location.coords.longitude;
@@ -186,25 +208,26 @@ function setMarkers() {
 
 		var location = $.evalJSON(localStorage
 				.getItem(locationArray[i].location));
-		
+
 		if (location.latitude != undefined && location.longitude != undefined) {
-			//if(location.latude > 1 && location.longitude > 1){
+			// if(location.latude > 1 && location.longitude > 1){
 			console.log("Setting marker!");
 			console.log(location.topLocation);
 
-				setMarker(location.id, location.name, location.latitude,
-						location.longitude, location.topLocation, location.openingHoursSaturday);
-			//}
+			setMarker(location.id, location.name, location.latitude,
+					location.longitude, location.topLocation,
+					location.openingHoursSaturday);
+			// }
 		}
 	}
 }
 
 function setVisited(id) {
-	
-	var location = $.evalJSON(localStorage.getItem('loc-'+id));
-	location.visited = true;	
-	localStorage.setItem('loc-'+id,$.toJSON(location));
-} 
+
+	var location = $.evalJSON(localStorage.getItem('loc-' + id));
+	location.visited = true;
+	localStorage.setItem('loc-' + id, $.toJSON(location));
+}
 
 function init() {
 	// load data

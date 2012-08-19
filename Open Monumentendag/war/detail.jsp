@@ -35,16 +35,14 @@
 		<ul id="Gallery" class="gallery"></ul>
 		<div class="comment">
 			<div class="loggedIn">
-				<form action="" method="get">
-					<input id="comment_LocationID" type="hidden" name="locationID" />
-					<input type="text" name="comment" placeholder="Commentaar" />
-					<button type="submit" data-theme="b" data-mini="true">Verstuur</button>
-				</form>
+				<input id="comment" type="text" placeholder="Commentaar" />
+				<input id="submitComment" type="button" data-theme="b" data-mini="true" value="Verstuur" />
+				Uw commentaar: <i><span id="currentComment"></span></i>
 			</div>
 			<div class="notLoggedIn">
 				U moet ingelogd zijn om commentaar te kunnen geven. Klik <a
 					data-rel="dialog" data-transition="slidedown" data-mini="true"
-					href="#login">hier</a> om in te loggen</a>
+					href="#login">hier</a> om in te loggen.
 			</div>
 		</div>
 		<div data-role="collapsible">

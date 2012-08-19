@@ -8,13 +8,13 @@ var pUser = getPersistedUser();
 // if there was something persisted
 if (!(pUser === null)) {
 	// see if the server still knows us
-	getUserById(pUser.id, pUser.accessKey);
+	getUserById(pUser.id, pUser.key);
 } else {
 	getNewUser();
 }
 
 function getNewUser() {
-	var url = "/user?action=newuser";
+	var url = "/user?action=new";
 	$.getJSON(url, function(data) {
 		console.log("Got new user: " + data.id);
 		// store the new User
@@ -23,10 +23,10 @@ function getNewUser() {
 }
 
 function getUserById(id, key) {
-	var url = "/user?action=get&userId=" + id + "&key=" + key;
+	var url = "/user?action=get&userID=" + id + "&key=" + key;
 	$.getJSON(url, function(data) {
 		// check if the user exists
-		if (data!=null && typeof data.id !== "undefined" && data.id != null) {
+		if (data != null && typeof data.id !== "undefined" && data.id != null) {
 			console.log("Retrieved existing user");
 			setUser(data);
 		} else {
@@ -45,6 +45,7 @@ function setUser(newUser) {
 	}
 	// persist the new (and updated) user
 	persistUser(user);
+	checkLoggedInAndShowHideBlocks();
 }
 
 function updateEmail(e) {
@@ -64,17 +65,16 @@ function updateFBAccessToken(token) {
 	user.fbAccessToken = token;
 }
 
-function checkLoggedInAndShowHideBlocks(){
-	if(isLoggedIn()){
+function checkLoggedInAndShowHideBlocks() {
+	if (isLoggedIn()) {
 		$("#loginLink .ui-btn-text").text("Ingelogd");
 		$(".loggedIn").show();
 		$(".notLoggedIn").hide();
-	}
-	else{
+	} else {
 		$("#loginLink .ui-btn-text").text("Inloggen");
 		$(".loggedIn").hide();
 		$(".notLoggedIn").show();
-	}	
+	}
 }
 
 function setProperties(data) {
@@ -88,7 +88,7 @@ function setProperties(data) {
 		user[p] = data[p];
 	}
 	// update user object on server
-	var url = "/user?action=update&id=" + user.id + "&key=" + user.accessKey;
+	var url = "/user?action=update&userID=" + user.id + "&key=" + user.key;
 	for (p in data) {
 		url = url + "&" + p + "=" + data[p];
 	}
@@ -123,45 +123,83 @@ function isLoggedIn() {
 }
 
 // Make sure we can use the url parameters on anchors.
-$(document)
-		.bind(
-				"pagebeforechange",
+$(document).bind("pagebeforechange",
 				function(event, data) {
 					$.mobile.pageData = (data && data.options && data.options.pageData) ? data.options.pageData
 							: null;
-				});
+				}
+
+		);
+$(document).bind("pagechange", function(event, data) {
+	checkLoggedInAndShowHideBlocks();
+}
+
+);
 
 // apply triggers/events
 $(document).bind(
 		"mobileinit",
 		function() {
-			//control binds
+			// control binds
 			$('.googleLogout').click(function() {
 				updateEmail("");
 			});
-			
-			//Bind on all pageshows
-			$('[data-role=page]').live('pageshow', function(event, ui) {
-				checkLoggedInAndShowHideBlocks();			
-			});
-			
-			$('#detail').live('pagebeforeshow', function(event, ui) {
-				if (supports_local_storage()) {
-					// if the browser if capable of localStorage load cached
-					// information
-					loadLocation($.mobile.pageData.id);
-				} else {
-					// TODO: ASK DB
-				}
 
-			});
-			
 			$('#detail').live('pageshow', function(event, ui) {
-				//$("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
+				// comments
+				$("#submitComment").click(function() {
+					$.mobile.loading('show');
+					$.getJSON("/comment", {
+						action : "set",
+						comment : $("#comment").val(),
+						userID : user.id,
+						locationID : $.mobile.pageData.id,
+						key : user.key
+					}, function(data) {
+						$.mobile.loading('hide');
+						$("#currentComment").html($("#comment").val());
+						$("#comment").val("");
+					});
+				});
 			});
-			
+
+			$('#detail').live(
+					'pagebeforeshow',
+					function(event, ui) {
+						// set current comment
+						$.getJSON("/comment", {
+							action : "get",
+							userID : user.id,
+							locationID : $.mobile.pageData.id,
+							key : user.key
+						}, function(data) {
+							if (data === null)
+								$("#currentComment").html(
+										"Nog geen commentaar...");
+							else
+								$("#currentComment").html(data.comment);
+						});
+
+						// set location data
+						if (supports_local_storage()) {
+							// if the browser if capable of localStorage load
+							// cached
+							// information
+							loadLocation($.mobile.pageData.id);
+						} else {
+							// TODO: ASK DB
+						}
+
+					});
+
+			$('#detail').live('pageshow', function(event, ui) {
+				// $("#Gallery a").photoSwipe({ enableMouseWheel: false ,
+				// enableKeyboard: false });
+			});
+
 			$('#detail').live('pagehide', function(event, ui) {
-				//$("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
+				// $("#Gallery a").photoSwipe({ enableMouseWheel: false ,
+				// enableKeyboard: false });
 			});
 
 			$('#home').live(
@@ -180,30 +218,37 @@ $(document).bind(
 												.height()));
 					});
 
-			$("#map").live("pagebeforeshow", function(event, ui) {
-				// $("#map_canvas").gmap({'callback' : function() {
-				if (navigator.geolocation)
-					navigator.geolocation.getCurrentPosition(
-							displayCurrentLocation, displayError);
-				// }
-				// });
+			$("#map").live(
+					"pagebeforeshow",
+					function(event, ui) {
+						// $("#map_canvas").gmap({'callback' : function() {
+						if (navigator.geolocation)
+							navigator.geolocation.getCurrentPosition(
+									displayCurrentLocation, displayError);
+						// }
+						// });
 
-				// set map height
-				$('[data-role=content]').height(
-						$(window).height()
-								- (42 + $('[data-role=header]').last()
-										.height()));
+						// set map height
+						$('[data-role=content]').height(
+								$(window).height()
+										- (42 + $('[data-role=header]').last()
+												.height()));
 
-				setMarkers();
-				
-				if(localStorage.getItem("mapsUsed") == null){
-					$("#map_canvas").gmap("option","center", new google.maps.LatLng(52.012443,4.356047));
-					$("#map_canvas").gmap("option","zoom", 15);
-					//localStorage.setItem("mapsUsed",true);
-				}
-				// drawPolyLine(monuments);
-				// $("#map_canvas").gmap("refresh");
-			});
+						setMarkers();
+
+						if (localStorage.getItem("mapsUsed") == null) {
+							$("#map_canvas")
+									.gmap(
+											"option",
+											"center",
+											new google.maps.LatLng(52.012443,
+													4.356047));
+							$("#map_canvas").gmap("option", "zoom", 15);
+							// localStorage.setItem("mapsUsed",true);
+						}
+						// drawPolyLine(monuments);
+						// $("#map_canvas").gmap("refresh");
+					});
 
 			$("#map").live("pageshow", function(event, ui) {
 				$("#map_canvas").gmap("refresh");
@@ -229,9 +274,10 @@ function displayCurrentLocation(location) {
 		"bounds" : false,
 		"title" : "You are here!"
 	});
-	//$("#map_canvas").gmap("option", "mapTypeId", google.maps.MapTypeId.ROADMAP);
-	
-	//$("#map_canvas").gmap("refresh");
+	// $("#map_canvas").gmap("option", "mapTypeId",
+	// google.maps.MapTypeId.ROADMAP);
+
+	// $("#map_canvas").gmap("refresh");
 }
 
 function setMarker(id, title, lat, lon, top, info) {
@@ -272,15 +318,17 @@ function setMarker(id, title, lat, lon, top, info) {
 	var myLatLng = new google.maps.LatLng(lat, lon);
 
 	$('#map_canvas').gmap('addMarker', {
-				'position' : myLatLng,
-				'shadow' : shadow,
-				'icon' : (top) ? image : image2,
-				'shape' : shape,
-				'title' : title,
-				'zIndex' : id,
-				'bounds' : false
+		'position' : myLatLng,
+		'shadow' : shadow,
+		'icon' : (top) ? image : image2,
+		'shape' : shape,
+		'title' : title,
+		'zIndex' : id,
+		'bounds' : false
 	}).click(function() {
-		$('#map_canvas').gmap('openInfoWindow', { 'content': '<h3>'+title+'</h3><br/>Za: '+info }, this);
+		$('#map_canvas').gmap('openInfoWindow', {
+			'content' : '<h3>' + title + '</h3><br/>Za: ' + info
+		}, this);
 	});
 }
 
@@ -349,7 +397,8 @@ function displayError(error) {
 	}
 }
 
-$(document).ready(function(){
-	//var myPhotoSwipe = $("#Gallery a").photoSwipe({ enableMouseWheel: false , enableKeyboard: false });
+$(document).ready(function() {
+	// var myPhotoSwipe = $("#Gallery a").photoSwipe({ enableMouseWheel: false ,
+	// enableKeyboard: false });
 
 });

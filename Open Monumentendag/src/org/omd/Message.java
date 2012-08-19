@@ -8,4 +8,5 @@ public class Message {
 	public Date dateCreated;
 	public Date validUntil;
 	public String importance;
+	public String email;
 }

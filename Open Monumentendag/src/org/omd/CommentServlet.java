@@ -15,18 +15,22 @@ import com.googlecode.objectify.ObjectifyService;
 
 public class CommentServlet extends HttpServlet {
 
+	final String success = "success";
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		//initialize
 		Objectify ofy = ObjectifyService.begin();
 		Gson gson = new Gson();
 		response.setContentType("application/json; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
+		//load parameters
 		String action = request.getParameter("action");
 		Long locationID, userID;
 		String s_locationID = request.getParameter("locationID");
 		String s_userID = request.getParameter("userID");
 		String key = request.getParameter("key");
-		
+		String comment = request.getParameter("comment");
 		try {
 			locationID = Long.valueOf(s_locationID);
 		}
@@ -38,14 +42,14 @@ public class CommentServlet extends HttpServlet {
 		}
 		catch (NumberFormatException ex) {
 			userID = null;
-		}
+		}		
+		
+		//result object
+		Object result = null;
 
-		String comment = request.getParameter("comment");
-		List<Comment> comments = null;
-		String result = null;
-
+		//switch per action
 		if ("get".equals(action)) {
-			// vars: locationID, userID
+			List<Comment> comments = null;
 			if (locationID != null && userID == null) {
 				// return all for this location
 				comments = ofy.query(Comment.class).filter("locationID", locationID).list();
@@ -62,48 +66,50 @@ public class CommentServlet extends HttpServlet {
 				// return all
 				comments = ofy.query(Comment.class).list();
 			}
-			result = gson.toJson(comments);
+			if(comments.size()==0)
+				result=null;
+			else
+				result = comments;
 		}
 		else if ("set".equals(action)) {
 			// check if we have all the data
-			if (locationID != null && userID != null && comment != null && comment.trim().length() > 0 && key!=null) {
-				//check if the user exists (ID/key combination)
-				User u = ofy.query(User.class).filter("Id", userID).filter("accessKey", key).get();
-				if(u!=null){				
-					//check if the user already posted a comment for this location, and delete that one.
+			if (locationID != null && userID != null && comment != null && comment.trim().length() > 0 && key != null) {
+				// check if the user exists (ID/key combination)
+				User u = ofy.query(User.class).filter("id", userID).filter("key", key).get();
+				if (u != null) {
+					// check if the user already posted a comment for this
+					// location, and overwrite that one
 					Comment c = ofy.query(Comment.class).filter("userID", userID).filter("locationID", locationID).get();
 					Comment cnew = new Comment();
-					if(c!=null){
-						//overwrite
+					if (c != null) {
+						// overwrite
 						cnew.id = c.id;
 					}
 					cnew.comment = comment;
 					cnew.userID = userID;
 					cnew.locationID = locationID;
-					//store comment
+					// store comment
 					ofy.put(cnew);
+					result = success;
 				}
 			}
-			result = "done";
 		}
 		else if ("delete".equals(action)) {
-			//user can only delete their own comments
-			//check if we have all the data
-			if (locationID != null && userID != null && key!=null) {
-				//check if the user exists
-				User u = ofy.query(User.class).filter("Id", userID).filter("accessKey", key).get();
-				if(u!=null){
-					//check if a comment exists
+			// user can only delete their own comments
+			// check if we have all the data
+			if (locationID != null && userID != null && key != null) {
+				// check if the user exists
+				User u = ofy.query(User.class).filter("id", userID).filter("key", key).get();
+				if (u != null) {
+					// check if a comment exists
 					Comment c = ofy.query(Comment.class).filter("userID", userID).filter("locationID", locationID).get();
-					if(c!=null)
+					if (c != null) {
 						ofy.delete(c);
+						result = success;
+					}
 				}
-			}	
-			result = "done";
+			}
 		}
-		else{
-			result = "No action specified.";
-		}
-		response.getWriter().write(result);
+		response.getWriter().write(gson.toJson(result));
 	}
 }

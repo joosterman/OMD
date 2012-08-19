@@ -12,12 +12,12 @@ public class User {
 	@Id
 	public Long id;
 	public String email;
-	public String accessKey;
+	public String key;
 	public GeoPt location;
 		
 	@PrePersist void onPersist() { 
-		if(accessKey==null){
-			accessKey = UUID.randomUUID().toString();
+		if(key==null){
+			key = UUID.randomUUID().toString();
 		}
 	}
 }
