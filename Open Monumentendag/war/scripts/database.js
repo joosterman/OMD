@@ -186,6 +186,9 @@ function parseLocationImages(locations) {
 			enableMouseWheel : false,
 			enableKeyboard : false
 		});
+	}else{
+		//Remove old image if no new image is found
+		$('#locationImageURL').html('');
 	}
 
 	
