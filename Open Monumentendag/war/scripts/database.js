@@ -16,7 +16,11 @@ function persistUser(user) {
 }
 
 function cacheLocations() {
-	var jsonObj = $.getJSON("/data", {}, parseLocations);
+	//TODO: Efficient is data outdated check
+	if(localStorage.getItem("locArray") == null){
+		var jsonObj = getSyncJSON("/data",{}, parseLocations);
+		//var jsonObj = $.getJSON("/data", {}, parseLocations);
+	}
 }
 
 function parseLocations(locations) {
@@ -139,8 +143,6 @@ function loadLocation(id) {
 	$('#title').addClass(color+"Color");
 	$('#detailInformation').find('strong').addClass(color+"Color");
 	
-	
->>>>>>> Hardcoded buttons
 	loadLocationImages(location.id);
 }
 
@@ -255,6 +257,17 @@ function supports_local_storage() {
 	} catch (e) {
 		return false;
 	}
+}
+
+function getSyncJSON(url, data, success){
+	$.ajax({
+	    type: 'GET',
+	    url: url,
+	    dataType: 'json',
+	    success: success,
+	    data: data,
+	    async: false
+	});
 }
 
 $(document).ready(function(e) {
