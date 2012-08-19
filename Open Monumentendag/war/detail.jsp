@@ -1,6 +1,7 @@
 <div data-role="page" id="detail">
 	<div data-theme="a" data-role="header" id="detailHeader">
 		<h3 class="locationName"></h3>
+		<a href="/#locations" data-icon="back" id="backBtnDetail">Back</a>
 	</div>
 	<div data-role="content">
 		<div id="title">

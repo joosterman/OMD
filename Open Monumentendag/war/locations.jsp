@@ -23,6 +23,7 @@ Collections.sort(locs, new Comparator<Location>() {
 <div data-role="page" id="locations">
 	<div data-theme="a" data-role="header" data-backbtn="true">
 		<h1>Locaties</h1>
+		<a href="/#home" data-icon="back">Back</a>
 	</div>
 	<div id="allLocations" data-role="content" class="ui-content">
 		<ul class="locationsList ui-listview" data-role="listview" data-filter="true" data-filter-placeholder="Zoek een locatie...">

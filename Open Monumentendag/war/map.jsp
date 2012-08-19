@@ -1,6 +1,7 @@
 <div data-role="page" id="map" class="page-map">
 	<div data-theme="a" data-role="header">
 		<h3>OMD Delft</h3>
+		<a href="/#home" data-icon="back">Back</a>
 	</div>	
 	<div data-role="content" style="padding:0;">
 		<span id="mapinfo"></span>

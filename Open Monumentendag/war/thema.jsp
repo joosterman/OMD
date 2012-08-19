@@ -1,6 +1,7 @@
 <div data-role="page" id="thema">
 	<div data-theme="a" data-role="header" data-backbtn="true">
 		<h3>Thema</h3>
+		<a href="/#home" data-icon="back">Back</a>
 	</div>
 	<div data-role="content">
 		<div style="text-align: center">
