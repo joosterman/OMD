@@ -46,7 +46,7 @@ Collections.sort(locs, new Comparator<Location>() {
 				<li>
 					<a href="#detail?id=<%=l.id%>">
 					<img src="http://jquerymobile.com/test/docs/lists/images/album-bb.jpg" alt="<%=l.name%>"/>
-					<h3><%=l.name%></h3>
+					<h3><font style="white-space:normal;"><%=l.name%></font></h3>
 					<p><%=l.street%>,  <%=l.city%></p>
 					<span class="ui-li-count">12.00 km</span>
 					</a>

@@ -24,7 +24,7 @@ function parseTweets(tweets){
 		result += '<a href="https://mobile.twitter.com/'+tweets.results[i].from_user+'/status/'+tweets.results[i].id_str+'" class="ui-link-inherit" data-transition="slide">';
 		//result += '<img src="'+tweets.results[i].profile_image_url+'">';
 		result += '<h3>@'+tweets.results[i].from_user+'</h3>';
-		result += '<p>'+text+'</p>';
+		result += '<p><font style="white-space:normal; font-size: small" >'+text+'</font></p>';
 		result += '<p></p>';
 		result += '<p class="ui-li-aside"><strong>'+tweets.results[i].created_at+'</strong>PM</p>';
 		result += '</a>';
