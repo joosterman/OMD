@@ -43,7 +43,7 @@ Collections.sort(locs, new Comparator<Location>() {
 				<% } %>
 				
 			
-				<li>
+				<li id="location-<%=l.id%>">
 					<a href="#detail?id=<%=l.id%>">
 					<img src="http://jquerymobile.com/test/docs/lists/images/album-bb.jpg" alt="<%=l.name%>"/>
 					<h3><font style="white-space:normal;"><%=l.name%></font></h3>

@@ -213,6 +213,17 @@ $(document).bind(
 
 						}
 					});
+			$('#locations').live(
+					'pageshow',
+					function(event, ui) {
+						// ask location permission on first screen
+						if (navigator.geolocation) {
+							console.log("found gps");
+							navigator.geolocation.watchPosition(
+									updateDistances, displayError);
+
+						}
+					});
 
 			$("#map").live(
 					"pagebeforeshow",

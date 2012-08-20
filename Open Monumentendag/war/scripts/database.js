@@ -196,19 +196,21 @@ function parseLocationImages(locations) {
 
 function updateDistances(location) {
 	var lat1 = location.coords.latitude, lon1 = location.coords.longitude;
-	console.log(lat1 + " " + lon1);
+	//console.log(lat1 + " " + lon1);
 	// Update the server with the new location
 	updateLocation(lat1, lon1);
 
 	var locationArray = $.evalJSON(localStorage.getItem("locArray"));
-	// console.log(locationArray);
+	//console.log(locationArray);
 	for (i = 0; i < locationArray.length; i++) {
 		// console.log(locationArray[i].location);
 
 		var location = $.evalJSON(localStorage
 				.getItem(locationArray[i].location));
+		//console.log(location);
 
 		if (location.latitude != null && location.longitude != null) {
+			//console.log()';'
 			$('#location-' + location.id + ' span.ui-li-count').html(
 					calculateDistance(lat1, lon1,
 							parseFloat(location.latitude),
