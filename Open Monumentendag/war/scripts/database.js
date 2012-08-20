@@ -236,9 +236,9 @@ function setMarkers() {
 			console.log("Setting marker!");
 			console.log(location.topLocation);
 
-			setMarker(location.id, location.name, location.latitude,
+			setMarker('#map_canvas',location.id, location.name, location.latitude,
 					location.longitude, location.topLocation,
-					location.openingHoursSaturday);
+					location.openingHoursSaturday, location.openingHoursSunday, location.info, location.street);
 			// }
 		}
 	}

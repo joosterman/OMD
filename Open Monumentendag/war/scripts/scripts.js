@@ -313,6 +313,34 @@ $(document).bind(
 			$("#social").live("pagebeforeshow", function(event, ui) {
 				loadTweets('delft');
 			});
+			
+			$("#routenoord").live(
+					"pagebeforeshow",
+					function(event, ui) {
+						if (navigator.geolocation)
+							navigator.geolocation.getCurrentPosition(
+									displayCurrentLocationRN, displayError);
+
+						$('[data-role=content]').height(
+								$(window).height()
+										- (42 + $('[data-role=header]').last()
+												.height()));
+
+						$("#map_canvas_rn")
+								.gmap("option",	"center",
+										new google.maps.LatLng(52.012443, 4.356047));
+						$("#map_canvas_rn").gmap("option", "zoom", 15);
+						
+						setMarker('#map_canvas_rn',0, 'Locatie', 52.012443,
+								4.356047, true,
+								'', '', '', 'Aan de zuidkant van de vroegere vestingwallen werd in 1829 een Rooms-katholieke begraafplaats gesticht op de plek van een zeventiendeeeuwse buitenplaats. Van deze buitenplaats werden de oprijlaan en tuinaanleg gebruikt voor de aanleg van de begraafplaats. De lindelaan is vandaag de dag nog goed herkenbaar. Door de aanleg van de Sebastiaansbrug in 1960 is de begraafplaats in het oosten ontruimd en in het westen, op de plek van de oude moestuin en bloemkwekerij van de oude buitenplaats, uitgebreid. Op de begraafplaats liggen verschillende graven, waaronder van priesters, nonnen en hoogleraren. Het baarhuisje werd vermoedelijk rond 1830 gebouwd door P.J. Schouten, ook bekend van de voormalige Roomskatholieke jongensschool aan de Nieuwe Langendijk');
+						// }
+
+					});
+
+			$("#routenoord").live("pageshow", function(event, ui) {
+				$("#map_canvas_rn").gmap("refresh");
+			});
 
 		});
 
@@ -326,13 +354,22 @@ function displayCurrentLocation(location) {
 		"bounds" : false,
 		"title" : "You are here!"
 	});
-	// $("#map_canvas").gmap("option", "mapTypeId",
-	// google.maps.MapTypeId.ROADMAP);
-
-	// $("#map_canvas").gmap("refresh");
 }
 
-function setMarker(id, title, lat, lon, top, info) {
+function displayCurrentLocationRN(location) {
+	console.log("setting current position");
+	var loc = new google.maps.LatLng(location.coords.latitude,
+			location.coords.longitude);
+
+	$("#map_canvas_rn").gmap("addMarker", {
+		"position" : loc,
+		"bounds" : false,
+		"title" : "You are here!"
+	});
+}
+
+
+function setMarker(map, id, title, lat, lon, top, za, zo, info, street) {
 	// Add markers to the map
 
 	// Marker sizes are expressed as a Size of X,Y
@@ -369,7 +406,7 @@ function setMarker(id, title, lat, lon, top, info) {
 
 	var myLatLng = new google.maps.LatLng(lat, lon);
 
-	$('#map_canvas').gmap('addMarker', {
+	$(map).gmap('addMarker', {
 		'position' : myLatLng,
 		'shadow' : shadow,
 		'icon' : (top) ? image : image2,
@@ -378,8 +415,8 @@ function setMarker(id, title, lat, lon, top, info) {
 		'zIndex' : id,
 		'bounds' : false
 	}).click(function() {
-		$('#map_canvas').gmap('openInfoWindow', {
-			'content' : '<h3>' + title + '</h3><br/>Za: ' + info
+		$(map).gmap('openInfoWindow', {
+			'content' : '<h3>' + title + '</h3><br/>'+street+'<br/>Zaterdag: ' + za +'<br/>Zondag: '+zo+'<br/>Overige informatie: '+info
 		}, this);
 	});
 }

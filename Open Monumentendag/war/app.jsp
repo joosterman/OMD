@@ -113,6 +113,7 @@
 	<jsp:include page="social.jsp"></jsp:include>
 	<jsp:include page="thema.jsp"></jsp:include>
 	<jsp:include page="wandelroutes.jsp"></jsp:include>
+	<jsp:include page="routenoord.jsp"></jsp:include>
 	<script type="text/javascript">
 		$('[data-role=page]').live('pageshow', function(event, ui) {
 			try {
