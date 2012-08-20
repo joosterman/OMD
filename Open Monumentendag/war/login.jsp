@@ -23,13 +23,17 @@
 			Ingelogd via Google als
 			<%=email%>
 		</p>
-		<a rel="external" class="googleLogout" data-role="button"
-			href="<%=userService.createLogoutURL(request.getRequestURI())%>">Log
+		<a rel="external" data-ajax="false" class="googleLogout" data-role="button"
+			href="<%=userService.createLogoutURL("/")%>">Log
 			uit</a>
 		<%
 			} else {
 				//case 2 and 3 clientside
 		%>
+		<script type="text/javascript">
+			updateEmail("");
+		</script>
+		<%--
 		<div class="fbLoggedIn">
 			<p>
 				Ingelogd via Facebook als <span class="fbemail"></span>
@@ -42,6 +46,10 @@
 				src="./img/google.png" alt="Google logo" /></a> of
 			<div class="fb-login-button" data-show-faces="false"
 				data-scope="email" data-width="200" data-max-rows="1"></div>
+		</div> --%>
+		<div>
+		<h4>Log in via</h4>
+			<a data-role="button" rel="external" href="<%=userService.createLoginURL("/")%>">Google</a>
 		</div>
 		<%
 			}

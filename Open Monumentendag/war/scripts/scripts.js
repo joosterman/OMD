@@ -3,20 +3,23 @@ var user = new Object();
 // global update object
 var updates = [];
 
-// get persisted or new user
-var pUser = getPersistedUser();
-// if there was something persisted
-if (!(pUser === null)) {
-	// see if the server still knows us
-	getUserById(pUser.id, pUser.key);
-} else {
-	getNewUser();
+function initializeUser() {
+	// get persisted or new user
+	var pUser = getPersistedUser();
+	// if there was something persisted
+	if (!(pUser === null)) {
+		// see if the server still knows us
+		getUserById(pUser.id, pUser.key);
+	} else {
+		getNewUser();
+	}
+
 }
 
 function getNewUser() {
 	var url = "/user?action=new";
-	$.getJSON(url, function(data) {
-		console.log("Got new user: " + data.id);
+	getSyncJSON(url, null, function(data) {
+		// console.log("Got new user: " + data.id);
 		// store the new User
 		setUser(data);
 	});
@@ -24,10 +27,10 @@ function getNewUser() {
 
 function getUserById(id, key) {
 	var url = "/user?action=get&userID=" + id + "&key=" + key;
-	$.getJSON(url, function(data) {
+	getSyncJSON(url, null, function(data) {
 		// check if the user exists
 		if (data != null && typeof data.id !== "undefined" && data.id != null) {
-			console.log("Retrieved existing user");
+			// console.log("Retrieved existing user");
 			setUser(data);
 		} else {
 			getNewUser();
@@ -39,19 +42,17 @@ function setUser(newUser) {
 	user = newUser;
 	// check fifo queue of updates
 	while (updates.length > 0) {
-		console.log("Processing queue... Items left: " + updates.length);
+		// console.log("Processing queue... Items left: " + updates.length);
 		var update = updates.shift();
 		setProperties(update);
 	}
-	// persist the new (and updated) user
-	persistUser(user);
-	checkLoggedInAndShowHideBlocks();
 }
 
 function updateEmail(e) {
 	setProperties({
 		email : e
 	});
+
 }
 
 function updateLocation(latitude, longitude) {
@@ -78,8 +79,9 @@ function checkLoggedInAndShowHideBlocks() {
 }
 
 function setProperties(data) {
-	if (typeof user.id === "undefined" || user.id === null) {
-		console.warn("User is still null, update is queued.");
+	if (typeof user === "undefined" || typeof user.id === "undefined"
+			|| user.id === null) {
+		// console.warn("User is still null, update is queued.");
 		updates.push(data);
 		return;
 	}
@@ -94,7 +96,8 @@ function setProperties(data) {
 	}
 	$.getJSON(url, function(data) {
 		if (data) {
-			console.log("User updated on server");
+			// console.log("User updated on server");
+			checkLoggedInAndShowHideBlocks();
 			persistUser(user);
 		} else {
 			console.warn("User could not be updated on server");
@@ -113,6 +116,7 @@ function fbLoggedIn(status) {
 	} else {
 		$(".fbLoggedIn").hide();
 		$(".notLoggedIn").show();
+		updateEmail("");
 	}
 }
 
@@ -122,8 +126,25 @@ function isLoggedIn() {
 
 }
 
+function storeComment(){
+	$.getJSON("/comment", {
+		action : "set",
+		comment : $("#comment").val(),
+		userID : user.id,
+		locationID : $.mobile.pageData.id,
+		key : user.key,
+		cache: false
+	}, function(data) {
+		$("#currentComment").html($("#comment").val());
+		$("#comment").val("");
+		$("#deleteComment").show();
+	});	
+}
+
 // Make sure we can use the url parameters on anchors.
-$(document).bind("pagebeforechange",
+$(document)
+		.bind(
+				"pagebeforechange",
 				function(event, data) {
 					$.mobile.pageData = (data && data.options && data.options.pageData) ? data.options.pageData
 							: null;
@@ -132,65 +153,89 @@ $(document).bind("pagebeforechange",
 		);
 $(document).bind("pagechange", function(event, data) {
 	checkLoggedInAndShowHideBlocks();
-}
-
-);
+});
 
 // apply triggers/events
 $(document).bind(
 		"mobileinit",
 		function() {
+			// init user
+			initializeUser();
 			// control binds
 			$('.googleLogout').click(function() {
 				updateEmail("");
 			});
 
 			$('#detail').live('pageshow', function(event, ui) {
-				// comments
+				//store comment option 1
+				$("#comment").keypress(function(e){
+					if(e.which === 13){
+						storeComment();
+					}
+				});
+				// store comment option 2
 				$("#submitComment").click(function() {
-					$.mobile.loading('show');
+					storeComment();
+				});
+				// delete current comment
+				$("#deleteComment").click(function() {
 					$.getJSON("/comment", {
-						action : "set",
-						comment : $("#comment").val(),
+						action : "delete",
 						userID : user.id,
 						locationID : $.mobile.pageData.id,
-						key : user.key
+						key : user.key,
+						cache: false
 					}, function(data) {
-						$.mobile.loading('hide');
-						$("#currentComment").html($("#comment").val());
-						$("#comment").val("");
+						$("#currentComment").html("U heeft nog geen reactie geplaatst...");
+						$("#deleteComment").hide();
 					});
 				});
 			});
 
-			$('#detail').live(
-					'pagebeforeshow',
-					function(event, ui) {
-						// set current comment
-						$.getJSON("/comment", {
-							action : "get",
-							userID : user.id,
-							locationID : $.mobile.pageData.id,
-							key : user.key
-						}, function(data) {
-							if (data === null)
-								$("#currentComment").html(
-										"Nog geen commentaar...");
-							else
-								$("#currentComment").html(data.comment);
-						});
+			$('#detail').live('pagebeforeshow', function(event, ui) {
+				// set current comment
+				$.getJSON("/comment", {
+					action : "get",
+					userID : user.id,
+					locationID : $.mobile.pageData.id,
+					key : user.key,
+					cache: false
+				}, function(data) {
+					if (data === null) {
+						$("#currentComment").html("U heeft nog geen reactie geplaatst...");
+						$("#deleteComment").hide();
+					} else {
+						$("#currentComment").html(data[0].comment);
+						$("#deleteComment").show;
+					}
+				});
 
-						// set location data
-						if (supports_local_storage()) {
-							// if the browser if capable of localStorage load
-							// cached
-							// information
-							loadLocation($.mobile.pageData.id);
-						} else {
-							// TODO: ASK DB
+				// set location data
+				if (supports_local_storage()) {
+					// if the browser if capable of localStorage load
+					// cached
+					// information
+					loadLocation($.mobile.pageData.id);
+				} else {
+					// TODO: ASK DB
+				}
+				
+				//set all comments
+				$.getJSON("/comment", {
+					action : "get",
+					locationID : $.mobile.pageData.id,
+					cache:false
+				},function(data) {
+					$.each(data, function(index,value){
+						//check for own comment
+						if(value.userID!==user.id){
+							$("#allComments").append("<li>"+value.comment+"<span class=\"ui-li-count\">"+value.date+"</span></li>")
 						}
-
+						$("#allComments").listview("refresh");
 					});
+				});
+
+			});
 
 			$('#detail').live('pageshow', function(event, ui) {
 				// $("#Gallery a").photoSwipe({ enableMouseWheel: false ,
@@ -403,9 +448,3 @@ function displayError(error) {
 		break;
 	}
 }
-
-$(document).ready(function() {
-	// var myPhotoSwipe = $("#Gallery a").photoSwipe({ enableMouseWheel: false ,
-	// enableKeyboard: false });
-
-});

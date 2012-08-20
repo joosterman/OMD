@@ -18,13 +18,22 @@ public class CommentServlet extends HttpServlet {
 	final String success = "success";
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		//initialize
+		// initialize
 		Objectify ofy = ObjectifyService.begin();
 		Gson gson = new Gson();
 		response.setContentType("application/json; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
+		//Disable cache, also for IE
+		// Set to expire far in the past.
+		response.setHeader("Expires", "Sat, 6 May 1995 12:00:00 GMT");
+		// Set standard HTTP/1.1 no-cache headers.
+		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+		// Set IE extended HTTP/1.1 no-cache headers (use addHeader).
+		response.addHeader("Cache-Control", "post-check=0, pre-check=0");
+		// Set standard HTTP/1.0 no-cache header.
+		response.setHeader("Pragma", "no-cache");
 
-		//load parameters
+		// load parameters
 		String action = request.getParameter("action");
 		Long locationID, userID;
 		String s_locationID = request.getParameter("locationID");
@@ -42,12 +51,12 @@ public class CommentServlet extends HttpServlet {
 		}
 		catch (NumberFormatException ex) {
 			userID = null;
-		}		
-		
-		//result object
+		}
+
+		// result object
 		Object result = null;
 
-		//switch per action
+		// switch per action
 		if ("get".equals(action)) {
 			List<Comment> comments = null;
 			if (locationID != null && userID == null) {
@@ -66,8 +75,8 @@ public class CommentServlet extends HttpServlet {
 				// return all
 				comments = ofy.query(Comment.class).list();
 			}
-			if(comments.size()==0)
-				result=null;
+			if (comments.size() == 0)
+				result = null;
 			else
 				result = comments;
 		}

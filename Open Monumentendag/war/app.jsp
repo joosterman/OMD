@@ -55,7 +55,7 @@
 </script>
 </head>
 <body onload="window.scrollTo(0,1);">
-	<!-- BEGIN Facebook stuff -->
+	<%-- <!--BEGIN Facebook stuff -->
 	<div id="fb-root"></div>
 	<script>
 		window.fbAsyncInit = function() {
@@ -65,12 +65,12 @@
 			FB
 					.init({
 						appId : '470201716343067', // App ID
-						channelUrl : 'http://openmonumentendag.appspot.com//channel.html', // Channel File
+						channelUrl : 'http://openmonumentendag.appspot.com/channel.html', // Channel File
 						status : true, // check login status
 						cookie : true, // enable cookies to allow the server to access the session
-						xfbml : true
-					// parse XFBML
+						xfbml: true, // enable XFBML and social plugins
 					});
+			
 			// Additional initialization code here
 			FB.Event.subscribe('auth.statusChange', function(response) {
 				console.debug(response);
@@ -102,8 +102,9 @@
 			ref.parentNode.insertBefore(js, ref);
 		}(document));
 	</script>
-	<!-- END Facebook stuff -->
+	<!-- END Facebook stuff --> --%>
 	<jsp:include page="home.jsp"></jsp:include>
+	<jsp:include page="login.jsp"></jsp:include>
 	<jsp:include page="map.jsp"></jsp:include>
 	<jsp:include page="detail.jsp"></jsp:include>
 	<jsp:include page="locations.jsp"></jsp:include>
@@ -111,7 +112,6 @@
 	<jsp:include page="voorwoord.jsp"></jsp:include>
 	<jsp:include page="social.jsp"></jsp:include>
 	<jsp:include page="thema.jsp"></jsp:include>
-	<jsp:include page="login.jsp"></jsp:include>
 	<jsp:include page="wandelroutes.jsp"></jsp:include>
 	<script type="text/javascript">
 		$('[data-role=page]').live('pageshow', function(event, ui) {
