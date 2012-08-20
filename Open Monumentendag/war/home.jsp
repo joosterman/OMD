@@ -1,6 +1,9 @@
 <div data-role="page" id="home">
 	<div data-theme="a" data-role="header">
 		<h3>Monumentendag</h3>
+		<a id="loginLink" data-rel="dialog" data-role="button"
+			data-transition="slidedown" data-mini="true" href="#login" class="ui-btn-right">
+			Inloggen </a>
 	</div>
 	<div data-role="content">
 		<div style="text-align: center">
@@ -39,10 +42,5 @@
 				</a>
 			</div>
 		</div>
-	</div>
-	<div data-role="footer" class="ui-bar">
-		<a id="loginLink" data-rel="dialog" data-role="button"
-			data-transition="slidedown" data-mini="true" href="#login">
-			Inloggen </a>
 	</div>
 </div>

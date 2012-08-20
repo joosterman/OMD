@@ -212,10 +212,6 @@ $(document).bind(
 									updateDistances, displayError);
 
 						}
-						$('[data-role=content]').height(
-								$(window).height()
-										- (120 + $('[data-role=header]').last()
-												.height()));
 					});
 
 			$("#map").live(
