@@ -281,10 +281,12 @@ $(document).bind(
 						// });
 
 						// set map height
-						$('[data-role=content]').height(
+						//$('[data-role=content]').height(
+						$('#map_canvas').height(						
 								$(window).height()
-										- (42 + $('[data-role=header]').last()
-												.height()));
+										- (62 + $('[data-role=header]').last()
+												.height())
+												-$('#mapinfo').height());
 
 						setMarkers();
 
@@ -328,50 +330,108 @@ $(document).bind(
 
 						$("#map_canvas_rn")
 								.gmap("option",	"center",
-										new google.maps.LatLng(52.012443, 4.356047));
-						$("#map_canvas_rn").gmap("option", "zoom", 15);
+										new google.maps.LatLng(52.01625506283269, 4.350918531417847));
+						$("#map_canvas_rn").gmap("option", "zoom", 16);
 						
-						setMarker('#map_canvas_rn',0, 'Locatie', 52.012443,
-								4.356047, true,
-								'', '', '', '');
-						//Nieuwe plantage
-						//(52.01925639451914, 4.35508899188878)
-						// }
-						/*(52.018602743329005, 4.354767126814664)
-						(52.01750009795959, 4.353393835984633)
-						(52.01769157724925, 4.352535529102361)
-						(52.019441263831105, 4.352476520496407)
-						(52.01946767367031, 4.352143926579544)
-						(52.018747999975396, 4.352219028431733)
-						(52.018747999975396, 4.352219028431733)
-						(52.01738785109913, 4.351811332662692)
-						(52.01701149192108, 4.35195080753104)
-						(52.0162455582017, 4.350877923928136)
-						(52.01538056556224, 4.350545330011281)
-						(52.01508342682692, 4.3500732612261)
-						(52.01486552383346, 4.349043292967484)
-						(52.0155390387475, 4.347895307512553)
-						(52.015756938460676, 4.347670001955955)
-						(52.016159719984984, 4.347648544283885)
-						(52.016800201170554, 4.3470370006303405)
-						(52.01675398118581, 4.346135778404058)
-						(52.0163842195886, 4.345470590570369)
-						(52.015426786965996, 4.346039218879789)
-						(52.01540697779884, 4.345588607766647)
-						(52.01527491646033, 4.345331115702013)
-						(52.01589560136208, 4.344547910672048)
-						(52.01522869489978, 4.343099517808391)
-						(52.01485892069602, 4.343485755905355)*/
-						//B (52.01899889670765, 4.352015180547454)
-						//C (52.01717656212665, 4.3515323829261)
-						//D(52.016100293430895, 4.346371812796633)
-						//E (52.015340947178366, 4.343936367018501)
+						setMarker('#map_canvas_rn',0, 'A - Nieuwe Plantage', 52.01795858690878, 4.35508668422699, true,	'', '', '', '');
+						setMarker('#map_canvas_rn',0, 'B - Nolthensiusplantsoen', 52.018747999975396, 4.352219028431733, true,	'', '', '', '');
+						setMarker('#map_canvas_rn',0, 'C - Kalverbos', 52.01717656212665, 4.3515323829261, true,	'', '', '', '');
+						setMarker('#map_canvas_rn',0, 'D - Agnetapark - Oude Park', 52.016100293430895, 4.346371812796633, true,	'', '', '', '');
+						setMarker('#map_canvas_rn',0, 'E - Agnetapark - Nieuwe Park', 52.015340947178366, 4.343936367018501, true,	'', '', '', '');
 						
+						var coordinates = [ new google.maps.LatLng(52.01795858690878, 4.35508668422699), //1
+						                    new google.maps.LatLng(52.01792887483538, 4.354378581047058), //2
+						                    new google.maps.LatLng(52.01750009795959, 4.353393835984633), //3						              
+						                    new google.maps.LatLng(52.01769157724925, 4.352535529102361), //4
+						                    new google.maps.LatLng(52.019441263831105, 4.352476520496407), //5
+						                    new google.maps.LatLng(52.01946767367031, 4.352143926579544), //6
+						                    new google.maps.LatLng(52.018747999975396, 4.352219028431733), // 7
+						                    new google.maps.LatLng(52.01946767367031, 4.352143926589544), //back begin
+						                    new google.maps.LatLng(52.019441263831105, 4.352476520496407),
+						                    new google.maps.LatLng(52.01769157724925, 4.352535529102361), //back end
+						                    new google.maps.LatLng(52.01738785109913, 4.351811332662692),
+						                    new google.maps.LatLng(52.01701149192108, 4.35195080753104),
+						                    new google.maps.LatLng(52.0162455582017, 4.350877923928136),
+						                    new google.maps.LatLng(52.01538056556224, 4.350545330011281),
+						                    new google.maps.LatLng(52.01508342682692, 4.3500732612261),
+						                    new google.maps.LatLng(52.01486552383346, 4.349043292967484),
+						                    new google.maps.LatLng(52.0155390387475, 4.347895307512553),
+						                    new google.maps.LatLng(52.015756938460676, 4.347670001955955),
+						                    new google.maps.LatLng(52.016159719984984, 4.347648544283885),
+						                    new google.maps.LatLng(52.016800201170554, 4.3470370006303405),
+						                    new google.maps.LatLng(52.01675398118581, 4.346135778404058),
+						                    new google.maps.LatLng(52.0163842195886, 4.345470590570369),
+						                    new google.maps.LatLng(52.015426786965996, 4.346039218879789),
+						                    new google.maps.LatLng(52.01540697779884, 4.345588607766647),
+						                    new google.maps.LatLng(52.01527491646033, 4.345331115702013),
+						                    new google.maps.LatLng(52.01589560136208, 4.344547910672048),
+						                    new google.maps.LatLng(52.01522869489978, 4.343099517808391),
+						                    new google.maps.LatLng(52.01485892069602, 4.343485755905355),
+						                    new google.maps.LatLng(52.01514575646878, 4.3442559242248535)/*,
+						                    new google.maps.LatLng(52.01899889670765, 4.352015180547454),
+						                    new google.maps.LatLng(52.01717656212665, 4.3515323829261),
+						                    new google.maps.LatLng(52.016100293430895, 4.346371812796633),
+						                    new google.maps.LatLng(52.015340947178366, 4.343936367018501) */
+						                   ];
+						drawPolyLine('#map_canvas_rn',coordinates);
+						/*void(prompt('',gApplication.getMap().getCenter()));*/		
 
 					});
 
 			$("#routenoord").live("pageshow", function(event, ui) {
 				$("#map_canvas_rn").gmap("refresh");
+			});
+			
+			$("#routezuid").live(
+					"pagebeforeshow",
+					function(event, ui) {
+						if (navigator.geolocation)
+							navigator.geolocation.getCurrentPosition(
+									displayCurrentLocationRN, displayError);
+
+						$('#map_canvas_rz').height(
+								$(window).height()
+								- (185 + $('[data-role=header]').last()
+										.height()));
+
+						$("#map_canvas_rz")
+								.gmap("option",	"center",
+										new google.maps.LatLng(52.00631927080595, 4.371507167816162));
+						$("#map_canvas_rz").gmap("option", "zoom", 16);
+						
+						setMarker('#map_canvas_rz',0, 'A - Nieuwe Plantage', 52.006831686309845, 4.365434646606445, true,	'', '', '', '');
+						setMarker('#map_canvas_rz',0, 'B - Nolthensiusplantsoen', 52.00382001372848, 4.372698068618774, true,	'', '', '', '');
+						setMarker('#map_canvas_rz',0, 'C - Kalverbos', 52.006580721335155, 4.369994401931763, true,	'', '', '', '');
+						setMarker('#map_canvas_rz',0, 'D - Agnetapark - Oude Park', 52.0085884017274, 4.37055230140686, true,	'', '', '', '');
+						
+						var coordinates = [ new google.maps.LatLng(52.006831686309845, 4.365434646606445), //1A
+						                    
+						                    new google.maps.LatLng(52.00691754242548, 4.364715814590454), //2
+						                    new google.maps.LatLng(52.00738644599683, 4.365681409835815), //3						              
+						                    new google.maps.LatLng(52.00634956813972, 4.366518259048462), //4
+						                    new google.maps.LatLng(52.00638259009789, 4.366711378097534), //5
+						                    new google.maps.LatLng(52.00601274277476, 4.36755895614624), //6
+						                    new google.maps.LatLng(52.00448048559027, 4.370359182357788), // 7
+						                    new google.maps.LatLng(52.00335767762617, 4.371185302734375), //
+						                    new google.maps.LatLng(52.00382001372848, 4.372698068618774), //B
+						                    new google.maps.LatLng(52.003654894240164, 4.371185302734375), //
+						                    new google.maps.LatLng(52.00451350892753, 4.370434284210205),
+						                    new google.maps.LatLng(52.00531927080595, 4.368996620178223),
+						                    new google.maps.LatLng(52.00620427123437, 4.370284080505371),
+						                    new google.maps.LatLng(52.006580721335155, 4.369994401931763),//C
+						                    new google.maps.LatLng(52.00620427123437, 4.370284080505371),
+						                    
+						                    new google.maps.LatLng(52.007472301048175, 4.372032880783081),
+						                    new google.maps.LatLng(52.00788176133486, 4.371936321258545),
+						                    new google.maps.LatLng(52.0085884017274, 4.37055230140686)
+						                   ];
+						drawPolyLine('#map_canvas_rz',coordinates);
+						/*void(prompt('',gApplication.getMap().getCenter()));*/		
+
+					});
+
+			$("#routezuid").live("pageshow", function(event, ui) {
+				$("#map_canvas_rz").gmap("refresh");
 			});
 
 		});
@@ -453,12 +513,7 @@ function setMarker(map, id, title, lat, lon, top, za, zo, info, street) {
 	});
 }
 
-function drawPolyLine() {
-	var coordinates = [ new google.maps.LatLng(52.010903, 4.356808),
-			new google.maps.LatLng(52.011667, 4.354444),
-			new google.maps.LatLng(52.0125, 4.355278),
-			new google.maps.LatLng(52.001667, 4.3725) ];
-
+function drawPolyLine(map, coordinates) {
 	var path = new google.maps.Polyline({
 		path : coordinates,
 		strokeColor : "#FF0000",
@@ -466,7 +521,7 @@ function drawPolyLine() {
 		strokeWeight : 2
 	});
 
-	path.setMap($('#map_canvas').gmap('get', 'map'));
+	path.setMap($(map).gmap('get', 'map'));
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2) {

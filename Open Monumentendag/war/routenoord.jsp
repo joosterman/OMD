@@ -1,6 +1,6 @@
 <div data-role="page" id="routenoord" class="page-map">
 	<div data-theme="a" data-role="header">
-		<h3>OMD Delft</h3>
+		<h3>Route Noord</h3>
 		<a href="/#wandel" data-icon="back">Back</a>
 	</div>	
 	<div data-role="content" style="padding:0;">
