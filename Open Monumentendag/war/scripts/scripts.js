@@ -273,15 +273,11 @@ $(document).bind(
 			$("#map").live(
 					"pagebeforeshow",
 					function(event, ui) {
-						// $("#map_canvas").gmap({'callback' : function() {
 						if (navigator.geolocation)
-							navigator.geolocation.getCurrentPosition(
+							navigator.geolocation.watchPosition(
 									displayCurrentLocation, displayError);
-						// }
-						// });
 
 						// set map height
-						//$('[data-role=content]').height(
 						$('#map_canvas').height(						
 								$(window).height()
 										- (62 + $('[data-role=header]').last()
@@ -300,7 +296,6 @@ $(document).bind(
 							$("#map_canvas").gmap("option", "zoom", 15);
 							// localStorage.setItem("mapsUsed",true);
 						}
-						// drawPolyLine(monuments);
 						// $("#map_canvas").gmap("refresh");
 					});
 
@@ -320,7 +315,7 @@ $(document).bind(
 					"pagebeforeshow",
 					function(event, ui) {
 						if (navigator.geolocation)
-							navigator.geolocation.getCurrentPosition(
+							navigator.geolocation.watchPosition(
 									displayCurrentLocationRN, displayError);
 
 						$('#map_canvas_rn').height(
@@ -367,11 +362,7 @@ $(document).bind(
 						                    new google.maps.LatLng(52.01589560136208, 4.344547910672048),
 						                    new google.maps.LatLng(52.01522869489978, 4.343099517808391),
 						                    new google.maps.LatLng(52.01485892069602, 4.343485755905355),
-						                    new google.maps.LatLng(52.01514575646878, 4.3442559242248535)/*,
-						                    new google.maps.LatLng(52.01899889670765, 4.352015180547454),
-						                    new google.maps.LatLng(52.01717656212665, 4.3515323829261),
-						                    new google.maps.LatLng(52.016100293430895, 4.346371812796633),
-						                    new google.maps.LatLng(52.015340947178366, 4.343936367018501) */
+						                    new google.maps.LatLng(52.01514575646878, 4.3442559242248535)
 						                   ];
 						drawPolyLine('#map_canvas_rn',coordinates);
 						/*void(prompt('',gApplication.getMap().getCenter()));*/		
@@ -386,8 +377,8 @@ $(document).bind(
 					"pagebeforeshow",
 					function(event, ui) {
 						if (navigator.geolocation)
-							navigator.geolocation.getCurrentPosition(
-									displayCurrentLocationRN, displayError);
+							navigator.geolocation.watchPosition(
+									displayCurrentLocationRZ, displayError);
 
 						$('#map_canvas_rz').height(
 								$(window).height()
@@ -437,29 +428,38 @@ $(document).bind(
 		});
 
 function displayCurrentLocation(location) {
-	console.log("setting current position");
-	var loc = new google.maps.LatLng(location.coords.latitude,
-			location.coords.longitude);
-
-	$("#map_canvas").gmap("addMarker", {
-		"position" : loc,
-		"bounds" : false,
-		"title" : "You are here!"
-	});
+	updateCurrentLocation("#map_canvas",location);
 }
 
 function displayCurrentLocationRN(location) {
-	console.log("setting current position");
-	var loc = new google.maps.LatLng(location.coords.latitude,
-			location.coords.longitude);
-
-	$("#map_canvas_rn").gmap("addMarker", {
-		"position" : loc,
-		"bounds" : false,
-		"title" : "You are here!"
-	});
+	updateCurrentLocation("#map_canvas_rn",location);
 }
 
+function displayCurrentLocationRZ(location) {
+	updateCurrentLocation("#map_canvas_rz",location);
+}
+
+
+function updateCurrentLocation(map, location){
+	console.log("setting current position");
+	var loc = new google.maps.LatLng(location.coords.latitude,
+			location.coords.longitude);	
+	
+	$(map).gmap('findMarker', 'title', "You are here!", false, function(marker, isFound){
+		if(isFound){
+			console.log("Moving marker!"); 
+			marker.setPosition(loc);
+			//$('#map_canvas').gmap('refresh');
+		}else{
+			$(map).gmap("addMarker", {
+				"position" : loc,
+				"bounds" : false,
+				"title" : "You are here!"
+			});
+			console.log("Adding new marker!"); 
+		}
+	}); 
+}
 
 function setMarker(map, id, title, lat, lon, top, za, zo, info, street) {
 	// Add markers to the map
