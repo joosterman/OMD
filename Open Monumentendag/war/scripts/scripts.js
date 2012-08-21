@@ -321,10 +321,10 @@ $(document).bind(
 							navigator.geolocation.getCurrentPosition(
 									displayCurrentLocationRN, displayError);
 
-						$('[data-role=content]').height(
+						$('#map_canvas_rn').height(
 								$(window).height()
-										- (42 + $('[data-role=header]').last()
-												.height()));
+								- (219 + $('[data-role=header]').last()
+										.height()));
 
 						$("#map_canvas_rn")
 								.gmap("option",	"center",
@@ -333,8 +333,40 @@ $(document).bind(
 						
 						setMarker('#map_canvas_rn',0, 'Locatie', 52.012443,
 								4.356047, true,
-								'', '', '', 'Aan de zuidkant van de vroegere vestingwallen werd in 1829 een Rooms-katholieke begraafplaats gesticht op de plek van een zeventiendeeeuwse buitenplaats. Van deze buitenplaats werden de oprijlaan en tuinaanleg gebruikt voor de aanleg van de begraafplaats. De lindelaan is vandaag de dag nog goed herkenbaar. Door de aanleg van de Sebastiaansbrug in 1960 is de begraafplaats in het oosten ontruimd en in het westen, op de plek van de oude moestuin en bloemkwekerij van de oude buitenplaats, uitgebreid. Op de begraafplaats liggen verschillende graven, waaronder van priesters, nonnen en hoogleraren. Het baarhuisje werd vermoedelijk rond 1830 gebouwd door P.J. Schouten, ook bekend van de voormalige Roomskatholieke jongensschool aan de Nieuwe Langendijk');
+								'', '', '', '');
+						//Nieuwe plantage
+						//(52.01925639451914, 4.35508899188878)
 						// }
+						/*(52.018602743329005, 4.354767126814664)
+						(52.01750009795959, 4.353393835984633)
+						(52.01769157724925, 4.352535529102361)
+						(52.019441263831105, 4.352476520496407)
+						(52.01946767367031, 4.352143926579544)
+						(52.018747999975396, 4.352219028431733)
+						(52.018747999975396, 4.352219028431733)
+						(52.01738785109913, 4.351811332662692)
+						(52.01701149192108, 4.35195080753104)
+						(52.0162455582017, 4.350877923928136)
+						(52.01538056556224, 4.350545330011281)
+						(52.01508342682692, 4.3500732612261)
+						(52.01486552383346, 4.349043292967484)
+						(52.0155390387475, 4.347895307512553)
+						(52.015756938460676, 4.347670001955955)
+						(52.016159719984984, 4.347648544283885)
+						(52.016800201170554, 4.3470370006303405)
+						(52.01675398118581, 4.346135778404058)
+						(52.0163842195886, 4.345470590570369)
+						(52.015426786965996, 4.346039218879789)
+						(52.01540697779884, 4.345588607766647)
+						(52.01527491646033, 4.345331115702013)
+						(52.01589560136208, 4.344547910672048)
+						(52.01522869489978, 4.343099517808391)
+						(52.01485892069602, 4.343485755905355)*/
+						//B (52.01899889670765, 4.352015180547454)
+						//C (52.01717656212665, 4.3515323829261)
+						//D(52.016100293430895, 4.346371812796633)
+						//E (52.015340947178366, 4.343936367018501)
+						
 
 					});
 
