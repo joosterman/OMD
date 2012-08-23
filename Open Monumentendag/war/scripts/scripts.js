@@ -201,11 +201,11 @@ $(document).bind(
 					key : user.key,
 					cache: false
 				}, function(data) {
-					if (data === null) {
+					if (data === null || data.length===0) {
 						$("#currentComment").html("U heeft nog geen reactie geplaatst...");
 						$("#deleteComment").hide();
 					} else {
-						$("#currentComment").html(data[0].comment);
+						$("#currentComment").text(data[0].comment);
 						$("#deleteComment").show;
 					}
 				});
@@ -226,13 +226,18 @@ $(document).bind(
 					locationID : $.mobile.pageData.id,
 					cache:false
 				},function(data) {
+					$("#allComments li").remove();
 					$.each(data, function(index,value){
 						//check for own comment
 						if(value.userID!==user.id){
-							$("#allComments").append("<li>"+value.comment+"<span class=\"ui-li-count\">"+value.date+"</span></li>")
+							//write listitem
+							$("#allComments").append("<li><span id='li"+index+"'></span><span class=\"ui-li-count\">"+new Date(value.date).toLocaleDateString()+"</span></li>")
+							//set comment value using JQ
+							$("#li"+index).text(value.comment);
 						}
-						$("#allComments").listview("refresh");
 					});
+					//reload list
+					$("#allComments").listview("refresh");
 				});
 
 			});

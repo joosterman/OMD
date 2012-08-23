@@ -75,10 +75,7 @@ public class CommentServlet extends HttpServlet {
 				// return all
 				comments = ofy.query(Comment.class).list();
 			}
-			if (comments.size() == 0)
-				result = null;
-			else
-				result = comments;
+			result = comments;
 		}
 		else if ("set".equals(action)) {
 			// check if we have all the data
