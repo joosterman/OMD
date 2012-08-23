@@ -236,8 +236,9 @@ function setMarkers() {
 			console.log(location.topLocation);
 
 			setMarker('#map_canvas',location.id, location.name, location.latitude,
-					location.longitude, location.topLocation,
-					location.openingHoursSaturday, location.openingHoursSunday, location.info, location.street);
+					location.longitude, location.topLocation, '<strong>'+location.name+'</strong></br>'+ location.street+ 
+					'<br/>Zaterdag: '+location.openingHoursSaturday+'<br/>Zondag: '+
+					location.openingHoursSunday+'<br/><a href="#detail?id='+location.id+'">Detail pagina</a>');
 			// }
 		}
 	}
