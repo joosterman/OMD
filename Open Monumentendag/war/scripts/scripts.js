@@ -379,11 +379,11 @@ $(document).bind(
 						if (navigator.geolocation)
 							navigator.geolocation.watchPosition(
 									displayCurrentLocationRZ, displayError);
-
+						
 						$('#map_canvas_rz').height(
 								$(window).height()
-								- (185 + $('[data-role=header]').last()
-										.height()));
+								- (18+$('#rzlist').height()
+									+ $('[data-role=header]').last().height()));						
 
 						$("#map_canvas_rz")
 								.gmap("option",	"center",
@@ -422,6 +422,10 @@ $(document).bind(
 					});
 
 			$("#routezuid").live("pageshow", function(event, ui) {
+				$('#map_canvas_rz').height(
+						$(window).height()
+						- (18+$('#rzlist').height()
+							+ $('[data-role=header]').last().height()));
 				$("#map_canvas_rz").gmap("refresh");
 			});
 
