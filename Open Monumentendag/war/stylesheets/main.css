@@ -21,6 +21,11 @@ img.logo
 	margin-right: auto;
 }
 
+.themaImg
+{
+	max-width: 90%;	
+}
+
 #tweet{
 	position:fixed;
 	right:17px;

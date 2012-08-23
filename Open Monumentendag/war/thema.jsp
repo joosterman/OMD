@@ -5,8 +5,8 @@
 	</div>
 	<div data-role="content">
 		<div style="text-align: center">
-			<img class="center" alt="Themabeeld van Groen van Toen"
-			src="./img/Themabeeld-8-9-sept-Groen-van-Toen_800px.jpg" style="width: 95%;"/>
+			<img class="center themaImg" alt="Themabeeld van Groen van Toen"
+			src="./img/thema.jpg"/>
 		</div>
 		<br />
 		<span class="fineprint"> (bron: <a

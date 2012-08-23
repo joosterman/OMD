@@ -143,11 +143,6 @@ function loadLocation(id) {
 	$('#title').addClass(color+"Color");
 	$('#detailInformation').find('strong').addClass(color+"Color");
 	
-	/*var url = $("#tweetLink").attr("href");
-	var sindex = url.indexOf("text=");
-	var url2 = url.substring(0,sindex)+"text="+location.name;
-	alert(url2);*/
-	
 	loadLocationImages(location.id);
 }
 
