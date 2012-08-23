@@ -21,6 +21,13 @@ img.logo
 	margin-right: auto;
 }
 
+#tweet{
+	position:fixed;
+	right:17px;
+	
+	
+}
+
 .gallery { list-style: none; padding: 0; margin: 0; }
 .gallery:after { clear: both; content: "."; display: block; height: 0; visibility: hidden; }
 .gallery li { float: left; width: 33.33333333%; }

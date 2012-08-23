@@ -4,6 +4,10 @@
 		<a href="/#locations" data-icon="back" id="backBtnDetail">Back</a>
 	</div>
 	<div data-role="content">
+		<div id="tweet">
+			<a id="tweetLink" href="https://twitter.com/intent/tweet?button_hashtag=omd2012" class="twitter-hashtag-button" data-lang="nl">#omd2012</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		</div>
 		<div id="title">
 			<h3 class="locationName"></h3>
 			<p id="locationStreet"></p>
@@ -51,11 +55,8 @@
 			</div>
 			<div data-role="collapsible" data-theme="b" data-content-theme="c">
 				<h4>Alle reacties</h4>
-				<ul data-role="listview" id="allComments">
-				</ul>
+				<ul data-role="listview" id="allComments"></ul>
 			</div>
 		</div>
-
-
 	</div>
 </div>

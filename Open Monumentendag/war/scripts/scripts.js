@@ -135,7 +135,7 @@ function storeComment(){
 		key : user.key,
 		cache: false
 	}, function(data) {
-		$("#currentComment").html($("#comment").val());
+		$("#currentComment").text($("#comment").val());
 		$("#comment").val("");
 		$("#deleteComment").show();
 	});	
@@ -186,13 +186,13 @@ $(document).bind(
 						key : user.key,
 						cache: false
 					}, function(data) {
-						$("#currentComment").html("U heeft nog geen reactie geplaatst...");
+						$("#currentComment").text("U heeft nog geen reactie geplaatst...");
 						$("#deleteComment").hide();
 					});
 				});
 			});
 
-			$('#detail').live('pagebeforeshow', function(event, ui) {
+			$('#detail').live('pagebeforeshow', function(event, ui) {				
 				// set current comment
 				$.getJSON("/comment", {
 					action : "get",
@@ -202,7 +202,7 @@ $(document).bind(
 					cache: false
 				}, function(data) {
 					if (data === null || data.length===0) {
-						$("#currentComment").html("U heeft nog geen reactie geplaatst...");
+						$("#currentComment").text("U heeft nog geen reactie geplaatst...");
 						$("#deleteComment").hide();
 					} else {
 						$("#currentComment").text(data[0].comment);
