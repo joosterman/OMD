@@ -253,7 +253,7 @@ $(document).bind(
 						// ask location permission on first screen
 						if (navigator.geolocation) {
 							console.log("found gps");
-							navigator.geolocation.watchPosition(
+							navigator.geolocation.getCurrentPosition(
 									updateDistances, displayError);
 
 						}

@@ -210,15 +210,14 @@ function updateDistances(location) {
 		//console.log(location);
 
 		if (location.latitude != null && location.longitude != null) {
-			//console.log()';'
+			
 			$('#location-' + location.id + ' span.ui-li-count').html(
 					calculateDistance(lat1, lon1,
 							parseFloat(location.latitude),
 							parseFloat(location.longitude)));
-			$('#location-' + location.id + ' span.ui-li-count').show()
+			$('#location-' + location.id + ' span.ui-li-count').css({"visibility":"visible"});
 
 		}
-
 	}
 }
 
