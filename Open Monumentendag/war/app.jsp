@@ -14,13 +14,13 @@
 <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <title>Open Monumentendag Delft</title>
-<link rel="stylesheet" href="http://jquerymobile.com/test/css/themes/default/jquery.mobile.css" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.css" />
 <link rel="stylesheet" href="/stylesheets/main.css" />
 <link rel="stylesheet" href="/stylesheets/photoswipe.css" />
 <link rel="stylesheet" href="/stylesheets/android2.css" type="text/css" />
 
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<script src="http://jquerymobile.com/test/js/jquery.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).bind("mobileinit", function() {
 		//$.mobile.page.prototype.options.addBackBtn = true;
@@ -30,7 +30,7 @@
 <script type="text/javascript" src="/scripts/database.js"></script>
 <script type="text/javascript" src="/scripts/scripts.js"></script>
 <script type="text/javascript" src="/scripts/klass.min.js"></script>
-<script src="http://jquerymobile.com/test/js/jquery.mobile.js"></script>
+<script src="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.js"></script>
 <script type="text/javascript" src="/scripts/jquery.ui.map.min.js"></script>
 <script type="text/javascript" src="/scripts/jquery.json-2.3.min.js"></script>
 <script type="text/javascript" src="/scripts/jqm.page.params.js"></script>
