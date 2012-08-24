@@ -26,7 +26,6 @@ public class LocationImage {
 	public double cropBottomY;
 	@UserField(fieldType=FieldType.textarea)
 	public String description;
-	public String thumbnailURL;
 	public String imageURL;
 	
 	public LocationImage(){}

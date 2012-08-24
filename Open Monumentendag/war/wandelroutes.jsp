@@ -2,6 +2,7 @@
 	<div data-theme="a" data-role="header" data-backbtn="true">
 		<h3>Wandelroutes</h3>
 		<a href="/#home" data-icon="back">Back</a>
+		<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>
 	</div>
 	<div data-role="content" class="ui-content">
 		<ul class="locationsList ui-listview" data-role="listview">

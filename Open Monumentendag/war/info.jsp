@@ -1,7 +1,6 @@
 <div data-role="page" id="info">
 	<div data-theme="a" data-role="header" data-backbtn="true">
-		<h3>Info</h3>
-		<a href="/#home" data-icon="back">Back</a>
+		<h3>Informatie</h3>
 	</div>
 	<div data-role="content">
 	<h4>Over de makers</h4>

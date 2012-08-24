@@ -56,10 +56,7 @@ public class ImageUploadServlet extends HttpServlet {
 				li.filename = info.getFilename();
 				li.imageBlobKey = key;
 				
-				//TODO: CROP
 				li.imageURL = imagesService.getServingUrl(opts);
-				opts = ServingUrlOptions.Builder.withBlobKey(key).imageSize(200);
-				li.thumbnailURL = imagesService.getServingUrl(opts);
 				ofy.put(li);
 				
 			}

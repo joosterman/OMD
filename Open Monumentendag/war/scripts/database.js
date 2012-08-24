@@ -16,10 +16,10 @@ function persistUser(user) {
 }
 
 function cacheLocations() {
-	//TODO: Efficient is data outdated check
-	if(localStorage.getItem("locArray") == null){
-		var jsonObj = getSyncJSON("/data",{}, parseLocations);
-		//var jsonObj = $.getJSON("/data", {}, parseLocations);
+	// TODO: Efficient is data outdated check
+	if (localStorage.getItem("locArray") == null) {
+		var jsonObj = getSyncJSON("/data", {}, parseLocations);
+		// var jsonObj = $.getJSON("/data", {}, parseLocations);
 	}
 }
 
@@ -29,8 +29,7 @@ function parseLocations(locations) {
 
 	for (i = 0; i < locations.length; i++) {
 
-		locations[i].name = locations[i].name.replace('<p>', '').replace(
-				'</p>', '');
+		locations[i].name = locations[i].name.replace('<p>', '').replace('</p>', '');
 		locations[i].visited = false;
 
 		var key = 'loc-' + locations[i].id;
@@ -54,8 +53,7 @@ function loadLocation(id) {
 	$('#locationOpen').html(location.openingstijden);
 	$('#locationNumber').html(location.number);
 	$("#comment_LocationID").val(id);
-	if (parseInt(location.number) < 10 || location.number == "S"
-			|| location.number == "D") {
+	if (parseInt(location.number) < 10 || location.number == "S" || location.number == "D") {
 		$('#locationNumber').addClass("locationNumberSD");
 		$('#locationNumber').removeClass("locationNumberDD");
 	} else {
@@ -76,8 +74,7 @@ function loadLocation(id) {
 	}
 
 	if (location.tourAvailable)
-		$('#locationInformation').append(
-				"<br/>Op deze locatie worden rondleidingen gegeven.");
+		$('#locationInformation').append("<br/>Op deze locatie worden rondleidingen gegeven.");
 
 	if (location.topLocation)
 		$('#locationInformation').append("<br/>Dit is een toplocatie.");
@@ -114,41 +111,34 @@ function loadLocation(id) {
 		color = "pink";
 	}
 
-	$('#detailHeader')
-			.removeClass(
-					"orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
-	$('#locationNumber')
-			.removeClass(
-					"orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
-	$('#title').removeClass(
-			"orangeColor pinkColor blueColor greenColor yellowColor");
-	$('#detailInformation').find('strong').removeClass(
-			"orangeColor pinkColor blueColor greenColor yellowColor");
+	$('#detailHeader').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
+	$('#locationNumber').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
+	$('#title').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
+	$('#detailInformation').find('strong').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
 
 	$('#detailHeader').addClass(color + "Background");
 	$('#locationNumber').addClass(color + "Background");
 	$('#title').addClass(color + "Color");
 	$('#detailInformation').find('strong').addClass(color + "Color");
-	
+
 	$('#detailHeader').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
 	$('#locationNumber').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
 	$('#backBtnDetail').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
 	$('#title').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
 	$('#detailInformation').find('strong').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
-		
-	$('#detailHeader').addClass(color+"Background");
-	$('#locationNumber').addClass(color+"Background");
-	$('#backBtnDetail').addClass(color+"Background");
+
+	$('#detailHeader').addClass(color + "Background");
+	$('#locationNumber').addClass(color + "Background");
+	$('#backBtnDetail').addClass(color + "Background");
 	$('#backBtnDetail').css('border-color', '#000');
-	$('#title').addClass(color+"Color");
-	$('#detailInformation').find('strong').addClass(color+"Color");
-	
+	$('#title').addClass(color + "Color");
+	$('#detailInformation').find('strong').addClass(color + "Color");
+
 	loadLocationImages(location.id);
 }
 
 function loadLocationImages(id) {
-	var jsonObj = $
-			.getJSON("/images?locationID=" + id, {}, parseLocationImages);
+	var jsonObj = $.getJSON("/images?locationID=" + id, {}, parseLocationImages);
 }
 
 function parseLocationImages(locations) {
@@ -157,65 +147,59 @@ function parseLocationImages(locations) {
 	galleryList.empty();
 
 	var result = "";
-
+	var bodyWidth = $("body").width()*0.8;
+	bodyWidth = bodyWidth>1000?1000:bodyWidth;
 	for (i = 0; i < locations.length; i++) {
 		if (locations[i].primary) {
-			$('#locationImageURL').html(
-					'<a href="' + locations[i].imageURL + '"><img src="'
-							+ locations[i].imageURL + '" alt="'
-							+ locations[i].description
-							+ '" id="primaryImage"/></a>');
+			$('#locationImageURL').html('<a href="' + locations[i].imageURL + '"><img src="' + locations[i].imageURL + "=s" + bodyWidth
+				+ '" alt="' + locations[i].description + '" id="primaryImage"/></a>');
 			$("#locationImageURL a").photoSwipe({
 				enableMouseWheel : false,
 				enableKeyboard : false
 			});
 		} else {
 			if (locations[i].imageURL != undefined)
-				result += '<li><a href="' + locations[i].imageURL
-						+ '"><img src="' + locations[i].thumbnailURL
-						+ '" alt="' + locations[i].description
-						+ '" /></a></li>';
+				result += '<li><a href="' + locations[i].imageURL + '"><img src="' + locations[i].thumbnailURL + '" alt="'
+					+ locations[i].description + '" /></a></li>';
 		}
 	}
 	if (locations.length > 0) {
 		var key = 'img-' + locations[0].id;
 		localStorage.setItem(key, $.toJSON(locations));
-		
+
 		galleryList.append(result);
 		$("#Gallery a").photoSwipe({
 			enableMouseWheel : false,
 			enableKeyboard : false
 		});
-	}else{
-		//Remove old image if no new image is found
+	} else {
+		// Remove old image if no new image is found
 		$('#locationImageURL').html('');
 	}
 
-	
 }
 
 function updateDistances(location) {
 	var lat1 = location.coords.latitude, lon1 = location.coords.longitude;
-	//console.log(lat1 + " " + lon1);
+	// console.log(lat1 + " " + lon1);
 	// Update the server with the new location
 	updateLocation(lat1, lon1);
 
 	var locationArray = $.evalJSON(localStorage.getItem("locArray"));
-	//console.log(locationArray);
+	// console.log(locationArray);
 	for (i = 0; i < locationArray.length; i++) {
 		// console.log(locationArray[i].location);
 
-		var location = $.evalJSON(localStorage
-				.getItem(locationArray[i].location));
-		//console.log(location);
+		var location = $.evalJSON(localStorage.getItem(locationArray[i].location));
+		// console.log(location);
 
 		if (location.latitude != null && location.longitude != null) {
-			
-			$('#location-' + location.id + ' span.ui-li-count').html(
-					calculateDistance(lat1, lon1,
-							parseFloat(location.latitude),
-							parseFloat(location.longitude)));
-			$('#location-' + location.id + ' span.ui-li-count').css({"visibility":"visible"});
+
+			$('#location-' + location.id + ' span.ui-li-count')
+				.html(calculateDistance(lat1, lon1, parseFloat(location.latitude), parseFloat(location.longitude)));
+			$('#location-' + location.id + ' span.ui-li-count').css({
+				"visibility" : "visible"
+			});
 
 		}
 	}
@@ -227,18 +211,16 @@ function setMarkers() {
 
 	for (i = 0; i < locationArray.length; i++) {
 
-		var location = $.evalJSON(localStorage
-				.getItem(locationArray[i].location));
+		var location = $.evalJSON(localStorage.getItem(locationArray[i].location));
 
 		if (location.latitude != undefined && location.longitude != undefined) {
 			// if(location.latude > 1 && location.longitude > 1){
 			console.log("Setting marker!");
 			console.log(location.topLocation);
 
-			setMarker('#map_canvas',location.id, location.name, location.latitude,
-					location.longitude, location.topLocation, '<strong>'+location.name+'</strong></br>'+ location.street+ 
-					'<br/>Zaterdag: '+location.openingHoursSaturday+'<br/>Zondag: '+
-					location.openingHoursSunday+'<br/><a href="#detail?id='+location.id+'">Detail pagina</a>');
+			setMarker('#map_canvas', location.id, location.name, location.latitude, location.longitude, location.topLocation, '<strong>'
+				+ location.name + '</strong></br>' + location.street + '<br/>Zaterdag: ' + location.openingHoursSaturday + '<br/>Zondag: '
+				+ location.openingHoursSunday + '<br/><a href="#detail?id=' + location.id + '">Detail pagina</a>');
 			// }
 		}
 	}
@@ -264,14 +246,14 @@ function supports_local_storage() {
 	}
 }
 
-function getSyncJSON(url, data, success){
+function getSyncJSON(url, data, success) {
 	$.ajax({
-	    type: 'GET',
-	    url: url,
-	    dataType: 'json',
-	    success: success,
-	    data: data,
-	    async: false
+		type : 'GET',
+		url : url,
+		dataType : 'json',
+		success : success,
+		data : data,
+		async : false
 	});
 }
 

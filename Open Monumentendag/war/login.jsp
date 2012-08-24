@@ -33,24 +33,8 @@
 		<script type="text/javascript">
 			updateEmail("");
 		</script>
-		<%--
-		<div class="fbLoggedIn">
-			<p>
-				Ingelogd via Facebook als <span class="fbemail"></span>
-			</p>
-			<a class="fbLogout" href="" data-role="button">Log uit</a>
-		</div>
-		<div class="notLoggedIn">
-			<h4>Log in via</h4>
-			<a href="<%=userService.createLoginURL(request.getRequestURI())%>"><img
-				src="./img/google.png" alt="Google logo" /></a> of
-			<div class="fb-login-button" data-show-faces="false"
-				data-scope="email" data-width="200" data-max-rows="1"></div>
-		</div> --%>
-		<div>
 		<h4>Log in via</h4>
 			<a data-role="button" rel="external" href="<%=userService.createLoginURL("/")%>">Google</a>
-		</div>
 		<%
 			}
 		%>

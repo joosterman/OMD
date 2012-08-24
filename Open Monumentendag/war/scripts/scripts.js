@@ -13,7 +13,6 @@ function initializeUser() {
 	} else {
 		getNewUser();
 	}
-
 }
 
 function getNewUser() {
@@ -62,10 +61,6 @@ function updateLocation(latitude, longitude) {
 	});
 }
 
-function updateFBAccessToken(token) {
-	user.fbAccessToken = token;
-}
-
 function checkLoggedInAndShowHideBlocks() {
 	if (isLoggedIn()) {
 		$("#loginLink .ui-btn-text").text("Ingelogd");
@@ -79,8 +74,7 @@ function checkLoggedInAndShowHideBlocks() {
 }
 
 function setProperties(data) {
-	if (typeof user === "undefined" || typeof user.id === "undefined"
-			|| user.id === null) {
+	if (typeof user === "undefined" || typeof user.id === "undefined" || user.id === null) {
 		// console.warn("User is still null, update is queued.");
 		updates.push(data);
 		return;
@@ -105,369 +99,322 @@ function setProperties(data) {
 	});
 }
 
-function fbLoggedIn(status) {
-	if (status) {
-		FB.api('/me', function(fbuser) {
-			updateEmail(fbuser.email);
-			$(".fbemail").html(fbuser.email);
-		});
-		$(".fbLoggedIn").show();
-		$(".notLoggedIn").hide();
-	} else {
-		$(".fbLoggedIn").hide();
-		$(".notLoggedIn").show();
-		updateEmail("");
-	}
-}
-
 function isLoggedIn() {
-	return typeof user.email !== "undefined" && user.email !== null
-			&& user.email !== "";
+	return typeof user.email !== "undefined" && user.email !== null && user.email !== "";
 
 }
 
-function storeComment(){
+function storeComment() {
 	$.getJSON("/comment", {
 		action : "set",
 		comment : $("#comment").val(),
 		userID : user.id,
 		locationID : $.mobile.pageData.id,
 		key : user.key,
-		cache: false
+		cache : false
 	}, function(data) {
 		$("#currentComment").text($("#comment").val());
 		$("#comment").val("");
 		$("#deleteComment").show();
-	});	
+	});
+}
+
+function loadMessages() {
+	var list = $("#messageList");
+	list.empty();
+	$.getJSON("/message", null, function(data) {
+		$.each(data, function(index, value) {
+			var li = "<li>";
+			li += "<h3>" + value.content + "</h3>";
+			li += "<p>" + value.author + "</p>";
+			li += "<p class='ui-li-aside'>" + new Date(value.dateCreated).toLocaleDateString() + "</p>";
+			li += "</li>";
+			list.append(li);
+		});
+		$(".messagesLink .ui-btn-text").text(data.length + " Berichten");
+	});
+	
 }
 
 // Make sure we can use the url parameters on anchors.
-$(document)
-		.bind(
-				"pagebeforechange",
-				function(event, data) {
-					$.mobile.pageData = (data && data.options && data.options.pageData) ? data.options.pageData
-							: null;
-				}
+$(document).bind("pagebeforechange", function(event, data) {
+	$.mobile.pageData = (data && data.options && data.options.pageData) ? data.options.pageData : null;
+}
 
-		);
-$(document).bind("pagechange", function(event, data) {
-	checkLoggedInAndShowHideBlocks();
-});
+);
 
 // apply triggers/events
-$(document).bind(
-		"mobileinit",
-		function() {
-			// init user
-			initializeUser();
-			// control binds
-			$('.googleLogout').click(function() {
-				updateEmail("");
+$(document).bind("mobileinit", function() {
+	// init user
+	initializeUser();
+	// control binds
+	$('.googleLogout').click(function() {
+		updateEmail("");
+	});
+	
+	$("[data-role='page']").live("pagebeforeshow", function(){
+		checkLoggedInAndShowHideBlocks();
+		loadMessages();
+	});
+
+	$('#messages').live('pagebeforeshow', function(event, ui) {
+		$("#messageList").listview("refresh");
+	});
+	
+	$('#detail').live('pageshow', function(event, ui) {
+		// store comment option 1
+		$("#comment").keypress(function(e) {
+			if (e.which === 13) {
+				storeComment();
+			}
+		});
+		// store comment option 2
+		$("#submitComment").click(function() {
+			storeComment();
+		});
+		// delete current comment
+		$("#deleteComment").click(function() {
+			$.getJSON("/comment", {
+				action : "delete",
+				userID : user.id,
+				locationID : $.mobile.pageData.id,
+				key : user.key,
+				cache : false
+			}, function(data) {
+				$("#currentComment").text("U heeft nog geen reactie geplaatst...");
+				$("#deleteComment").hide();
 			});
+		});
+	});
 
-			$('#detail').live('pageshow', function(event, ui) {
-				//store comment option 1
-				$("#comment").keypress(function(e){
-					if(e.which === 13){
-						storeComment();
-					}
-				});
-				// store comment option 2
-				$("#submitComment").click(function() {
-					storeComment();
-				});
-				// delete current comment
-				$("#deleteComment").click(function() {
-					$.getJSON("/comment", {
-						action : "delete",
-						userID : user.id,
-						locationID : $.mobile.pageData.id,
-						key : user.key,
-						cache: false
-					}, function(data) {
-						$("#currentComment").text("U heeft nog geen reactie geplaatst...");
-						$("#deleteComment").hide();
-					});
-				});
-			});
-
-			$('#detail').live('pagebeforeshow', function(event, ui) {				
-				// set current comment
-				$.getJSON("/comment", {
-					action : "get",
-					userID : user.id,
-					locationID : $.mobile.pageData.id,
-					key : user.key,
-					cache: false
-				}, function(data) {
-					if (data === null || data.length===0) {
-						$("#currentComment").text("U heeft nog geen reactie geplaatst...");
-						$("#deleteComment").hide();
-					} else {
-						$("#currentComment").text(data[0].comment);
-						$("#deleteComment").show;
-					}
-				});
-
-				// set location data
-				if (supports_local_storage()) {
-					// if the browser if capable of localStorage load
-					// cached
-					// information
-					loadLocation($.mobile.pageData.id);
-				} else {
-					// TODO: ASK DB
-				}
-				
-				//set all comments
-				$.getJSON("/comment", {
-					action : "get",
-					locationID : $.mobile.pageData.id,
-					cache:false
-				},function(data) {
-					$("#allComments li").remove();
-					$.each(data, function(index,value){
-						//check for own comment
-						if(value.userID!==user.id){
-							//write listitem
-							$("#allComments").append("<li><span id='li"+index+"'></span><span class=\"ui-li-count\">"+new Date(value.date).toLocaleDateString()+"</span></li>")
-							//set comment value using JQ
-							$("#li"+index).text(value.comment);
-						}
-					});
-					//reload list
-					$("#allComments").listview("refresh");
-				});
-
-			});
-
-			$('#detail').live('pageshow', function(event, ui) {
-				// $("#Gallery a").photoSwipe({ enableMouseWheel: false ,
-				// enableKeyboard: false });
-			});
-
-			$('#detail').live('pagehide', function(event, ui) {
-				// $("#Gallery a").photoSwipe({ enableMouseWheel: false ,
-				// enableKeyboard: false });
-			});
-
-			$('#home').live(
-					'pageshow',
-					function(event, ui) {
-						// ask location permission on first screen
-						if (navigator.geolocation) {
-							console.log("found gps");
-							navigator.geolocation.getCurrentPosition(
-									updateDistances, displayError);
-
-						}
-					});
-			$('#locations').live(
-					'pageshow',
-					function(event, ui) {
-						// ask location permission on first screen
-						if (navigator.geolocation) {
-							console.log("found gps");
-							navigator.geolocation.watchPosition(
-									updateDistances, displayError);
-
-						}
-					});
-
-			$("#map").live(
-					"pagebeforeshow",
-					function(event, ui) {
-						if (navigator.geolocation)
-							navigator.geolocation.watchPosition(
-									displayCurrentLocation, displayError);
-
-						// set map height
-						$('#map_canvas').height(						
-								$(window).height()
-										- (62 + $('[data-role=header]').last()
-												.height())
-												-$('#mapinfo').height());
-
-						setMarkers();
-
-						if (localStorage.getItem("mapsUsed") == null) {
-							$("#map_canvas")
-									.gmap(
-											"option",
-											"center",
-											new google.maps.LatLng(52.012443,
-													4.356047));
-							$("#map_canvas").gmap("option", "zoom", 15);
-							// localStorage.setItem("mapsUsed",true);
-						}
-						// $("#map_canvas").gmap("refresh");
-					});
-
-			$("#map").live("pageshow", function(event, ui) {
-				$("#map_canvas").gmap("refresh");
-			});
-
-			$("#locations").live("pagebeforeshow", function(event, ui) {
-
-			});
-
-			$("#social").live("pagebeforeshow", function(event, ui) {
-				loadTweets('delft');
-			});
-			
-			$("#routenoord").live(
-					"pagebeforeshow",
-					function(event, ui) {
-						if (navigator.geolocation)
-							navigator.geolocation.watchPosition(
-									displayCurrentLocationRN, displayError);
-
-						$('#map_canvas_rn').height(
-								$(window).height()
-								- (219 + $('[data-role=header]').last()
-										.height()));
-
-						$("#map_canvas_rn")
-								.gmap("option",	"center",
-										new google.maps.LatLng(52.01625506283269, 4.350918531417847));
-						$("#map_canvas_rn").gmap("option", "zoom", 16);
-						
-						setMarker('#map_canvas_rn',0, 'A - Nieuwe Plantage', 52.01795858690878, 4.35508668422699, true,	'Nieuwe Plantage');
-						setMarker('#map_canvas_rn',0, 'B - Nolthensiusplantsoen', 52.018747999975396, 4.352219028431733, true, '');
-						setMarker('#map_canvas_rn',0, 'C - Kalverbos', 52.01717656212665, 4.3515323829261, true, '');
-						setMarker('#map_canvas_rn',0, 'D - Agnetapark - Oude Park', 52.016100293430895, 4.346371812796633, true, '');
-						setMarker('#map_canvas_rn',0, 'E - Agnetapark - Nieuwe Park', 52.015340947178366, 4.343936367018501, true, '');
-						
-						var coordinates = [ new google.maps.LatLng(52.01795858690878, 4.35508668422699), //1
-						                    new google.maps.LatLng(52.01792887483538, 4.354378581047058), //2
-						                    new google.maps.LatLng(52.01750009795959, 4.353393835984633), //3						              
-						                    new google.maps.LatLng(52.01769157724925, 4.352535529102361), //4
-						                    new google.maps.LatLng(52.019441263831105, 4.352476520496407), //5
-						                    new google.maps.LatLng(52.01946767367031, 4.352143926579544), //6
-						                    new google.maps.LatLng(52.018747999975396, 4.352219028431733), // 7
-						                    new google.maps.LatLng(52.01946767367031, 4.352143926589544), //back begin
-						                    new google.maps.LatLng(52.019441263831105, 4.352476520496407),
-						                    new google.maps.LatLng(52.01769157724925, 4.352535529102361), //back end
-						                    new google.maps.LatLng(52.01738785109913, 4.351811332662692),
-						                    new google.maps.LatLng(52.01701149192108, 4.35195080753104),
-						                    new google.maps.LatLng(52.0162455582017, 4.350877923928136),
-						                    new google.maps.LatLng(52.01538056556224, 4.350545330011281),
-						                    new google.maps.LatLng(52.01508342682692, 4.3500732612261),
-						                    new google.maps.LatLng(52.01486552383346, 4.349043292967484),
-						                    new google.maps.LatLng(52.0155390387475, 4.347895307512553),
-						                    new google.maps.LatLng(52.015756938460676, 4.347670001955955),
-						                    new google.maps.LatLng(52.016159719984984, 4.347648544283885),
-						                    new google.maps.LatLng(52.016800201170554, 4.3470370006303405),
-						                    new google.maps.LatLng(52.01675398118581, 4.346135778404058),
-						                    new google.maps.LatLng(52.0163842195886, 4.345470590570369),
-						                    new google.maps.LatLng(52.015426786965996, 4.346039218879789),
-						                    new google.maps.LatLng(52.01540697779884, 4.345588607766647),
-						                    new google.maps.LatLng(52.01527491646033, 4.345331115702013),
-						                    new google.maps.LatLng(52.01589560136208, 4.344547910672048),
-						                    new google.maps.LatLng(52.01522869489978, 4.343099517808391),
-						                    new google.maps.LatLng(52.01485892069602, 4.343485755905355),
-						                    new google.maps.LatLng(52.01514575646878, 4.3442559242248535)
-						                   ];
-						drawPolyLine('#map_canvas_rn',coordinates);
-						/*void(prompt('',gApplication.getMap().getCenter()));*/		
-
-					});
-
-			$("#routenoord").live("pageshow", function(event, ui) {
-				$("#map_canvas_rn").gmap("refresh");
-			});
-			
-			$("#routezuid").live(
-					"pagebeforeshow",
-					function(event, ui) {
-						if (navigator.geolocation)
-							navigator.geolocation.watchPosition(
-									displayCurrentLocationRZ, displayError);
-						
-						$('#map_canvas_rz').height(
-								$(window).height()
-								- (18+$('#rzlist').height()
-									+ $('[data-role=header]').last().height()));						
-
-						$("#map_canvas_rz")
-								.gmap("option",	"center",
-										new google.maps.LatLng(52.00631927080595, 4.371507167816162));
-						$("#map_canvas_rz").gmap("option", "zoom", 16);
-						
-						setMarker('#map_canvas_rz',0, 'A - Nieuwe Plantage', 52.006831686309845, 4.365434646606445, true,	'');
-						setMarker('#map_canvas_rz',0, 'B - Nolthensiusplantsoen', 52.00382001372848, 4.372698068618774, true,	'');
-						setMarker('#map_canvas_rz',0, 'C - Kalverbos', 52.006580721335155, 4.369994401931763, true,	'');
-						setMarker('#map_canvas_rz',0, 'D - Agnetapark - Oude Park', 52.0085884017274, 4.37055230140686, true,	'');
-						
-						var coordinates = [ new google.maps.LatLng(52.006831686309845, 4.365434646606445), //1A
-						                    
-						                    new google.maps.LatLng(52.00691754242548, 4.364715814590454), //2
-						                    new google.maps.LatLng(52.00738644599683, 4.365681409835815), //3						              
-						                    new google.maps.LatLng(52.00634956813972, 4.366518259048462), //4
-						                    new google.maps.LatLng(52.00638259009789, 4.366711378097534), //5
-						                    new google.maps.LatLng(52.00601274277476, 4.36755895614624), //6
-						                    new google.maps.LatLng(52.00448048559027, 4.370359182357788), // 7
-						                    new google.maps.LatLng(52.00335767762617, 4.371185302734375), //
-						                    new google.maps.LatLng(52.00382001372848, 4.372698068618774), //B
-						                    new google.maps.LatLng(52.003654894240164, 4.371185302734375), //
-						                    new google.maps.LatLng(52.00451350892753, 4.370434284210205),
-						                    new google.maps.LatLng(52.00531927080595, 4.368996620178223),
-						                    new google.maps.LatLng(52.00620427123437, 4.370284080505371),
-						                    new google.maps.LatLng(52.006580721335155, 4.369994401931763),//C
-						                    new google.maps.LatLng(52.00620427123437, 4.370284080505371),
-						                    
-						                    new google.maps.LatLng(52.007472301048175, 4.372032880783081),
-						                    new google.maps.LatLng(52.00788176133486, 4.371936321258545),
-						                    new google.maps.LatLng(52.0085884017274, 4.37055230140686)
-						                   ];
-						drawPolyLine('#map_canvas_rz',coordinates);
-						/*void(prompt('',gApplication.getMap().getCenter()));*/		
-
-					});
-
-			$("#routezuid").live("pageshow", function(event, ui) {
-				$('#map_canvas_rz').height(
-						$(window).height()
-						- (18+$('#rzlist').height()
-							+ $('[data-role=header]').last().height()));
-				$("#map_canvas_rz").gmap("refresh");
-			});
-
+	$('#detail').live('pagebeforeshow', function(event, ui) {
+		// set current comment
+		$.getJSON("/comment", {
+			action : "get",
+			userID : user.id,
+			locationID : $.mobile.pageData.id,
+			key : user.key,
+			cache : false
+		}, function(data) {
+			if (data === null || data.length === 0) {
+				$("#currentComment").text("U heeft nog geen reactie geplaatst...");
+				$("#deleteComment").hide();
+			} else {
+				$("#currentComment").text(data[0].comment);
+				$("#deleteComment").show;
+			}
 		});
 
+		// set location data
+		if (supports_local_storage()) {
+			// if the browser if capable of localStorage load cached information
+			loadLocation($.mobile.pageData.id);
+		} else {
+			// TODO: ASK DB
+		}
+
+		// set all comments
+		$.getJSON("/comment", {
+			action : "get",
+			locationID : $.mobile.pageData.id,
+			cache : false
+		}, function(data) {
+			$("#allComments").empty();
+			var allc = $("#allComments");
+			$.each(data, function(index, value) {
+				// check for own comment
+				if (value.userID !== user.id) {
+					// write listitem
+					var li = "<li>";
+					li+="<span id='li" + index + "'></span>";
+					li+="<span class='ui-li-count'>" + new Date(value.date).toLocaleDateString() + "</span>";
+					li+="</li>";
+					allc.append(li);
+					$("#li" + index).text(value.comment);
+				}
+			});
+			// reload list
+			allc.listview("refresh");
+		});
+
+	});
+
+	$('#detail').live('pageshow', function(event, ui) {
+		// $("#Gallery a").photoSwipe({ enableMouseWheel: false
+		// ,
+		// enableKeyboard: false });
+	});
+
+	$('#detail').live('pagehide', function(event, ui) {
+		// $("#Gallery a").photoSwipe({ enableMouseWheel: false
+		// ,
+		// enableKeyboard: false });
+	});
+
+	$('#home').live('pageshow', function(event, ui) {
+		// ask location permission on first screen
+		if (navigator.geolocation) {
+			console.log("found gps");
+			navigator.geolocation.getCurrentPosition(updateDistances, displayError);
+
+		}
+	});
+	$('#locations').live('pageshow', function(event, ui) {
+		// ask location permission on first screen
+		if (navigator.geolocation) {
+			console.log("found gps");
+			navigator.geolocation.watchPosition(updateDistances, displayError);
+
+		}
+	});
+
+	$("#map").live("pagebeforeshow", function(event, ui) {
+		if (navigator.geolocation)
+			navigator.geolocation.watchPosition(displayCurrentLocation, displayError);
+
+		// set map height
+		$('#map_canvas').height($(window).height() - (62 + $('[data-role=header]').last().height()) - $('#mapinfo').height());
+
+		setMarkers();
+
+		if (localStorage.getItem("mapsUsed") == null) {
+			$("#map_canvas").gmap("option", "center", new google.maps.LatLng(52.012443, 4.356047));
+			$("#map_canvas").gmap("option", "zoom", 15);
+			// localStorage.setItem("mapsUsed",true);
+		}
+		// $("#map_canvas").gmap("refresh");
+	});
+
+	$("#map").live("pageshow", function(event, ui) {
+		$("#map_canvas").gmap("refresh");
+	});
+
+	$("#locations").live("pagebeforeshow", function(event, ui) {
+
+	});
+
+	$("#social").live("pagebeforeshow", function(event, ui) {
+		loadTweets('delft');
+	});
+
+	$("#routenoord").live("pagebeforeshow", function(event, ui) {
+		if (navigator.geolocation)
+			navigator.geolocation.watchPosition(displayCurrentLocationRN, displayError);
+
+		$('#map_canvas_rn').height($(window).height() - (219 + $('[data-role=header]').last().height()));
+
+		$("#map_canvas_rn").gmap("option", "center", new google.maps.LatLng(52.01625506283269, 4.350918531417847));
+		$("#map_canvas_rn").gmap("option", "zoom", 16);
+
+		setMarker('#map_canvas_rn', 0, 'A - Nieuwe Plantage', 52.01795858690878, 4.35508668422699, true, 'Nieuwe Plantage');
+		setMarker('#map_canvas_rn', 0, 'B - Nolthensiusplantsoen', 52.018747999975396, 4.352219028431733, true, '');
+		setMarker('#map_canvas_rn', 0, 'C - Kalverbos', 52.01717656212665, 4.3515323829261, true, '');
+		setMarker('#map_canvas_rn', 0, 'D - Agnetapark - Oude Park', 52.016100293430895, 4.346371812796633, true, '');
+		setMarker('#map_canvas_rn', 0, 'E - Agnetapark - Nieuwe Park', 52.015340947178366, 4.343936367018501, true, '');
+
+		var coordinates = [ new google.maps.LatLng(52.01795858690878, 4.35508668422699), // 1
+		new google.maps.LatLng(52.01792887483538, 4.354378581047058), // 2
+		new google.maps.LatLng(52.01750009795959, 4.353393835984633), // 3
+		new google.maps.LatLng(52.01769157724925, 4.352535529102361), // 4
+		new google.maps.LatLng(52.019441263831105, 4.352476520496407), // 5
+		new google.maps.LatLng(52.01946767367031, 4.352143926579544), // 6
+		new google.maps.LatLng(52.018747999975396, 4.352219028431733), // 7
+		new google.maps.LatLng(52.01946767367031, 4.352143926589544), // back
+		// begin
+		new google.maps.LatLng(52.019441263831105, 4.352476520496407), new google.maps.LatLng(52.01769157724925, 4.352535529102361), // back
+		// end
+		new google.maps.LatLng(52.01738785109913, 4.351811332662692), new google.maps.LatLng(52.01701149192108, 4.35195080753104),
+			new google.maps.LatLng(52.0162455582017, 4.350877923928136), new google.maps.LatLng(52.01538056556224, 4.350545330011281),
+			new google.maps.LatLng(52.01508342682692, 4.3500732612261), new google.maps.LatLng(52.01486552383346, 4.349043292967484),
+			new google.maps.LatLng(52.0155390387475, 4.347895307512553), new google.maps.LatLng(52.015756938460676, 4.347670001955955),
+			new google.maps.LatLng(52.016159719984984, 4.347648544283885), new google.maps.LatLng(52.016800201170554, 4.3470370006303405),
+			new google.maps.LatLng(52.01675398118581, 4.346135778404058), new google.maps.LatLng(52.0163842195886, 4.345470590570369),
+			new google.maps.LatLng(52.015426786965996, 4.346039218879789), new google.maps.LatLng(52.01540697779884, 4.345588607766647),
+			new google.maps.LatLng(52.01527491646033, 4.345331115702013), new google.maps.LatLng(52.01589560136208, 4.344547910672048),
+			new google.maps.LatLng(52.01522869489978, 4.343099517808391), new google.maps.LatLng(52.01485892069602, 4.343485755905355),
+			new google.maps.LatLng(52.01514575646878, 4.3442559242248535) ];
+		drawPolyLine('#map_canvas_rn', coordinates);
+		/* void(prompt('',gApplication.getMap().getCenter())); */
+
+	});
+
+	$("#routenoord").live("pageshow", function(event, ui) {
+		$("#map_canvas_rn").gmap("refresh");
+	});
+
+	$("#routezuid").live("pagebeforeshow", function(event, ui) {
+		if (navigator.geolocation)
+			navigator.geolocation.watchPosition(displayCurrentLocationRZ, displayError);
+
+		$('#map_canvas_rz').height($(window).height() - (18 + $('#rzlist').height() + $('[data-role=header]').last().height()));
+
+		$("#map_canvas_rz").gmap("option", "center", new google.maps.LatLng(52.00631927080595, 4.371507167816162));
+		$("#map_canvas_rz").gmap("option", "zoom", 16);
+
+		setMarker('#map_canvas_rz', 0, 'A - Nieuwe Plantage', 52.006831686309845, 4.365434646606445, true, '');
+		setMarker('#map_canvas_rz', 0, 'B - Nolthensiusplantsoen', 52.00382001372848, 4.372698068618774, true, '');
+		setMarker('#map_canvas_rz', 0, 'C - Kalverbos', 52.006580721335155, 4.369994401931763, true, '');
+		setMarker('#map_canvas_rz', 0, 'D - Agnetapark - Oude Park', 52.0085884017274, 4.37055230140686, true, '');
+
+		var coordinates = [ new google.maps.LatLng(52.006831686309845, 4.365434646606445), // 1A
+
+		new google.maps.LatLng(52.00691754242548, 4.364715814590454), // 2
+		new google.maps.LatLng(52.00738644599683, 4.365681409835815), // 3
+		new google.maps.LatLng(52.00634956813972, 4.366518259048462), // 4
+		new google.maps.LatLng(52.00638259009789, 4.366711378097534), // 5
+		new google.maps.LatLng(52.00601274277476, 4.36755895614624), // 6
+		new google.maps.LatLng(52.00448048559027, 4.370359182357788), // 7
+		new google.maps.LatLng(52.00335767762617, 4.371185302734375), //
+		new google.maps.LatLng(52.00382001372848, 4.372698068618774), // B
+		new google.maps.LatLng(52.003654894240164, 4.371185302734375), //
+		new google.maps.LatLng(52.00451350892753, 4.370434284210205), new google.maps.LatLng(52.00531927080595, 4.368996620178223),
+			new google.maps.LatLng(52.00620427123437, 4.370284080505371), new google.maps.LatLng(52.006580721335155, 4.369994401931763),// C
+			new google.maps.LatLng(52.00620427123437, 4.370284080505371),
+
+			new google.maps.LatLng(52.007472301048175, 4.372032880783081), new google.maps.LatLng(52.00788176133486, 4.371936321258545),
+			new google.maps.LatLng(52.0085884017274, 4.37055230140686) ];
+		drawPolyLine('#map_canvas_rz', coordinates);
+		/* void(prompt('',gApplication.getMap().getCenter())); */
+
+	});
+
+	$("#routezuid").live("pageshow", function(event, ui) {
+		$('#map_canvas_rz').height($(window).height() - (18 + $('#rzlist').height() + $('[data-role=header]').last().height()));
+		$("#map_canvas_rz").gmap("refresh");
+	});
+
+});
+
 function displayCurrentLocation(location) {
-	updateCurrentLocation("#map_canvas",location);
+	updateCurrentLocation("#map_canvas", location);
 }
 
 function displayCurrentLocationRN(location) {
-	updateCurrentLocation("#map_canvas_rn",location);
+	updateCurrentLocation("#map_canvas_rn", location);
 }
 
 function displayCurrentLocationRZ(location) {
-	updateCurrentLocation("#map_canvas_rz",location);
+	updateCurrentLocation("#map_canvas_rz", location);
 }
 
-
-function updateCurrentLocation(map, location){
+function updateCurrentLocation(map, location) {
 	console.log("setting current position");
-	var loc = new google.maps.LatLng(location.coords.latitude,
-			location.coords.longitude);	
-	
-	$(map).gmap('findMarker', 'title', "You are here!", false, function(marker, isFound){
-		if(isFound){
-			console.log("Moving marker!"); 
+	var loc = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
+
+	$(map).gmap('findMarker', 'title', "You are here!", false, function(marker, isFound) {
+		if (isFound) {
+			console.log("Moving marker!");
 			marker.setPosition(loc);
-			//$('#map_canvas').gmap('refresh');
-		}else{
+			// $('#map_canvas').gmap('refresh');
+		} else {
 			$(map).gmap("addMarker", {
 				"position" : loc,
 				"bounds" : false,
 				"title" : "You are here!"
 			});
-			console.log("Adding new marker!"); 
+			console.log("Adding new marker!");
 		}
-	}); 
+	});
 }
 
 function setMarker(map, id, title, lat, lon, top, content) {
@@ -487,14 +434,12 @@ function setMarker(map, id, title, lat, lon, top, content) {
 	new google.maps.Point(0, 0),
 	// The anchor for this image is the base of the flagpole at 0,32.
 	new google.maps.Point(0, 32));
-	var image2 = new google.maps.MarkerImage('img/beachflag2.png',
-			new google.maps.Size(20, 32), new google.maps.Point(0, 0),
-			new google.maps.Point(0, 32));
+	var image2 = new google.maps.MarkerImage('img/beachflag2.png', new google.maps.Size(20, 32), new google.maps.Point(0, 0),
+		new google.maps.Point(0, 32));
 	var shadow = new google.maps.MarkerImage('img/beachflag_shadow.png',
 	// The shadow image is larger in the horizontal dimension
 	// while the position and offset are the same as for the main image.
-	new google.maps.Size(37, 32), new google.maps.Point(0, 0),
-			new google.maps.Point(0, 32));
+	new google.maps.Size(37, 32), new google.maps.Point(0, 0), new google.maps.Point(0, 32));
 	// Shapes define the clickable region of the icon.
 	// The type defines an HTML <area> element 'poly' which
 	// traces out a polygon as a series of X,Y points. The final
@@ -506,7 +451,7 @@ function setMarker(map, id, title, lat, lon, top, content) {
 	};
 
 	var myLatLng = new google.maps.LatLng(lat, lon);
-	
+
 	console.log(content);
 
 	$(map).gmap('addMarker', {
@@ -548,8 +493,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 	var dLat = lat2 - lat1;
 	var dLon = lon2 - lon1;
 
-	var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1)
-			* Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	var d = R * c;
 	return d.toFixed(2) + " km";
@@ -566,20 +510,20 @@ function displayError(error) {
 
 	// find out which error we have, output message accordingly
 	switch (error.code) {
-	case error.PERMISSION_DENIED:
-		locationElement.innerHTML = "Permission was denied";
-		break;
-	case error.POSITION_UNAVAILABLE:
-		locationElement.innerHTML = "Location data not available";
-		break;
-	case error.TIMEOUT:
-		locationElement.innerHTML = "Location request timeout";
-		break;
-	case error.UNKNOWN_ERROR:
-		locationElement.innerHTML = "An unspecified error occurred";
-		break;
-	default:
-		locationElement.innerHTML = "Who knows what happened...";
-		break;
+		case error.PERMISSION_DENIED:
+			locationElement.innerHTML = "Permission was denied";
+			break;
+		case error.POSITION_UNAVAILABLE:
+			locationElement.innerHTML = "Location data not available";
+			break;
+		case error.TIMEOUT:
+			locationElement.innerHTML = "Location request timeout";
+			break;
+		case error.UNKNOWN_ERROR:
+			locationElement.innerHTML = "An unspecified error occurred";
+			break;
+		default:
+			locationElement.innerHTML = "Who knows what happened...";
+			break;
 	}
 }

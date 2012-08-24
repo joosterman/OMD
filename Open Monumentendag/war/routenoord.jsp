@@ -2,6 +2,7 @@
 	<div data-theme="a" data-role="header">
 		<h3>Route Noord</h3>
 		<a href="/#wandel" data-icon="back">Back</a>
+		<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>
 	</div>
 	<div data-role="content" style="padding: 0;">
 		<div data-role="collapsible-set" data-theme="c" data-content-theme="d" data-mini="true">

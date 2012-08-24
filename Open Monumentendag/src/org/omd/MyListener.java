@@ -19,6 +19,7 @@ public class MyListener implements ServletContextListener {
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(UserLocationHistory.class);
 		ObjectifyService.register(Comment.class);
+		ObjectifyService.register(Message.class);
 	}
 
 }

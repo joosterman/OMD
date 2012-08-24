@@ -11,7 +11,6 @@
 <%!
 Gson gson = new Gson();
 Objectify ofy = ObjectifyService.begin();
-ChannelService channelService = ChannelServiceFactory.getChannelService();
 UserService userService = UserServiceFactory.getUserService();
 DateFormat dformat = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT);
 %>
@@ -25,14 +24,12 @@ DateFormat dformat = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.
 		String importance = request.getParameter("importance");
 		Message m = new Message();
 		m.author = author;
+		m.email = userService.getCurrentUser().getEmail();
 		m.validUntil = dformat.parse(validUntil);
 		m.importance = importance;
 		m.dateCreated = new Date();
-		
-		String json= gson.toJson(m);
-		for (User u : ofy.query(User.class)) {
-			channelService.sendMessage(new ChannelMessage(u.id.toString(), json));
-		}	
+		m.content = message;
+		ofy.put(m);
 	}
 	
 %>
@@ -73,7 +70,7 @@ xt/javascript">
 			</tr>
 			<tr>
 				<td></td>
-				<td><input type="submit" value="Verstuur" class="sendMessage" /></td>
+				<td><input type="reset" value="Reset" /><input type="submit" value="Verstuur" class="sendMessage" /></td>
 			</tr>
 		</table>
 	</form>

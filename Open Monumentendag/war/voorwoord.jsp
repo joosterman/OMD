@@ -2,6 +2,7 @@
 	<div data-theme="a" data-role="header" data-backbtn="true">
 		<h3>Voorwoord</h3>
 		<a href="/#home" data-icon="back">Back</a>
+		<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>
 	</div>
 	<div data-role="content">
 		<p>Het landelijke thema voor Open Monumentendag 2012 is &apos;Groen van Toen&apos;. Groen, zelfs historisch groen, is natuurlijk nooit eeuwenoud, want het verjongt zich steeds. Maar het is wel een belangrijk historisch gegeven dat er steeds groen was en nog steeds is. De Delftse binnenstad is zo mooi vanwege de vele monumenten, maar vooral ook door vele bomen langs de grachten. Groen is er meestal voor meer dan alleen sier. De bomen langs de grachten geven beschutting tegen weer en wind en als hun tijd gekomen was en ze vervangen werden door jonge bomen, werd het hout voor allerlei doeleinden gebruikt. In de Delftse hofjes was er groen in de vorm van bleekveld, boomgaard, moestuin of siertuin. In de Botanische Tuin staat het groen in de eerste plaats ten dienste van wetenschappelijk onderzoek, maar intussen is het een bijzondere groene oase in de stad geworden. Buiten de binnenstad maken plantsoenen en parken de leefomgeving mooier. Daarom neemt het groen in onze monumentale stad zo’n belangrijke plaats in. </p>

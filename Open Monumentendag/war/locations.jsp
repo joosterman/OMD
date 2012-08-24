@@ -6,12 +6,16 @@
 <%@ page import ="java.util.List" %>
 <%@ page import ="java.util.Collections" %>
 <%@ page import ="java.util.Comparator" %>
+<%@ page import = "com.google.appengine.api.images.ImagesServiceFactory" %>
+<%@ page import = "com.google.appengine.api.images.ImagesService" %>
+<%@ page import = "com.google.appengine.api.images.ServingUrlOptions" %>
 
 <%!//get all locations
 Objectify ofy = ObjectifyService.begin();
-// sort locations based on toplocation and number
+ImagesService imagesService = ImagesServiceFactory.getImagesService();
 %>
 <%
+//sort locations based on toplocation and number
 List<Location> locs = ofy.query(Location.class).list();
 Collections.sort(locs, new Comparator<Location>() {
 	public int compare(Location o1, Location o2) {
@@ -24,6 +28,7 @@ Collections.sort(locs, new Comparator<Location>() {
 	<div data-theme="a" data-role="header" data-backbtn="true">
 		<h1>Locaties</h1>
 		<a href="/#home" data-icon="back">Back</a>
+		<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>
 	</div>
 	<div id="allLocations" data-role="content" class="ui-content">
 		<ul class="locationsList ui-listview" data-role="listview" data-filter="true" data-filter-placeholder="Zoek een locatie...">
@@ -45,7 +50,16 @@ Collections.sort(locs, new Comparator<Location>() {
 			
 				<li id="location-<%=l.id%>">
 					<a href="#detail?id=<%=l.id%>">
-					<img src="http://jquerymobile.com/test/docs/lists/images/album-bb.jpg" alt="<%=l.name%>"/>
+					<% 
+					String imageUrl;
+					if(l.imageBlobKey==null){ 
+						imageUrl="";
+					}
+					else{
+						imageUrl = imagesService.getServingUrl(ServingUrlOptions.Builder.withBlobKey(l.imageBlobKey).imageSize(80).crop(true));
+					}
+					%>
+					<img src="<%=imageUrl %>" alt="<%=l.name%>"/>
 					<h3><font style="white-space:normal;"><%=l.name%></font></h3>
 					<p><%=l.street%>,  <%=l.city%></p>
 					<span class="ui-li-count" style="margin-top: -35px; visibility: hidden;">12.00 km</span>

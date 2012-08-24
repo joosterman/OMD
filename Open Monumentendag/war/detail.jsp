@@ -2,6 +2,7 @@
 	<div data-theme="a" data-role="header" id="detailHeader">
 		<h3 class="locationName"></h3>
 		<a href="/#locations" data-icon="back" id="backBtnDetail">Back</a>
+		<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>
 	</div>
 	<div data-role="content">
 		<div id="tweet">
