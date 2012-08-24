@@ -13,6 +13,11 @@ import com.googlecode.objectify.ObjectifyService;
 
 public class UserServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4040848189404871718L;
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Objectify ofy = ObjectifyService.begin();
 		Gson gson = new Gson();

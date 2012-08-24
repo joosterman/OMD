@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AdminServlet extends HttpServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7232271415556123262L;
 	private String uri = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=";
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

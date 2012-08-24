@@ -3,7 +3,6 @@ package org.omd;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,9 +22,12 @@ import com.googlecode.objectify.ObjectifyService;
 
 public class ImageUploadServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4094732054437532029L;
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	private ImagesService imagesService = ImagesServiceFactory.getImagesService();
-	private static final Logger log = Logger.getLogger(ImageUploadServlet.class.getName());
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Objectify ofy = ObjectifyService.begin();

@@ -27,10 +27,9 @@ img.logo
 }
 
 #tweet{
-	position:fixed;
+	position:absolute;
 	right:17px;
-	
-	
+	top:57px;	
 }
 
 .gallery { list-style: none; padding: 0; margin: 0; }

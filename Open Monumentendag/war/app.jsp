@@ -33,7 +33,7 @@
 <script src="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.js"></script>
 <script type="text/javascript" src="/scripts/jquery.ui.map.min.js"></script>
 <script type="text/javascript" src="/scripts/jquery.json-2.3.min.js"></script>
-<script type="text/javascript" src="/scripts/jqm.page.params.js"></script>
+<script type="text/javascript" src="/scripts/jqm.page.params.min.js"></script>
 <script type="text/javascript" src="/scripts/code.photoswipe.jquery-3.0.5.min.js"></script>
 <script type="text/javascript" src="/scripts/social.js"></script>
 <script type="text/javascript">

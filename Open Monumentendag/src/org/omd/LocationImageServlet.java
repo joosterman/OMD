@@ -14,6 +14,11 @@ import com.googlecode.objectify.ObjectifyService;
 
 public class LocationImageServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7565297590913255950L;
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		// initialize
 		Objectify ofy = ObjectifyService.begin();

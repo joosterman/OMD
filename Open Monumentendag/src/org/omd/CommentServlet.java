@@ -1,20 +1,21 @@
 package org.omd;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.Gson;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
 public class CommentServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8828056617136222338L;
 	final String success = "success";
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

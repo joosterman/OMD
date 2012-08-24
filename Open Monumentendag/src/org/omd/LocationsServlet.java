@@ -16,6 +16,11 @@ import com.googlecode.objectify.ObjectifyService;
 
 public class LocationsServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8884792081307234167L;
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setContentType("application/json; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");		
