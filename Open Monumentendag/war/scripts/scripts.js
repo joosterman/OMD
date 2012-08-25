@@ -136,6 +136,10 @@ function loadMessages() {
 	
 }
 
+function flagComment(id){
+	alert(id);
+}
+
 // Make sure we can use the url parameters on anchors.
 $(document).bind("pagebeforechange", function(event, data) {
 	$.mobile.pageData = (data && data.options && data.options.pageData) ? data.options.pageData : null;
@@ -213,7 +217,7 @@ $(document).bind("mobileinit", function() {
 			// TODO: ASK DB
 		}
 
-		// set all comments
+		// load all comments
 		$.getJSON("/comment", {
 			action : "get",
 			locationID : $.mobile.pageData.id,
@@ -221,18 +225,24 @@ $(document).bind("mobileinit", function() {
 		}, function(data) {
 			$("#allComments").empty();
 			var allc = $("#allComments");
+			var count = data.length;
 			$.each(data, function(index, value) {
 				// check for own comment
 				if (value.userID !== user.id) {
 					// write listitem
 					var li = "<li>";
-					li+="<span id='li" + index + "'></span>";
-					li+="<span class='ui-li-count'>" + new Date(value.date).toLocaleDateString() + "</span>";
+					li+="<h3 id='li" + index + "'></h3>";
+					li+="<p>" + new Date(value.date).toLocaleDateString() + "</p>";
+					li+="<p class='ui-li-aside'><a href='' onclick='flagComment("+value.id+");' alt='Meld reactie als ongepast' title='Meld reactie als ongepast'><img src='img/exclamation-icon-18px.png' /></a></p>";
 					li+="</li>";
 					allc.append(li);
 					$("#li" + index).text(value.comment);
 				}
+				else{
+					count--;
+				}
 			});
+			$("#commentCount").text("("+count+ ")");
 			// reload list
 			allc.listview("refresh");
 		});
@@ -291,6 +301,13 @@ $(document).bind("mobileinit", function() {
 
 	$("#locations").live("pagebeforeshow", function(event, ui) {
 
+	});
+	
+	$("#userUpload").live("pagebeforeshow",function(event,ui){
+		var locationID = $.mobile.pageData.id;
+		$.getJSON("/userUpload",{successPath:"/#detail?id="+locationID},function(data){
+			$("#userUploadForm").attr("action",data);
+		});
 	});
 
 	$("#social").live("pagebeforeshow", function(event, ui) {

@@ -48,6 +48,8 @@ function parseLocations(locations) {
 function loadLocation(id) {
 	var location = $.evalJSON(localStorage.getItem('loc-' + id));
 
+	$( "#locInfoBlock" ).trigger("expand");
+	
 	$('.locationName').html(location.name);
 	$('#locationStreet').html(location.street /* +', '+location.city */);
 	$('#locationOpen').html(location.openingstijden);
@@ -134,6 +136,11 @@ function loadLocation(id) {
 	$('#title').addClass(color + "Color");
 	$('#detailInformation').find('strong').addClass(color + "Color");
 
+	//load image upload fields
+	$(".userID").val(user.id);
+	$(".locationID").val(id);	
+	$("#userUploadLink").attr("href","/#userUpload?id="+id);
+	
 	loadLocationImages(location.id);
 }
 
@@ -143,6 +150,7 @@ function loadLocationImages(id) {
 
 function parseLocationImages(locations) {
 	// console.log(locations);
+	$("#imageCount").text("("+locations.length+")");
 	var galleryList = $("#Gallery");
 	galleryList.empty();
 

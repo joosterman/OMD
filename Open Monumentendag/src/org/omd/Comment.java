@@ -12,6 +12,7 @@ public class Comment {
 	public Long locationID;
 	public String comment;
 	public Date date;
+	public int flagged;
 	
 	@PrePersist void onPersist() { 
 		date= new Date();

@@ -1,3 +1,28 @@
+<%@page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory"%>
+<%@page import="com.google.appengine.api.blobstore.BlobstoreService"%>
+<%@page import="com.google.appengine.api.blobstore.BlobKey"%>
+<%@page import="com.google.appengine.api.images.ServingUrlOptions"%>
+<%@ page import="com.google.appengine.api.images.ImagesServiceFactory"%>
+<%@ page import="com.google.appengine.api.images.ImagesService"%>
+<%!ImagesService imageService = ImagesServiceFactory.getImagesService();
+	BlobKey themaKey = new BlobKey(
+			"AMIfv966Vg25LEzjMKOjr79g8cuux5oZbuZDy4oT3kJe0O9R5OwyP57mmFGXsBw7xl6IV9uplZnLIePhDiCz-lTrX14IGAPPCdSUB8DphW36JaJV5CLvPtMIxP1X8kFP-CaZwDFtuhV6SNCbzPBwRxmrL6bIhGLWixb7tEK2n33YCdw_VCE_KpQ");
+	ServingUrlOptions themaOpts = ServingUrlOptions.Builder.withBlobKey(themaKey).imageSize(300);
+	String themaUrl = null;
+
+	void setUrls() {
+		if (themaUrl == null) {
+			try {
+				themaUrl = imageService.getServingUrl(themaOpts);
+			}
+			catch (Exception e2) {
+				themaUrl = "img/thema.jpg";
+			}
+		}
+	}%>
+<%
+	setUrls();
+%>
 <div data-role="page" id="thema">
 	<div data-theme="a" data-role="header" data-backbtn="true">
 		<h3>Thema</h3>
@@ -7,7 +32,7 @@
 	<div data-role="content">
 		<div style="text-align: center">
 			<img class="center themaImg" alt="Themabeeld van Groen van Toen"
-			src="./img/thema.jpg"/>
+			src="<%=themaUrl %>"/>
 		</div>
 		<br />
 		<span class="fineprint"> (bron: <a

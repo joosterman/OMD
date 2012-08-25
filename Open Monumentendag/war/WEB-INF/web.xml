@@ -68,6 +68,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-class>org.omd.MessageServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
+		<servlet-name>UserUploadServlet</servlet-name>
+		<url-pattern>/userUpload</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>UserUploadServlet</servlet-name>
+		<servlet-class>org.omd.UserUploadServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
 		<servlet-name>MessageServlet</servlet-name>
 		<url-pattern>/message</url-pattern>
 	</servlet-mapping>

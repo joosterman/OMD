@@ -10,6 +10,11 @@
 	background-image: url("../img/message-icon-18px.png");
 }
 
+.flagComment{
+	background-image: url("../img/exclamation-icon-18px.png");
+	background-size: 18px 18px;
+}
+
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
 	.ui-icon-custom-message {
 		background-image: url("../img/message-icon-36px.png");
@@ -111,7 +116,7 @@ img.logo {
 	margin: auto;
 	position: relative;
 	background-color: #fbfbfb;
-	border: 1px solid #b8b8b8;
+	/* border: 1px solid #b8b8b8;*/
 	overflow: hidden;
 }
 

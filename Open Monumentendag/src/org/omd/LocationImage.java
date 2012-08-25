@@ -1,6 +1,9 @@
 package org.omd;
 
+import java.util.Date;
+
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 
 import org.omd.UserField.FieldType;
 
@@ -16,17 +19,10 @@ public class LocationImage {
 	@UserField
 	public String filename;
 	public boolean primary = false;
-	@UserField
-	public double cropLeftX;
-	@UserField
-	public double cropTopY;
-	@UserField
-	public double cropRightX;
-	@UserField
-	public double cropBottomY;
 	@UserField(fieldType=FieldType.textarea)
 	public String description;
 	public String imageURL;
+	public Date date;
 	
 	public LocationImage(){}
 	
@@ -37,5 +33,9 @@ public class LocationImage {
 	@Override
 	public String toString(){
 		return filename;
+	}
+	
+	@PrePersist void onPersist() { 
+		date = new Date();
 	}
 }
