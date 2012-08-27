@@ -5,7 +5,7 @@
 		<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>
 	</div>
 	<div data-role="content" style="padding: 0;">
-		<div data-role="collapsible-set" data-theme="c" data-content-theme="d" data-mini="true">
+		<div data-role="collapsible-set" data-theme="c" data-content-theme="d" data-mini="true" id="rnlist">
 			<div data-role="collapsible">
 				<h3>A - Nieuwe Plantage</h3>
 				<p>De Nieuwe Plantage strekt zich uit van het Kalverbos tot aan het Rijn-Schiekanaal. Het langgerekte park werd
