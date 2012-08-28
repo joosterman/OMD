@@ -18,7 +18,17 @@ div#home
 	background-size: 18px 18px;
 }
 
-.flagComment{
+.ui-icon-custom-like {
+	background-image: url("../img/3-rating-good.png");
+	background-size: 18px 18px;
+}
+
+.ui-icon-custom-dislike {
+	background-image: url("../img/3-rating-bad.png");
+	background-size: 18px 18px;
+}
+
+.flagComment {
 	background-image: url("../img/exclamation-icon-18px.png");
 	background-size: 18px 18px;
 }
@@ -47,12 +57,6 @@ img.logo {
 
 .themaImg {
 	max-width: 90%;
-}
-
-#tweet {
-	position: absolute;
-	right: 17px;
-	top: 57px;
 }
 
 .gallery {
@@ -88,6 +92,25 @@ img.logo {
 
 #detail .ui-content {
 	overflow: hidden;
+}
+
+#tweet {
+	position: absolute;
+	right: 17px;
+	top: 57px;
+}
+
+#like{
+	position: absolute;
+	right: 10px;
+	top: 80px;
+}
+
+#like_counts div {
+	font-size: small;
+	width: 43px;
+	float: right;
+	text-align: center;
 }
 
 /* DETAIL PAGE */
