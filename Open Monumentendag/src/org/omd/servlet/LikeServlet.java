@@ -46,10 +46,11 @@ public class LikeServlet extends HttpServlet {
 		User user = null;
 		LikeStatus status = null;
 		try {
+			locationID = Long.parseLong(s_locationID);
 			userID = Long.parseLong(s_userID);
 			// get the user
 			user = ofy.query(User.class).filter("id", userID).filter("key", key).get();
-			locationID = Long.parseLong(s_locationID);
+			
 			status = LikeStatus.valueOf(s_status);
 		}
 		catch (Exception ex) {}

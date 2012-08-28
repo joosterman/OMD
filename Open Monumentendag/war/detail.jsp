@@ -12,29 +12,16 @@
 			href="#messages">0 Berichten</a>
 	</div>
 	<div data-role="content">
-		<div id="tweet">
-			<a id="tweetLink" href="https://twitter.com/intent/tweet?button_hashtag=omd2012" class="twitter-hashtag-button"
-				data-lang="nl">#omd2012</a>
-			<script>
-				!function(d, s, id) {
-					var js, fjs = d.getElementsByTagName(s)[0];
-					if (!d.getElementById(id)) {
-						js = d.createElement(s);
-						js.id = id;
-						js.src = "//platform.twitter.com/widgets.js";
-						fjs.parentNode.insertBefore(js, fjs);
-					}
-				}(document, "script", "twitter-wjs");
-			</script>
-		</div>
+
 		<div id="like">
-			<div data-role="controlgroup" data-type="horizontal" data-mini="true" style="width: 85px;">
-				<a href="#" data-role="button" data-icon="custom-like" data-iconpos="notext">Like</a>
-				<a href="#" data-role="button" data-icon="custom-dislike" data-iconpos="notext">Dislike</a>
+			<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+				<a href="#" data-role="button" data-icon="custom-like" data-iconpos="notext" id="like_btn">Like</a>
+				<a href="#" data-role="button" data-icon="custom-dislike" data-iconpos="notext" id="dislike_btn">Dislike</a>
+				<a href="#" data-role="button">Tweet</a>
 			</div>
 			<div id="like_counts">
-				<div id="like_count">0</div>
 				<div id="dislike_count">0</div>
+				<div id="like_count">0</div>				
 			</div>
 		</div>
 		<div id="title">

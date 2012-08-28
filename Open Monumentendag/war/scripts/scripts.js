@@ -140,6 +140,45 @@ function flagComment(id) {
 	alert(id);
 }
 
+function initButtons(id){
+	
+	$.getJSON("/like",{action: "get", locationID: 750, userID: user.id, key: user.key}, function(data){
+		$('#like_count').html(data.like);
+		$('#dislike_count').html(data.dislike);
+		if(data.userStatus == "LIKE"){
+			$('#like_btn').addClass('ui-disabled');
+		}else if(data.userStatus == "DISLIKE"){
+			$('#dislike_btn').addClass('ui-disabled');
+		}
+	});
+	
+	
+	$('#like_btn').click(function(){
+		
+		$.getJSON("/like",{action: "set", status: "LIKE", locationID: 750, userID: user.id, key: user.key},
+				function(data){	});
+		
+		$('#like_btn').addClass('ui-disabled');			
+		$('#dislike_btn').removeClass('ui-disabled');
+		
+		$('#like_count').html(parseInt($('#like_count').html())+1);
+		$('#dislike_count').html(parseInt($('#dislike_count').html())-1);	
+
+	});
+	$('#dislike_btn').click(function(){
+			
+		$.getJSON("/like",{action: "set", status: "DISLIKE", locationID: 750, userID: user.id, key: user.key}, 
+				function(data){	});
+		
+		$('#like_btn').removeClass('ui-disabled');
+	    $('#dislike_btn').addClass('ui-disabled');
+	    $('#like_count').html(parseInt($('#like_count').html())-1);
+		$('#dislike_count').html(parseInt($('#dislike_count').html())+1);	
+	});
+	
+	
+}
+
 // Make sure we can use the url parameters on anchors.
 $(document).bind("pagebeforechange", function(event, data) {
 	$.mobile.pageData = (data && data.options && data.options.pageData) ? data.options.pageData : null;
@@ -167,6 +206,7 @@ $(document)
 		});
 
 		$('#detail').live('pageshow', function(event, ui) {
+			initButtons();
 			// store comment option 1
 			$("#comment").keypress(function(e) {
 				if (e.which === 13) {
