@@ -142,7 +142,7 @@ function flagComment(id) {
 
 function initButtons(id){
 	
-	$.getJSON("/like",{action: "get", locationID: 750, userID: user.id, key: user.key}, function(data){
+	$.getJSON("/like",{action: "get", locationID: id, userID: user.id, key: user.key}, function(data){
 		$('#like_count').html(data.like);
 		$('#dislike_count').html(data.dislike);
 		if(data.userStatus == "LIKE"){
@@ -206,7 +206,7 @@ $(document)
 		});
 
 		$('#detail').live('pageshow', function(event, ui) {
-			initButtons();
+			initButtons($.mobile.pageData.id);
 			// store comment option 1
 			$("#comment").keypress(function(e) {
 				if (e.which === 13) {
