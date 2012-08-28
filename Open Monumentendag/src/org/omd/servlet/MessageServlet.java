@@ -1,4 +1,4 @@
-package org.omd;
+package org.omd.servlet;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.omd.Message;
 import com.google.gson.Gson;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;

@@ -1,4 +1,4 @@
-package org.omd;
+package org.omd.servlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;

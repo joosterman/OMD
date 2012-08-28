@@ -6,6 +6,13 @@
 	text-align: right;
 }
 
+div#home
+{
+	background-image: url("../img/ding.png");	
+	background-repeat:no-repeat;
+	background-size: 100% 100%; 
+	
+}
 .ui-icon-custom-message {
 	background-image: url("../img/ic_action_mail.png");
 	background-size: 18px 18px;

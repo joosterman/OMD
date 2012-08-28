@@ -1,4 +1,4 @@
-package org.omd;
+package org.omd.servlet;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.omd.Comment;
+import org.omd.User;
 import com.google.gson.Gson;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
@@ -17,11 +19,11 @@ public class CommentServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 8828056617136222338L;
 	final String success = "success";
+	private Objectify ofy = ObjectifyService.begin();
+	private Gson gson = new Gson();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// initialize
-		Objectify ofy = ObjectifyService.begin();
-		Gson gson = new Gson();
+		// initialize		
 		response.setContentType("application/json; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		//Disable cache, also for IE
