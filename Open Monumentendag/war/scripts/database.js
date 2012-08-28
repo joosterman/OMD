@@ -159,7 +159,7 @@ function parseLocationImages(locations) {
 	bodyWidth = bodyWidth>1000?1000:bodyWidth;
 	for (i = 0; i < locations.length; i++) {
 		if (locations[i].primary) {
-			$('#locationImageURL').html('<a href="' + locations[i].imageURL + '"><img src="' + locations[i].imageURL + "=s" + bodyWidth
+			$('#locationImageURL').html('<a href="' + locations[i].imageURL + "=s" + bodyWidth*2 + '"><img src="' + locations[i].imageURL + "=s" + bodyWidth
 				+ '" alt="' + locations[i].filename + '" id="primaryImage"/></a>');
 			$("#locationImageURL a").photoSwipe({
 				enableMouseWheel : false,
@@ -167,7 +167,7 @@ function parseLocationImages(locations) {
 			});
 		} else {
 			if (locations[i].imageURL != undefined){
-				result += '<li><a href="' + locations[i].imageURL + '"><img src="' + locations[i].imageURL + '=s' + Math.floor(bodyWidth/3) + '-c" alt="'
+				result += '<li><a href="' + locations[i].imageURL + "=s" + bodyWidth*2 +'"><img src="' + locations[i].imageURL + '=s' + Math.floor(bodyWidth/3) + '-c" alt="'
 					+ locations[i].filename + '" /></a></li>';
 			imageCount++;
 			}
