@@ -7,7 +7,8 @@
 }
 
 .ui-icon-custom-message {
-	background-image: url("../img/message-icon-18px.png");
+	background-image: url("../img/ic_action_mail.png");
+	background-size: 18px 18px;
 }
 
 .flagComment{
@@ -17,7 +18,7 @@
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
 	.ui-icon-custom-message {
-		background-image: url("../img/message-icon-36px.png");
+		background-image: url("../img/ic_action_mail.png");
 		background-size: 18px 18px;
 	}
 }

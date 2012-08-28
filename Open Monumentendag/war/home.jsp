@@ -42,7 +42,7 @@
 				<a data-role="button" data-transition="fade" href="#map"> Kaart </a>
 			</div>
 			<div class="ui-block-a">
-				<a data-role="button" data-transition="fade" href="#thema"> OMD Thema </a>
+				<a data-role="button" data-transition="fade" href="#thema"> Thema </a>
 			</div>
 			<div class="ui-block-b">
 				<a data-role="button" data-transition="fade" href="#voorwoord"> OMD Delft </a>
