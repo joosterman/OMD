@@ -304,10 +304,18 @@ $(document).bind("mobileinit", function() {
 	});
 	
 	$("#userUpload").live("pagebeforeshow",function(event,ui){
-		var locationID = $.mobile.pageData.id;
-		$.getJSON("/userUpload",{successPath:"/#detail?id="+locationID},function(data){
-			$("#userUploadForm").attr("action",data);
-		});
+		if(Modernizr.fileinput){
+			$("#noFileUpload").hide();
+			$("#fileUpload").show();
+			var locationID = $.mobile.pageData.id;
+			$.getJSON("/userUpload",{successPath:"/#detail?id="+locationID},function(data){
+				$("#userUploadForm").attr("action",data);
+			});
+		}
+		else{
+			$("#noFileUpload").show();
+			$("#fileUpload").hide();
+		}
 	});
 
 	$("#social").live("pagebeforeshow", function(event, ui) {

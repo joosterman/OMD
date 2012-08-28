@@ -46,8 +46,8 @@
 					<p>
 						<strong>Open voor publiek</strong>
 					<p>
-						<span id="locationOpenSaLabel"><i>Zaterdag <span id="locationOpenSa"></span></i><br /></span>
-						<span id="locationOpenSuLabel"><i>Zondag <span id="locationOpenSu"></span></i></span>
+						<span id="locationOpenSaLabel"><i>Zaterdag <span id="locationOpenSa"></span></i><br /></span> <span
+							id="locationOpenSuLabel"><i>Zondag <span id="locationOpenSu"></span></i></span>
 					</p>
 					<p id="locationInformationLabel">
 						<strong>Overige informatie:</strong> <br /> <span id="locationInformation"></span>
@@ -58,14 +58,19 @@
 				</div>
 			</div>
 			<div data-role="collapsible" id="locImageBlock">
-				<h3>Afbeeldingen <span id="imageCount"></span></h3>
+				<h3>
+					Afbeeldingen <span id="imageCount"></span>
+				</h3>
 				<div class="loggedIn">
-					<a id="userUploadLink" href="" data-role="button" data-rel="dialog" data-transition="slidedown">Upload eigen foto</a>
+					<a id="userUploadLink" href="" data-role="button" data-rel="dialog" data-transition="slidedown">Upload eigen
+						foto</a>
 				</div>
 				<ul id="Gallery" class="gallery"></ul>
 			</div>
 			<div data-role="collapsible" id="locCommentBlock">
-				<h3>Reacties <span id="commentCount"></span></h3>
+				<h3>
+					Reacties <span id="commentCount"></span>
+				</h3>
 				<div class="comment">
 					<div class="loggedIn">
 						<div class="ui-grid-a">
@@ -95,10 +100,17 @@
 		<h3>Upload foto</h3>
 	</div>
 	<div data-role="content">
-		<form id="userUploadForm" data-ajax="false" action='' method="POST" enctype="multipart/form-data">
-			<input type="file" name="userImage" /> <input class="locationID" type="hidden" name="locationID" value="" /> <input class="userID"
-				type="hidden" name="userID" value="" />
-				<input type="submit" accept="image/*" capture="camera" value="Upload" data-mini="true" />
-		</form>
+		<div id="noFileUpload">
+			<p>Helaas ondersteunt uw browser het uploaden van bestanden niet.</p>
+			<p>U kunt uw afbeeldingen ook naar ons <a href="mailto:">emailen</a>.</p>
+		</div>
+		<div id="fileUpload">
+			<form id="userUploadForm" data-ajax="false" action='' method="POST" enctype="multipart/form-data">
+				<input type="file" name="userImage" /> <input class="locationID" type="hidden" name="locationID" value="" /> <input
+					class="userID" type="hidden" name="userID" value="" /> <input type="submit" accept="image/*" capture="camera"
+					value="Upload" data-mini="true" />
+			</form>
+		</div>
+
 	</div>
 </div>
