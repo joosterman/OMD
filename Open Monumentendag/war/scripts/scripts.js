@@ -290,6 +290,7 @@ $(document).bind("mobileinit", function() {
 		if (localStorage.getItem("mapsUsed") == null) {
 			$("#map_canvas").gmap("option", "center", new google.maps.LatLng(52.012443, 4.356047));
 			$("#map_canvas").gmap("option", "zoom", 15);
+			$("#map_canvas_rz").gmap("option", "streetViewControl", false);
 			// localStorage.setItem("mapsUsed",true);
 		}
 		// $("#map_canvas").gmap("refresh");
@@ -318,6 +319,7 @@ $(document).bind("mobileinit", function() {
 
 		$("#map_canvas_rn").gmap("option", "center", new google.maps.LatLng(52.01625506283269, 4.350918531417847));
 		$("#map_canvas_rn").gmap("option", "zoom", 16);
+		$("#map_canvas_rn").gmap("option", "streetViewControl", false);
 
 		setMarker('#map_canvas_rn', 0, 'A - Nieuwe Plantage', 52.01795858690878, 4.35508668422699, true, 'Nieuwe Plantage');
 		setMarker('#map_canvas_rn', 0, 'B - Nolthensiusplantsoen', 52.018747999975396, 4.352219028431733, true, '');
@@ -372,6 +374,7 @@ $(document).bind("mobileinit", function() {
 
 		$("#map_canvas_rz").gmap("option", "center", new google.maps.LatLng(52.00631927080595, 4.371507167816162));
 		$("#map_canvas_rz").gmap("option", "zoom", 16);
+		$("#map_canvas_rz").gmap("option", "streetViewControl", false);
 
 		setMarker('#map_canvas_rz', 0, 'A - Nieuwe Plantage', 52.006831686309845, 4.365434646606445, true, '');
 		setMarker('#map_canvas_rz', 0, 'B - Nolthensiusplantsoen', 52.00382001372848, 4.372698068618774, true, '');
