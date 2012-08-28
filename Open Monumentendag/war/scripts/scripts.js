@@ -141,39 +141,48 @@ function flagComment(id) {
 }
 
 function initButtons(id){
+	var prevLiked = false;
+	$('#like_btn').removeClass('ui-disabled');
+	$('#dislike_btn').removeClass('ui-disabled');
 	
 	$.getJSON("/like",{action: "get", locationID: id, userID: user.id, key: user.key}, function(data){
 		$('#like_count').html(data.like);
 		$('#dislike_count').html(data.dislike);
 		if(data.userStatus == "LIKE"){
 			$('#like_btn').addClass('ui-disabled');
+			prevLiked = true;
 		}else if(data.userStatus == "DISLIKE"){
 			$('#dislike_btn').addClass('ui-disabled');
+			prevLiked = true;
 		}
 	});
 	
 	
 	$('#like_btn').click(function(){
 		
-		$.getJSON("/like",{action: "set", status: "LIKE", locationID: 750, userID: user.id, key: user.key},
+		$.getJSON("/like",{action: "set", status: "LIKE", locationID: id, userID: user.id, key: user.key},
 				function(data){	});
 		
 		$('#like_btn').addClass('ui-disabled');			
 		$('#dislike_btn').removeClass('ui-disabled');
 		
 		$('#like_count').html(parseInt($('#like_count').html())+1);
-		$('#dislike_count').html(parseInt($('#dislike_count').html())-1);	
+		if(prevLiked){
+			$('#dislike_count').html(parseInt($('#dislike_count').html())-1);
+		}
 
 	});
 	$('#dislike_btn').click(function(){
 			
-		$.getJSON("/like",{action: "set", status: "DISLIKE", locationID: 750, userID: user.id, key: user.key}, 
+		$.getJSON("/like",{action: "set", status: "DISLIKE", locationID: id, userID: user.id, key: user.key}, 
 				function(data){	});
 		
 		$('#like_btn').removeClass('ui-disabled');
 	    $('#dislike_btn').addClass('ui-disabled');
-	    $('#like_count').html(parseInt($('#like_count').html())-1);
-		$('#dislike_count').html(parseInt($('#dislike_count').html())+1);	
+	    $('#dislike_count').html(parseInt($('#dislike_count').html())+1);
+	    if(prevLiked){
+	    	$('#like_count').html(parseInt($('#like_count').html())-1);
+	    }
 	});
 	
 	
