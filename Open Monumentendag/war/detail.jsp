@@ -27,6 +27,16 @@
 				}(document, "script", "twitter-wjs");
 			</script>
 		</div>
+		<div id="like">
+			<div data-role="controlgroup" data-type="horizontal" data-mini="true" style="width: 85px;">
+				<a href="#" data-role="button" data-icon="custom-like" data-iconpos="notext">Like</a>
+				<a href="#" data-role="button" data-icon="custom-dislike" data-iconpos="notext">Dislike</a>
+			</div>
+			<div id="like_counts">
+				<div id="like_count">0</div>
+				<div id="dislike_count">0</div>
+			</div>
+		</div>
 		<div id="title">
 			<h3 class="locationName"></h3>
 			<p id="locationStreet"></p>
