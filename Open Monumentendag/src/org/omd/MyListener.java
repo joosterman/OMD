@@ -21,6 +21,6 @@ public class MyListener implements ServletContextListener {
 		ObjectifyService.register(Comment.class);
 		ObjectifyService.register(Message.class);
 		ObjectifyService.register(UserImage.class);
+		ObjectifyService.register(Like.class);
 	}
-
 }
