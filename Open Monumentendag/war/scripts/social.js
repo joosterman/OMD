@@ -47,7 +47,7 @@ function list(tweet){
 }
 
 function hashm(tweet) {
-      return tweet.replace(/#(\w+)/gi, function(m, before, hash) {
+      return tweet.replace(/(^|\s+)#(\w+)/gi, function(m, before, hash) {
         return before + '<a target="_blank" class="twtr-hashtag" href="http://twitter.com/search?q=%23' + hash + '">#' + hash + '</a>';
       });
 }
