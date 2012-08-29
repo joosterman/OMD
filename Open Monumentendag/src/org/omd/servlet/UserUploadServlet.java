@@ -82,8 +82,11 @@ public class UserUploadServlet extends HttpServlet {
 			ui.locationID = locationID;
 			ui.userID = userID;
 			ui.blobKey = blobKey;
+			ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(blobKey);				
+			imagesService.getServingUrl(opts);
+			ui.imageURL = imagesService.getServingUrl(opts);
 			ofy.put(ui);
-			response.sendRedirect(String.format("%s?id=%s",path,s_locationID));
+			response.sendRedirect(String.format("%s#detail?id=%s",path,s_locationID));
 		}
 	}
 

@@ -15,6 +15,7 @@ public class UserImage {
 	public Date date;
 	public BlobKey blobKey;
 	public boolean adminApproved;
+	public String imageURL;
 	
 	@PrePersist void onPersist() { 
 		date = new Date();		
