@@ -540,7 +540,7 @@ function setMarker(map, id, title, lat, lon, top, content) {
 		'shape' : shape,
 		'title' : title,
 		'zIndex' : id,
-		'bounds' : true
+		'bounds' : false
 	}).click(function() {
 		$(map).gmap('openInfoWindow', {
 			'content' : content
