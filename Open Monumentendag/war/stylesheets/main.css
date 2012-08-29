@@ -100,11 +100,23 @@ img.logo {
 	top: 80px;
 }
 
+#like_counts{
+	margin-right: 65px;
+}
+
 #like_counts div {
 	font-size: small;
 	width: 43px;
 	float: right;
 	text-align: center;
+}
+
+#like_count{
+	color: green;
+}
+
+#dislike_count{
+	color: red;
 }
 
 /* DETAIL PAGE */

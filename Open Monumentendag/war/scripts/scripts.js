@@ -221,7 +221,6 @@ $(document)
 		});
 
 		$('#detail').live('pageshow', function(event, ui) {
-			initButtons($.mobile.pageData.id);
 			// store comment option 1
 			$("#comment").keypress(function(e) {
 				if (e.which === 13) {
@@ -249,6 +248,7 @@ $(document)
 
 		$('#detail')
 			.live('pagebeforeshow', function(event, ui) {
+				initButtons($.mobile.pageData.id);
 				// set current comment
 				$.getJSON("/comment", {
 					action : "get",
@@ -309,18 +309,6 @@ $(document)
 					});
 
 			});
-
-		$('#detail').live('pageshow', function(event, ui) {
-			// $("#Gallery a").photoSwipe({ enableMouseWheel: false
-			// ,
-			// enableKeyboard: false });
-		});
-
-		$('#detail').live('pagehide', function(event, ui) {
-			// $("#Gallery a").photoSwipe({ enableMouseWheel: false
-			// ,
-			// enableKeyboard: false });
-		});
 
 		$('#home').live('pageshow', function(event, ui) {
 			// ask location permission on first screen
