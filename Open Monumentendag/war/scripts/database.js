@@ -126,6 +126,7 @@ function loadLocation(id) {
 	$('#detailHeader').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
 	$('#locationNumber').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
 	$('#backBtnDetail').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
+	$('#msgBtnDetail').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
 	$('#title').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
 	$('#detailInformation').find('strong').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
 
@@ -133,6 +134,8 @@ function loadLocation(id) {
 	$('#locationNumber').addClass(color + "Background");
 	$('#backBtnDetail').addClass(color + "Background");
 	$('#backBtnDetail').css('border-color', '#000');
+	$('#msgBtnDetail').addClass(color + "Background");
+	$('#msgBtnDetail').css('border-color', '#000');
 	$('#title').addClass(color + "Color");
 	$('#detailInformation').find('strong').addClass(color + "Color");
 
