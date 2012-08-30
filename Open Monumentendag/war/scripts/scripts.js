@@ -376,11 +376,11 @@ $(document)
 				$("#map_canvas_rn").gmap("option", "zoom", 16);
 				$("#map_canvas_rn").gmap("option", "streetViewControl", false);
 
-				setMarker('#map_canvas_rn', 0, 'A - Nieuwe Plantage', 52.01795858690878, 4.35508668422699, true, 'Nieuwe Plantage');
-				setMarker('#map_canvas_rn', 0, 'B - Nolthensiusplantsoen', 52.018747999975396, 4.352219028431733, true, '');
-				setMarker('#map_canvas_rn', 0, 'C - Kalverbos', 52.01717656212665, 4.3515323829261, true, '');
-				setMarker('#map_canvas_rn', 0, 'D - Agnetapark - Oude Park', 52.016100293430895, 4.346371812796633, true, '');
-				setMarker('#map_canvas_rn', 0, 'E - Agnetapark - Nieuwe Park', 52.015340947178366, 4.343936367018501, true, '');
+				setMarker('#map_canvas_rn', 0, 'A - Nieuwe Plantage', 52.01795858690878, 4.35508668422699, "A", 'Nieuwe Plantage');
+				setMarker('#map_canvas_rn', 0, 'B - Nolthensiusplantsoen', 52.018747999975396, 4.352219028431733, "B", '');
+				setMarker('#map_canvas_rn', 0, 'C - Kalverbos', 52.01717656212665, 4.3515323829261, "C", '');
+				setMarker('#map_canvas_rn', 0, 'D - Agnetapark - Oude Park', 52.016100293430895, 4.346371812796633, "D", '');
+				setMarker('#map_canvas_rn', 0, 'E - Agnetapark - Nieuwe Park', 52.015340947178366, 4.343936367018501, "E", '');
 
 				var coordinates = [ new google.maps.LatLng(52.01795858690878, 4.35508668422699),
 					new google.maps.LatLng(52.01792887483538, 4.354378581047058),
@@ -431,10 +431,10 @@ $(document)
 			$("#map_canvas_rz").gmap("option", "zoom", 16);
 			$("#map_canvas_rz").gmap("option", "streetViewControl", false);
 
-			setMarker('#map_canvas_rz', 0, 'A - Nieuwe Plantage', 52.006831686309845, 4.365434646606445, true, '');
-			setMarker('#map_canvas_rz', 0, 'B - Nolthensiusplantsoen', 52.00382001372848, 4.372698068618774, true, '');
-			setMarker('#map_canvas_rz', 0, 'C - Kalverbos', 52.006580721335155, 4.369994401931763, true, '');
-			setMarker('#map_canvas_rz', 0, 'D - Agnetapark - Oude Park', 52.0085884017274, 4.37055230140686, true, '');
+			setMarker('#map_canvas_rz', 0, 'A - Nieuwe Plantage', 52.006831686309845, 4.365434646606445, "A", '');
+			setMarker('#map_canvas_rz', 0, 'B - Nolthensiusplantsoen', 52.00382001372848, 4.372698068618774, "B", '');
+			setMarker('#map_canvas_rz', 0, 'C - Kalverbos', 52.006580721335155, 4.369994401931763, "C", '');
+			setMarker('#map_canvas_rz', 0, 'D - Agnetapark - Oude Park', 52.0085884017274, 4.37055230140686, "D", '');
 
 			var coordinates = [ new google.maps.LatLng(52.006831686309845, 4.365434646606445),
 				new google.maps.LatLng(52.00691754242548, 4.364715814590454), new google.maps.LatLng(52.00738644599683, 4.365681409835815),
@@ -484,7 +484,7 @@ function updateCurrentLocation(map, location) {
 	}
 }
 
-function setMarker(map, id, title, lat, lon, top, content) {
+function setMarker(map, id, title, lat, lon, marker, content) {
 	// Add markers to the map
 
 	// Marker sizes are expressed as a Size of X,Y
@@ -518,13 +518,38 @@ function setMarker(map, id, title, lat, lon, top, content) {
 	};
 
 	var myLatLng = new google.maps.LatLng(lat, lon);
-
-	console.log(content);
+	var icon;
+	//console.log(content);
+	//console.log(Object.prototype.toString.call(marker));
+	if(Object.prototype.toString.call(marker) === '[object Boolean]' ){
+		icon = (marker) ? image : image2;
+	}else{
+		switch(marker){
+			case "A": icon = new google.maps.MarkerImage('img/a.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+					new google.maps.Point(16, 16));					
+					break;
+			case "B": icon = new google.maps.MarkerImage('img/b.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+					new google.maps.Point(16, 16));
+					break;
+			case "C": icon = new google.maps.MarkerImage('img/c.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+					new google.maps.Point(16, 16));
+					break;
+			case "D": icon = new google.maps.MarkerImage('img/d.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+					new google.maps.Point(16, 16));
+					break;
+			case "E": icon = new google.maps.MarkerImage('img/e.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+					new google.maps.Point(16, 16));
+					break;
+			default: break;
+			
+			
+		}
+	}
 
 	$(map).gmap('addMarker', {
 		'position' : myLatLng,
 		'shadow' : shadow,
-		'icon' : (top) ? image : image2,
+		'icon' : icon,
 		'shape' : shape,
 		'title' : title,
 		'zIndex' : id,
