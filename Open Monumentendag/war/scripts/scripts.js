@@ -311,6 +311,7 @@ $(document)
 			});
 
 		$('#home').live('pageshow', function(event, ui) {
+			$('#home').css('background-image','url(http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU=s'+Math.floor($("body").width()*0.8)+')');
 			// ask location permission on first screen
 			if (navigator.geolocation) {
 				console.log("found gps");
