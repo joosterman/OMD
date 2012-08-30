@@ -169,10 +169,7 @@ function parseLocationImages(locations) {
 		if (systemImages[i].primary) {
 			$('#locationImageURL').html('<a href="' + systemImages[i].imageURL + "=s" + bodyWidth*2 + '"><img src="' + systemImages[i].imageURL + "=s" + bodyWidth
 				+ '" alt="' + systemImages[i].filename + '" id="primaryImage"/></a>');
-			$("#locationImageURL a").photoSwipe({
-				enableMouseWheel : false,
-				enableKeyboard : false
-			});
+			$("#locationImageURL a").photoSwipe({captionAndToolbarAutoHideDelay: 0});
 		} else {
 			if (systemImages[i].imageURL != undefined){
 				result += '<li><a href="' + systemImages[i].imageURL + "=s" + bodyWidth*2 +'"><img src="' + systemImages[i].imageURL + '=s' + Math.floor(bodyWidth/3) + '-c" alt="'
@@ -192,10 +189,7 @@ function parseLocationImages(locations) {
 	$("#imageCount").text("("+imageCount+")");
 	if (systemImages.length > 0) {
 		galleryList.append(result);
-		$("#Gallery a").photoSwipe({
-			enableMouseWheel : false,
-			enableKeyboard : false
-		});
+		$("#Gallery a").photoSwipe({captionAndToolbarAutoHideDelay: 0});
 	} else {
 		// Remove old image if no new image is found
 		$('#locationImageURL').html('');
