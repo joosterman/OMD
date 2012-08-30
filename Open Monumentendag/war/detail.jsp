@@ -71,10 +71,10 @@
 				<div class="comment">
 					<div class="loggedIn">
 						<div class="ui-grid-a">
-							<div class="ui-block-a" style="width: 95%">
+							<div class="ui-block-a" style="width: 85%">
 								<input id="comment" data-mini="true" type="text" placeholder="Uw reactie" />
 							</div>
-							<div class="ui-block-b" style="width: 5%">
+							<div class="ui-block-b" style="width: 15%">
 								<a id="submitComment" data-iconpos="notext" type="button" data-icon="check" value="Verstuur">Verstuur
 									reactie</a>
 							</div>
