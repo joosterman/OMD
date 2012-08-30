@@ -235,16 +235,18 @@
 	<div class="image">
 		<%
 			if (selLoc != null) {
+				%>
+				<p>Upload <a href="/admin/uploadImage.jsp?locationID=<%=selLoc.id %>">hier</a> een afbeelding</p>
+				<%
 				if (selLoc.imageBlobKey == null) {
 		%>
-		<p>Er is nog geen afbeelding geupload. Upload <a href="/admin/uploadImage.jsp?locationID=<%=selLoc.id %>">hier</a></p>
 		<%
 			}
 				else {
 					ServingUrlOptions op = ServingUrlOptions.Builder.withBlobKey(selLoc.imageBlobKey);
 		%>
 		<img
-			src="<%=imagesService.getServingUrl(op)%>" />
+			src="<%=imagesService.getServingUrl(op)%>" />	
 		<%
 			}
 		%>
