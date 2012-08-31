@@ -1,6 +1,7 @@
 package org.omd.servlet;
 
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -79,11 +80,8 @@ public class CommentServlet extends HttpServlet {
 				// return all
 				comments = ofy.query(Comment.class);
 			}
-			//filter on malicous comments
-			if(comments!=null)
-				comments = comments.filter("adminApproved !=", false).filter("flagged <", flaggedThreshold);
-			
-			result = comments;
+
+			result = comments.list();
 		}
 		else if ("set".equals(action)) {
 			// check if we have all the data

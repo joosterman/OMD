@@ -4,6 +4,6 @@
 		<li><a href="/admin/admin.jsp">Beheer locaties</a></li>
 		<li><a href="/admin/uploadImage.jsp">Beheer systeem afbeeldingen</a></li>
 		<li><a href="/admin/comments.jsp">Beheer reacties</a></li>
-		<li><a href="/admin/userImages.jsp">Beheer uploads</a></li>
+		<li><a href="/admin/userUpload.jsp">Beheer uploads</a></li>
 	</ul>
 </div>

@@ -184,14 +184,14 @@ function parseLocationImages(locations) {
 		}
 	}
 	for (i = 0; i < userImages.length; i++) {
-			if (userImages[i].imageURL != undefined && (userImages[i].flagged < 2 || userImages[i].adminApproved)){
+			if (userImages[i].imageURL != undefined && userImages[i].adminApproved!==false && (userImages[i].flagged < 2 || userImages[i].adminApproved)){
 				result += '<li><a href="' + userImages[i].imageURL + "=s" + bodyWidth*2 +'"><img src="' + userImages[i].imageURL + '=s' + Math.floor(bodyWidth/3) + '-c" alt="'
 					+ userImages[i].filename + '" /></a></li>';
 			imageCount++;
 			}
 	}
 	$("#imageCount").text("("+imageCount+")");
-	if (systemImages.length > 0) {
+	if (systemImages.length > 0 || userImages.length > 0) {
 		galleryList.append(result);
 		$("#Gallery a").photoSwipe({captionAndToolbarAutoHideDelay: 0});
 	} else {
