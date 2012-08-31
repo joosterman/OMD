@@ -13,8 +13,10 @@ public class Comment {
 	public String comment;
 	public Date date;
 	public int flagged;
+	public Boolean adminApproved;
 	
 	@PrePersist void onPersist() { 
-		date= new Date();
+		if(date==null)
+			date= new Date();
 	}
 }

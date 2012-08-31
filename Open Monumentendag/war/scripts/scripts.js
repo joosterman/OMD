@@ -139,7 +139,8 @@ function loadMessages() {
 }
 
 function flagComment(id) {
-	alert(id);
+	$.ajax("/comment?action=flag&commentID="+id);
+	$('#flagResponse').popup("open");
 }
 
 function initButtons(id) {
@@ -243,6 +244,12 @@ $(document)
 		});
 
 		$('#detail').live('pageshow', function(event, ui) {
+			//flag 
+			$('#flagResponse').popup();
+			$('#flagResponse').click(function(){
+				$('#flagResponse').popup("close");
+			});
+			
 			// store comment option 1
 			$("#comment").keypress(function(e) {
 				if (e.which === 13) {
@@ -339,7 +346,7 @@ $(document)
 						+ Math.floor($("body").width() * 0.8) + ')');
 				// ask location permission on first screen
 				if (navigator.geolocation) {
-					console.log("found gps");
+					// console.log("found gps");
 					navigator.geolocation.watchPosition(updateDistances, displayError, {
 						enableHighAcuracy : true
 					});

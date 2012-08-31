@@ -46,6 +46,7 @@ xt/javascript">
 </script>
 </head>
 <body>
+	<jsp:include page="header.jsp"></jsp:include>
 	<form action="" method="post">
 		<table>
 			<tr>

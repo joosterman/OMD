@@ -149,6 +149,7 @@
 </script>
 </head>
 <body>
+	<jsp:include page="header.jsp"></jsp:include>
 	<p>
 		<b><%=message%></b>
 	</p>

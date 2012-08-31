@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8"%>
 <%@page import="com.google.appengine.api.images.ServingUrlOptions"%>
 <%@page import="java.lang.reflect.Modifier"%>
 <%@ page import="java.lang.reflect.Field"%>
@@ -10,8 +10,7 @@
 <%@ page import="org.omd.UserField"%>
 <%@ page import="org.omd.UserField.FieldType"%>
 <%@ page import="java.util.*"%>
-<%@ page
-	import="com.google.appengine.api.blobstore.BlobstoreServiceFactory"%>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory"%>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService"%>
 <%@ page import="com.google.appengine.api.images.ImagesService"%>
 <%@ page import="com.google.appengine.api.images.ImagesServiceFactory"%>
@@ -24,8 +23,7 @@
 	Query<Location> locations = null;
 
 	String GetFieldValue(LocationImage loc, String fieldName) {
-		if (loc == null)
-			return "";
+		if (loc == null) return "";
 		else {
 			String value = "";
 			Object o = null;
@@ -61,15 +59,15 @@
 
 	//check if we posted an action
 	String action = request.getParameter("action");
-	if("primary".equals(action)){
-		if(selId!=null && imageId!=null){
+	if ("primary".equals(action)) {
+		if (selId != null && imageId != null) {
 			//get image and location image
 			Location l = ofy.get(Location.class, selId);
 			LocationImage li = ofy.get(LocationImage.class, imageId);
-			if(l!=null && li!=null){
+			if (l != null && li != null) {
 				//make all location images for this location not primary
 				Query<LocationImage> lis = ofy.query(LocationImage.class).filter("locationID", l.id).filter("primary", true);
-				for(LocationImage image:lis){
+				for (LocationImage image : lis) {
 					image.primary = false;
 					ofy.put(image);
 				}
@@ -78,12 +76,12 @@
 				ofy.put(li);
 				//set the correct link to the location
 				l.imageBlobKey = li.imageBlobKey;
-				ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(li.imageBlobKey).imageSize(115);				
+				ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(li.imageBlobKey).imageSize(115);
 				l.thumbnailURL = imagesService.getServingUrl(opts);
-				ofy.put(l);				
+				ofy.put(l);
 			}
 		}
-		response.sendRedirect("./uploadImage.jsp?selId="+selId+"&imageId="+imageId);
+		response.sendRedirect("./uploadImage.jsp?selId=" + selId + "&imageId=" + imageId);
 	}
 	else if ("opslaan".equals(action)) {
 		Class<LocationImage> cloc = LocationImage.class;
@@ -186,20 +184,19 @@
 <head>
 <link rel="stylesheet" type="text/css" href="./stylesheets/admin.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<script type="text/javascript"
-	src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="./scripts/scripts.js"></script>
 </head>
 
 <body>
+	<jsp:include page="header.jsp"></jsp:include>
 	<div class="selection">
 		<form action="" method="get">
 			Locatie <select name="selId" onchange="this.form.submit()">
 				<%
 					for (Location l : locations) {
 				%>
-				<option value="<%=l.id%>"
-					<%=l.id.equals(selId) ? "selected=\"selected\"" : ""%>>
+				<option value="<%=l.id%>" <%=l.id.equals(selId) ? "selected=\"selected\"" : ""%>>
 					<%=l.toString()%></option>
 				<%
 					}
@@ -208,8 +205,7 @@
 				<%
 					for (LocationImage li : locationImages) {
 				%>
-				<option value="<%=li.id%>"
-					<%=li.id.equals(imageId) ? "selected=\"selected\"" : ""%>>
+				<option value="<%=li.id%>" <%=li.id.equals(imageId) ? "selected=\"selected\"" : ""%>>
 					<%=li.toString()%></option>
 				<%
 					}
@@ -218,7 +214,7 @@
 		</form>
 	</div>
 	<div class="data">
-	<h2>Data</h2>
+		<h2>Data</h2>
 		<form action="" method="POST">
 			<table>
 				<%
@@ -233,22 +229,17 @@
 					<td>
 						<%
 							if (uf.fieldType() == FieldType.textbox) {
-						%> <input type="text" id="<%=field.getName()%>"
-						name="<%="field_" + field.getName()%>"
+						%> <input type="text" id="<%=field.getName()%>" name="<%="field_" + field.getName()%>"
 						value="<%=GetFieldValue(selImage, field.getName())%>" /> <%
  	}
  				else if (uf.fieldType() == FieldType.radiobuttons) {
- %> yes <input type="radio" id="<%=field.getName()%>"
-						name="<%="field_" + field.getName()%>" value="true"
-						<%=GetFieldValue(selImage, field.getName()).equals("true") ? "checked=checked" : ""%> />
-						no <input type="radio" id="<%=field.getName()%>"
-						name="<%="field_" + field.getName()%>" value="false"
-						<%=GetFieldValue(selImage, field.getName()).equals("false") ? "checked=checked" : ""%> />
-						<%
-							}
-										else if (uf.fieldType() == FieldType.textarea) {
-						%> <textarea id="<%=field.getName()%>"
-							name="<%="field_" + field.getName()%>">
+ %> yes <input type="radio" id="<%=field.getName()%>" name="<%="field_" + field.getName()%>" value="true"
+						<%=GetFieldValue(selImage, field.getName()).equals("true") ? "checked=checked" : ""%> /> no <input type="radio"
+						id="<%=field.getName()%>" name="<%="field_" + field.getName()%>" value="false"
+						<%=GetFieldValue(selImage, field.getName()).equals("false") ? "checked=checked" : ""%> /> <%
+ 	}
+ 				else if (uf.fieldType() == FieldType.textarea) {
+ %> <textarea id="<%=field.getName()%>" name="<%="field_" + field.getName()%>">
 								<%=GetFieldValue(selImage, field.getName())%></textarea> <%
  	}
  %>
@@ -258,54 +249,48 @@
 					}
 							else if (field.getAnnotation(javax.persistence.Id.class) != null) {
 				%>
-				<input type="hidden" name="id"
-					value="<%=GetFieldValue(selImage, field.getName())%>" />
+				<input type="hidden" name="id" value="<%=GetFieldValue(selImage, field.getName())%>" />
 				<%
 					}
 						}
 				%>
 				<tr>
-					<td colspan="2"><input type="submit" name="action"
-						value="opslaan"
-						<%=(selLoc == null || selImage == null) ? "disabled=disabled" : ""%> />
-						<input type="submit" name="action" value="verwijder"
-						<%=(selLoc == null || selImage == null) ? "disabled=disabled" : ""%> />
-						<input type="submit" name="action" value="nieuw" /></td>
+					<td colspan="2"><input type="submit" name="action" value="opslaan"
+						<%=(selLoc == null || selImage == null) ? "disabled=disabled" : ""%> /> <input type="submit" name="action" value="verwijder"
+						<%=(selLoc == null || selImage == null) ? "disabled=disabled" : ""%> /> <input type="submit" name="action" value="nieuw" /></td>
 				</tr>
 			</table>
 		</form>
 	</div>
 	<div class="image">
-	<h2>Image preview</h2>
-	<em>Click top-left following by bottom-right to set crop</em><br />
+		<h2>Image preview</h2>
 		<%
 			//System.out.println(selImage);
-			//System.out.println(selImage.imageBlobKey);
-			if (selImage != null) {
-				if (selImage.imageBlobKey == null) {
-					%>
-					<p>Er is nog geen afbeelding geupload.</p>
-					<%
-				}else{
-					ServingUrlOptions op = ServingUrlOptions.Builder.withBlobKey(selImage.imageBlobKey);
-					%>
-					<img class="measure" src="<%=imagesService.getServingUrl(op)%>" />
-					<%
-				}
-				%>
-				<form
-					action="<%=blobstoreService.createUploadUrl("/admin/imageUpload?selId=" + selId + "&imageId=" + imageId)%>"
-					method="post" enctype="multipart/form-data">
-					<input type="file" name="locationImage"> <input type="submit"
-						<%=(selLoc == null) ? "disabled=disabled" : ""%> value="upload">
-				</form>
-			<%
+				//System.out.println(selImage.imageBlobKey);
+				if (selImage != null) {
+					if (selImage.imageBlobKey == null) {
+		%>
+		<p>Er is nog geen afbeelding geupload.</p>
+		<%
 			}
-			%>
+					else {
+						ServingUrlOptions op = ServingUrlOptions.Builder.withBlobKey(selImage.imageBlobKey);
+		%>
+		<img class="measure" src="<%=imagesService.getServingUrl(op)%>" />
+		<%
+			}
+		%>
+		<form action="<%=blobstoreService.createUploadUrl("/admin/imageUpload?selId=" + selId + "&imageId=" + imageId)%>" method="post"
+			enctype="multipart/form-data">
+			<input type="file" name="locationImage"> <input type="submit" <%=(selLoc == null) ? "disabled=disabled" : ""%> value="upload">
+		</form>
+		<%
+			}
+		%>
 
 	</div>
 	<div class="images">
-	<h2>Select primary image</h2>
+		<h2>Select primary image</h2>
 		<%
 			for (LocationImage li : locationImages) {
 					if (li.imageBlobKey != null) {
@@ -313,9 +298,7 @@
 						String url = imagesService.getServingUrl(op);
 		%>
 		<div class="imagelist">
-			<a
-				href="./uploadImage.jsp?action=primary&selId=<%=selId%>&imageId=<%=li.id%>"><img
-				src="<%=url%>" /></a> <br />
+			<a href="./uploadImage.jsp?action=primary&selId=<%=selId%>&imageId=<%=li.id%>"><img src="<%=url%>" /></a> <br />
 			<%
 				if (li.primary) {
 			%>
@@ -330,7 +313,6 @@
 				}
 		%>
 	</div>
-
 </body>
 </html>
 <%

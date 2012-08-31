@@ -111,3 +111,8 @@
 		</div>
 	</div>
 </div>
+<div data-role="popup" id="flagResponse" class="ui-content" data-theme="e" style="max-width: 350px;">
+	<p>
+		Bedankt dat u dit aangeeft. Wij gaan er naar kijken.
+	</p>
+</div>

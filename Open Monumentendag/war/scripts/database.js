@@ -17,7 +17,8 @@ function persistUser(user) {
 
 function cacheLocations() {
 	// TODO: Efficient is data outdated check
-	if (localStorage.getItem("locArray") == null) {
+	var locArray = localStorage.getItem("locArray"); 
+	if ( locArray === null || locArray===""  ) {
 		var jsonObj = getSyncJSON("/data", {}, parseLocations);
 		// var jsonObj = $.getJSON("/data", {}, parseLocations);
 	}
@@ -159,7 +160,7 @@ function loadLocationImages(id) {
 
 function parseLocationImages(locations) {
 	var imageCount = 0;
-	console.log(locations);
+	//console.log(locations);
 	var systemImages = locations['systemImages'];
 	var userImages = locations['userImages'];
 	var galleryList = $("#Gallery");

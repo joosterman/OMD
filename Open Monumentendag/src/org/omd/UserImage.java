@@ -14,11 +14,12 @@ public class UserImage {
 	public int flagged;
 	public Date date;
 	public BlobKey blobKey;
-	public boolean adminApproved;
+	public Boolean adminApproved;
 	public String imageURL;
 	
 	@PrePersist void onPersist() { 
-		date = new Date();		
+		if(date==null)
+			date = new Date();		
 	}
 	
 }

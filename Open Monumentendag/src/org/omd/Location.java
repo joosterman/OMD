@@ -1,18 +1,15 @@
 package org.omd;
 
 import java.util.Date;
-
 import javax.persistence.Id;
-
 import org.omd.UserField.FieldType;
-
 import com.google.appengine.api.blobstore.BlobKey;
 
 public class Location {
 
 	@Id
 	public Long id;
-	@UserField(fieldType=FieldType.radiobuttons)
+	@UserField(fieldType = FieldType.radiobuttons)
 	public boolean topLocation;
 	@UserField
 	public String number;
@@ -26,9 +23,9 @@ public class Location {
 	public String openingHoursSaturday;
 	@UserField
 	public String openingHoursSunday;
-	@UserField(fieldType=FieldType.radiobuttons)
+	@UserField(fieldType = FieldType.radiobuttons)
 	public boolean wheelchairFriendly;
-	@UserField(fieldType=FieldType.radiobuttons)
+	@UserField(fieldType = FieldType.radiobuttons)
 	public boolean tourAvailable;
 	@UserField
 	public String city = "Delft";
@@ -38,13 +35,12 @@ public class Location {
 	public String latitude;
 	@UserField
 	public String longitude;
-	//@Transient
+	// @Transient
 	public BlobKey imageBlobKey;
 	public Date lastChanged;
 	public String thumbnailURL;
 
-	public Location() {
-	};
+	public Location() {};
 
 	public Location(String name) {
 		this.name = name;
@@ -53,5 +49,15 @@ public class Location {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Location && this.id.equals(((Location) other).id)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }

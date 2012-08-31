@@ -1,7 +1,6 @@
 package org.omd.servlet;
 
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +10,7 @@ import org.omd.User;
 import com.google.gson.Gson;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Query;
 
 public class CommentServlet extends HttpServlet {
 
@@ -19,14 +19,15 @@ public class CommentServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 8828056617136222338L;
 	final String success = "success";
-	private Objectify ofy = ObjectifyService.begin();
-	private Gson gson = new Gson();
+	private static Objectify ofy = ObjectifyService.begin();
+	private static Gson gson = new Gson();
+	private int flaggedThreshold = 10;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// initialize		
+		// initialize
 		response.setContentType("application/json; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		//Disable cache, also for IE
+		// Disable cache, also for IE
 		// Set to expire far in the past.
 		response.setHeader("Expires", "Sat, 6 May 1995 12:00:00 GMT");
 		// Set standard HTTP/1.1 no-cache headers.
@@ -61,23 +62,27 @@ public class CommentServlet extends HttpServlet {
 
 		// switch per action
 		if ("get".equals(action)) {
-			List<Comment> comments = null;
+			Query<Comment> comments = null;
 			if (locationID != null && userID == null) {
 				// return all for this location
-				comments = ofy.query(Comment.class).filter("locationID", locationID).list();
+				comments = ofy.query(Comment.class).filter("locationID", locationID);
 			}
 			else if (locationID != null && userID != null) {
 				// return comment for this location and user
-				comments = ofy.query(Comment.class).filter("userID", userID).filter("locationID", locationID).list();
+				comments = ofy.query(Comment.class).filter("userID", userID).filter("locationID", locationID);
 			}
 			else if (locationID == null && userID != null) {
 				// return all for this user
-				comments = ofy.query(Comment.class).filter("userID", userID).list();
+				comments = ofy.query(Comment.class).filter("userID", userID);
 			}
 			else if (locationID == null && userID == null) {
 				// return all
-				comments = ofy.query(Comment.class).list();
+				comments = ofy.query(Comment.class);
 			}
+			//filter on malicous comments
+			if(comments!=null)
+				comments = comments.filter("adminApproved !=", false).filter("flagged <", flaggedThreshold);
+			
 			result = comments;
 		}
 		else if ("set".equals(action)) {
@@ -93,6 +98,9 @@ public class CommentServlet extends HttpServlet {
 					if (c != null) {
 						// overwrite
 						cnew.id = c.id;
+						cnew.adminApproved = null;
+						cnew.flagged = 0;
+						cnew.date = null;
 					}
 					cnew.comment = comment;
 					cnew.userID = userID;
@@ -116,6 +124,21 @@ public class CommentServlet extends HttpServlet {
 						ofy.delete(c);
 						result = success;
 					}
+				}
+			}
+		}
+		else if ("flag".equals(action)) {
+			String s_commentID = request.getParameter("commentID");
+			Long commentID = null;
+			try {
+				commentID = Long.parseLong(s_commentID);
+			}
+			catch (Exception ex) {}
+			if (commentID != null) {
+				Comment c = ofy.find(Comment.class, commentID);
+				if (c != null) {
+					c.flagged++;
+					ofy.put(c);
 				}
 			}
 		}
