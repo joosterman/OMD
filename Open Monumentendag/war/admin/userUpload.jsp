@@ -65,7 +65,7 @@
 			<td><%=ui.date%></td>
 			<td><%=ui.flagged%></td>
 			<td><form action="" method="GET">
-					<input type="hidden" name="commentID" value="<%=ui.id%>" />
+					<input type="hidden" name="userImageID" value="<%=ui.id%>" />
 					<button type="submit" name="action" value="goed">Goed</button>
 					<button type="submit" name="action" value="fout">Fout</button>
 				</form></td>
