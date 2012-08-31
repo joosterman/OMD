@@ -6,6 +6,11 @@
 		<h3>Inloggen</h3>
 	</div>
 	<div data-role="content">
+		<div class="loggedIn"><p>U bent ingelogd! U kunt nu reacties plaatsen en afbeeldingen toevoegen aan locaties.</p>
+		</div>
+		<div class="notLoggedIn">
+		<p>De voordelen van inloggen zijn dat u reacties kunt plaatsen en afbeeldingen kunt toevoegen aan locaties.</p>
+		</div>
 		<%
 			//case 1: not logged in: show google and FB buttons
 			//case 2: logged in with google: show loggedin email and logout link
@@ -33,8 +38,8 @@
 		<script type="text/javascript">
 			updateEmail("");
 		</script>
-		<h4>Log in via</h4>
-			<a data-role="button" rel="external" href="<%=userService.createLoginURL("/")%>">Google</a>
+		<h4>Log in via:</h4>
+			<a id="loginUrl" data-role="button" rel="external" href="<%=userService.createLoginURL("/")%>">Google</a>
 		<%
 			}
 		%>

@@ -4,20 +4,37 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gson.Gson;
 
-public class AdminServlet extends HttpServlet {
+public class UtilityServlet extends HttpServlet {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7232271415556123262L;
 	private String uri = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=";
+	private static Gson gson = new Gson();
+	private static UserService userService = UserServiceFactory.getUserService();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		// initialize
+		response.setContentType("application/json; charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		// Disable cache, also for IE
+		// Set to expire far in the past.
+		response.setHeader("Expires", "Sat, 6 May 1995 12:00:00 GMT");
+		// Set standard HTTP/1.1 no-cache headers.
+		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+		// Set IE extended HTTP/1.1 no-cache headers (use addHeader).
+		response.addHeader("Cache-Control", "post-check=0, pre-check=0");
+		// Set standard HTTP/1.0 no-cache header.
+		response.setHeader("Pragma", "no-cache");
+
 		String action = request.getParameter("action");
 		if ("getLatLng".equals(action)) {
 			String address = request.getParameter("address");
@@ -39,6 +56,11 @@ public class AdminServlet extends HttpServlet {
 					ex.printStackTrace(response.getWriter());
 				}
 			}
+		}
+		else if("getLoginUrl".equals(action)){
+			String returnURL = request.getParameter("returnUrl");
+			String url = userService.createLoginURL(returnURL);
+			response.getWriter().write(gson.toJson(url));
 		}
 
 	}

@@ -62,6 +62,10 @@
 					<a id="userUploadLink" href="" data-role="button" data-rel="dialog" data-transition="slidedown">Upload eigen
 						foto</a>
 				</div>
+				<div class="notLoggedIn">
+						U moet ingelogd zijn om afbeeldingen te kunnen uploaden. Klik <a class="loginLink" data-rel="dialog" data-transition="slidedown"
+							data-mini="true" href="#login">hier</a> om in te loggen.
+					</div>
 				<ul id="Gallery" class="gallery"></ul>
 			</div>
 			<div data-role="collapsible" id="locCommentBlock">
@@ -71,10 +75,10 @@
 				<div class="comment">
 					<div class="loggedIn">
 						<div class="ui-grid-a">
-							<div class="ui-block-a" style="width: 95%">
+							<div class="ui-block-a" style="width: 85%">
 								<input id="comment" data-mini="true" type="text" placeholder="Uw reactie" />
 							</div>
-							<div class="ui-block-b" style="width: 5%">
+							<div class="ui-block-b" style="width: 15%">
 								<a id="submitComment" data-iconpos="notext" type="button" data-icon="check" value="Verstuur">Verstuur
 									reactie</a>
 							</div>
@@ -83,7 +87,7 @@
 							data-iconpos="notext" data-icon="delete">Verwijder reactie</a>
 					</div>
 					<div class="notLoggedIn">
-						U moet ingelogd zijn om een reactie te kunnen plaatsen. Klik <a data-rel="dialog" data-transition="slidedown"
+						U moet ingelogd zijn om een reactie te kunnen plaatsen. Klik <a class="loginLink" data-rel="dialog" data-transition="slidedown"
 							data-mini="true" href="#login">hier</a> om in te loggen.
 					</div>
 					<ul data-role="listview" data-theme="c" data-inset="true" id="allComments"></ul>

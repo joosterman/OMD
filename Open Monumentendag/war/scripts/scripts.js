@@ -142,56 +142,71 @@ function flagComment(id) {
 	alert(id);
 }
 
-function initButtons(id){
-	$('#like_btn').removeClass('ui-disabled');	
+function initButtons(id) {
+	$('#like_btn').removeClass('ui-disabled');
 	$('#dislike_btn').removeClass('ui-disabled');
 	$('#like_btn').unbind("click");
 	$('#dislike_btn').unbind("click");
-	
-	$.getJSON("/like",{action: "get", locationID: id, userID: user.id, key: user.key}, function(data){
+
+	$.getJSON("/like", {
+		action : "get",
+		locationID : id,
+		userID : user.id,
+		key : user.key
+	}, function(data) {
 		$('#like_count').html(data.like);
 		$('#dislike_count').html(data.dislike);
-		if(data.userStatus == "LIKE"){
+		if (data.userStatus == "LIKE") {
 			prevLiked = true;
 			$('#like_btn').addClass('ui-disabled');
-		}else if(data.userStatus == "DISLIKE"){
+		} else if (data.userStatus == "DISLIKE") {
 			$('#dislike_btn').addClass('ui-disabled');
 			prevLiked = true;
-		}else{
+		} else {
 			prevLiked = false;
 		}
 	});
-	
-	
-	$('#like_btn').click(function(){
-		
-		$.getJSON("/like",{action: "set", status: "LIKE", locationID: id, userID: user.id, key: user.key},
-				function(data){	});
-		
-		$('#like_btn').addClass('ui-disabled');			
-		$('#dislike_btn').removeClass('ui-disabled');		
-		$('#like_count').html(parseInt($('#like_count').html())+1);
-		if(prevLiked){
-			$('#dislike_count').html(parseInt($('#dislike_count').html())-1);
+
+	$('#like_btn').click(function() {
+
+		$.getJSON("/like", {
+			action : "set",
+			status : "LIKE",
+			locationID : id,
+			userID : user.id,
+			key : user.key
+		}, function(data) {
+		});
+
+		$('#like_btn').addClass('ui-disabled');
+		$('#dislike_btn').removeClass('ui-disabled');
+		$('#like_count').html(parseInt($('#like_count').html()) + 1);
+		if (prevLiked) {
+			$('#dislike_count').html(parseInt($('#dislike_count').html()) - 1);
 		}
 		prevLiked = true;
 
 	});
-	$('#dislike_btn').click(function(){
-			
-		$.getJSON("/like",{action: "set", status: "DISLIKE", locationID: id, userID: user.id, key: user.key}, 
-				function(data){	});
-		
+	$('#dislike_btn').click(function() {
+
+		$.getJSON("/like", {
+			action : "set",
+			status : "DISLIKE",
+			locationID : id,
+			userID : user.id,
+			key : user.key
+		}, function(data) {
+		});
+
 		$('#like_btn').removeClass('ui-disabled');
-	    $('#dislike_btn').addClass('ui-disabled');
-	    $('#dislike_count').html(parseInt($('#dislike_count').html())+1);
-	    if(prevLiked){
-	    	$('#like_count').html(parseInt($('#like_count').html())-1);
-	    }
-	    prevLiked = true;
+		$('#dislike_btn').addClass('ui-disabled');
+		$('#dislike_count').html(parseInt($('#dislike_count').html()) + 1);
+		if (prevLiked) {
+			$('#like_count').html(parseInt($('#like_count').html()) - 1);
+		}
+		prevLiked = true;
 	});
-	
-	
+
 }
 
 // Make sure we can use the url parameters on anchors.
@@ -218,6 +233,13 @@ $(document)
 
 		$('#messages').live('pagebeforeshow', function(event, ui) {
 			$("#messageList").listview("refresh");
+		});
+
+		$('#login').live('pagebeforeshow', function(event, ui) {
+			var returnUrl = $.mobile.pageData === null ? "/" : $.mobile.pageData.returnUrl;
+			$.getJSON("/utility?action=getLoginUrl&returnUrl=" + returnUrl, null, function(data) {
+				$("#loginUrl").attr("href", data);
+			});
 		});
 
 		$('#detail').live('pageshow', function(event, ui) {
@@ -310,16 +332,19 @@ $(document)
 
 			});
 
-		$('#home').live('pageshow', function(event, ui) {
-			$('#home').css('background-image','url(http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU=s'+Math.floor($("body").width()*0.8)+')');
-			// ask location permission on first screen
-			if (navigator.geolocation) {
-				console.log("found gps");
-				navigator.geolocation.watchPosition(updateDistances, displayError, {
-					enableHighAcuracy : true
-				});
-			}
-		});
+		$('#home')
+			.live('pageshow', function(event, ui) {
+				$('#home')
+					.css('background-image', 'url(http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU=s'
+						+ Math.floor($("body").width() * 0.8) + ')');
+				// ask location permission on first screen
+				if (navigator.geolocation) {
+					console.log("found gps");
+					navigator.geolocation.watchPosition(updateDistances, displayError, {
+						enableHighAcuracy : true
+					});
+				}
+			});
 
 		$("#map").live("pagebeforeshow", function(event, ui) {
 			if (navigator.geolocation)
@@ -351,7 +376,7 @@ $(document)
 				$.getJSON("/userUpload", {
 					locationID : locationID,
 					userID : user.id,
-					key: user.key,
+					key : user.key,
 					path : "/#detail"
 				}, function(data) {
 					$("#userUploadForm").attr("action", data);
@@ -520,30 +545,35 @@ function setMarker(map, id, title, lat, lon, marker, content) {
 
 	var myLatLng = new google.maps.LatLng(lat, lon);
 	var icon;
-	//console.log(content);
-	//console.log(Object.prototype.toString.call(marker));
-	if(Object.prototype.toString.call(marker) === '[object Boolean]' ){
+	// console.log(content);
+	// console.log(Object.prototype.toString.call(marker));
+	if (Object.prototype.toString.call(marker) === '[object Boolean]') {
 		icon = (marker) ? image : image2;
-	}else{
-		switch(marker){
-			case "A": icon = new google.maps.MarkerImage('img/a.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
-					new google.maps.Point(16, 16));					
-					break;
-			case "B": icon = new google.maps.MarkerImage('img/b.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+	} else {
+		switch (marker) {
+			case "A":
+				icon = new google.maps.MarkerImage('img/a.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
 					new google.maps.Point(16, 16));
-					break;
-			case "C": icon = new google.maps.MarkerImage('img/c.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+				break;
+			case "B":
+				icon = new google.maps.MarkerImage('img/b.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
 					new google.maps.Point(16, 16));
-					break;
-			case "D": icon = new google.maps.MarkerImage('img/d.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+				break;
+			case "C":
+				icon = new google.maps.MarkerImage('img/c.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
 					new google.maps.Point(16, 16));
-					break;
-			case "E": icon = new google.maps.MarkerImage('img/e.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+				break;
+			case "D":
+				icon = new google.maps.MarkerImage('img/d.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
 					new google.maps.Point(16, 16));
-					break;
-			default: break;
-			
-			
+				break;
+			case "E":
+				icon = new google.maps.MarkerImage('img/e.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+					new google.maps.Point(16, 16));
+				break;
+			default:
+				break;
+
 		}
 	}
 

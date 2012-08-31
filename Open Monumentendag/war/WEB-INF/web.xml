@@ -17,7 +17,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     </security-constraint>
 	<servlet>
 		<servlet-name>UserServlet</servlet-name>
-		<servlet-class>org.omd.UserServlet</servlet-class>
+		<servlet-class>org.omd.servlet.UserServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>UserServlet</servlet-name>
@@ -48,12 +48,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/admin/imageUpload</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>AdminServlet</servlet-name>
-		<servlet-class>org.omd.servlet.AdminServlet</servlet-class>
+		<servlet-name>UtilityServlet</servlet-name>
+		<servlet-class>org.omd.servlet.UtilityServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>AdminServlet</servlet-name>
-		<url-pattern>/admin</url-pattern>
+		<servlet-name>UtilityServlet</servlet-name>
+		<url-pattern>/utility</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>CommentServlet</servlet-name>

@@ -130,7 +130,7 @@
     	$(".LatLng").click(function(){
     		var street = $("#street").val();
     		var city = $("#city").val();
-    		var uri2 = "/admin?action=getLatLng&address="+street+",+"+city;
+    		var uri2 = "/utility?action=getLatLng&address="+street+",+"+city;
     		$.getJSON(uri2, function(data){
     			$.each(data.results,function(){
     				$("#longitude").val(this.geometry.location.lng);
