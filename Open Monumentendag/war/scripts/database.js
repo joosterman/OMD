@@ -16,11 +16,9 @@ function persistUser(user) {
 }
 
 function cacheLocations() {
-	// TODO: Efficient is data outdated check
 	var locArray = localStorage.getItem("locArray"); 
 	if ( locArray === null || locArray===""  ) {
 		var jsonObj = getSyncJSON("/data", {}, parseLocations);
-		// var jsonObj = $.getJSON("/data", {}, parseLocations);
 	}
 }
 
@@ -102,41 +100,36 @@ function loadLocation(id) {
 
 	// Set colors
 	var color = "";
+	var theme = "";
 	if (location.number == "S" || location.number == "D") {
 		color = "yellow";
+		theme = "j";
 	} else if (location.topLocation) {
 		color = "green";
+		theme = "i";
 	} else if (parseInt(location.number) <= 18) {
 		color = "orange";
+		theme = "f";
 	} else if (parseInt(location.number) <= 38) {
 		color = "blue";
+		theme = "h";
 	} else {
 		color = "pink";
+		theme = "g";
 	}
-
-	$('#detailHeader').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
+	
+	$('#detailHeader').attr('data-theme', theme);
+	$('#detailHeader').attr('class', 'ui-header ui-bar-'+theme);
+	$('#backBtnDetail').attr('data-theme', theme);
+	$('#backBtnDetail').attr('class','ui-btn-left ui-btn ui-btn-up-'+theme+' ui-shadow ui-btn-corner-all ui-btn-icon-left');
+	$('#msgBtnDetail').attr('data-theme', theme);
+	$('#msgBtnDetail').attr('class','ui-btn-right messagesLink ui-btn ui-btn-up-'+theme+' ui-shadow ui-btn-corner-all ui-mini ui-btn-icon-left');
+	
 	$('#locationNumber').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
 	$('#title').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
 	$('#detailInformation').find('strong').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
-
-	$('#detailHeader').addClass(color + "Background");
+	
 	$('#locationNumber').addClass(color + "Background");
-	$('#title').addClass(color + "Color");
-	$('#detailInformation').find('strong').addClass(color + "Color");
-
-	$('#detailHeader').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
-	$('#locationNumber').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
-	$('#backBtnDetail').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
-	$('#msgBtnDetail').removeClass("orangeBackground pinkBackground blueBackground greenBackground yellowBackground");
-	$('#title').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
-	$('#detailInformation').find('strong').removeClass("orangeColor pinkColor blueColor greenColor yellowColor");
-
-	$('#detailHeader').addClass(color + "Background");
-	$('#locationNumber').addClass(color + "Background");
-	$('#backBtnDetail').addClass(color + "Background");
-	$('#backBtnDetail').css('border-color', '#000');
-	$('#msgBtnDetail').addClass(color + "Background");
-	$('#msgBtnDetail').css('border-color', '#000');
 	$('#title').addClass(color + "Color");
 	$('#detailInformation').find('strong').addClass(color + "Color");
 
