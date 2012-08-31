@@ -17,7 +17,7 @@
 			<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 				<a href="#" data-role="button" data-icon="custom-like" data-iconpos="notext" id="like_btn">Like</a>
 				<a href="#" data-role="button" data-icon="custom-dislike" data-iconpos="notext" id="dislike_btn">Dislike</a>
-				<a href="https://twitter.com/intent/tweet?text=%23omd12" data-role="button">Tweet</a>
+				<a id="tweetLink" href="https://twitter.com/intent/tweet?text=%23omd12" data-role="button">Tweet</a>
 			</div>
 			<div id="like_counts">
 				<div id="dislike_count">0</div>

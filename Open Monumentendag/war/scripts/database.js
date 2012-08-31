@@ -144,6 +144,9 @@ function loadLocation(id) {
 	$(".locationID").val(id);	
 	$("#userUploadLink").attr("href","/#userUpload?id="+id);
 	
+	//set twitter link
+	$("#tweetLink").attr("href","https://twitter.com/intent/tweet?text="+location.name+" %23omd12");
+	
 	loadLocationImages(location.id);
 }
 
