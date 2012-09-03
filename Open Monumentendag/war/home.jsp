@@ -25,7 +25,7 @@
 %>
 <div data-role="page" id="home">
 	<div data-theme="a" data-role="header">
-		<h3>Monumentendag</h3>
+		<h3>MonuDelft</h3>
 			<a id="loginLink" data-rel="dialog" data-role="button" data-transition="slidedown" data-mini="true" href="#login">
 			Inloggen </a>
 			<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>

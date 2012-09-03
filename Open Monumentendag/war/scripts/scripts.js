@@ -273,12 +273,24 @@ $(document)
 					$("#deleteComment").hide();
 				});
 			});
+			//change visited state
+			$("#visited").change(function(){
+				var visited = $("#visited").prop("checked");
+				$.getJSON("/visit",
+					{
+						userID:user.id,
+						locationID:$.mobile.pageData.id,
+						visited:visited,
+						action:"set",
+						key:user.key
+					});
+			});
 		});
 
 		$('#detail')
 			.live('pagebeforeshow', function(event, ui) {
 				initButtons($.mobile.pageData.id);
-				// set current comment
+				// load current comment
 				$.getJSON("/comment", {
 					action : "get",
 					userID : user.id,
@@ -305,8 +317,7 @@ $(document)
 				}
 
 				// load all comments
-				$
-					.getJSON("/comment", {
+				$.getJSON("/comment", {
 						action : "get",
 						locationID : $.mobile.pageData.id,
 						cache : false
@@ -336,6 +347,23 @@ $(document)
 						// reload list
 						allc.listview("refresh");
 					});
+				//load visited state
+				$.getJSON("/visit", 
+						{
+							userID: user.id,
+							locationID: $.mobile.pageData.id,
+							action: "get",
+							key:user.key
+						}, function (data){
+							if(data!==null && typeof data.visited !== "undefined"){
+								$("#visited").prop("checked",data.visited).checkboxradio("refresh");
+							}
+							else
+							{
+								$("#visited").prop("checked",false).checkboxradio("refresh");
+							}
+							
+				});
 
 			});
 
