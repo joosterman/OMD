@@ -4,13 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gson.Gson;
+
+import org.omd.Utility;
 
 public class UtilityServlet extends HttpServlet {
 	/**
@@ -18,8 +18,6 @@ public class UtilityServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -7232271415556123262L;
 	private String uri = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=";
-	private static Gson gson = new Gson();
-	private static UserService userService = UserServiceFactory.getUserService();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		// initialize
@@ -59,8 +57,8 @@ public class UtilityServlet extends HttpServlet {
 		}
 		else if("getLoginUrl".equals(action)){
 			String returnURL = request.getParameter("returnUrl");
-			String url = userService.createLoginURL(returnURL);
-			response.getWriter().write(gson.toJson(url));
+			String url = Utility.userService.createLoginURL(returnURL);
+			response.getWriter().write(Utility.gson.toJson(url));
 		}
 
 	}

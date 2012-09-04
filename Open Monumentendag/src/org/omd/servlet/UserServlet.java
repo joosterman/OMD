@@ -1,13 +1,16 @@
 package org.omd.servlet;
 
 import java.io.IOException;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.omd.User;
 import org.omd.UserLocationHistory;
+import org.omd.Utility;
+
 import com.google.appengine.api.datastore.GeoPt;
-import com.google.gson.Gson;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -18,21 +21,9 @@ public class UserServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 4040848189404871718L;
 	private static Objectify ofy = ObjectifyService.begin();
-	private static Gson gson = new Gson();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// initialize
-		response.setContentType("application/json; charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		// Disable cache, also for IE
-		// Set to expire far in the past.
-		response.setHeader("Expires", "Sat, 6 May 1995 12:00:00 GMT");
-		// Set standard HTTP/1.1 no-cache headers.
-		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-		// Set IE extended HTTP/1.1 no-cache headers (use addHeader).
-		response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-		// Set standard HTTP/1.0 no-cache header.
-		response.setHeader("Pragma", "no-cache");
+		Utility.setNoCacheJSON(response);
 
 		User u = null;
 		String action = request.getParameter("action");
@@ -51,14 +42,14 @@ public class UserServlet extends HttpServlet {
 
 		// check key action combination
 		if (key == null) {
-			if (action == null || action.trim().equals("")) output = gson.toJson("No action specified.");
+			if (action == null || action.trim().equals("")) output = Utility.gson.toJson("No action specified.");
 			else if ("new".equals(action)) {
 				u = new User();
 				ofy.put(u);
-				output = gson.toJson(u);
+				output = Utility.gson.toJson(u);
 			}
 			else {
-				output = gson.toJson("Action needs authorization key.");
+				output = Utility.gson.toJson("Action needs authorization key.");
 			}
 		}
 		else {
@@ -66,12 +57,12 @@ public class UserServlet extends HttpServlet {
 			u = ofy.query(User.class).filter("key", key).get();
 			if (u == null || !u.id.equals(id)) {
 				// return non-informative null
-				output = gson.toJson(null);// "Key id combination not correct. For this key expected id: "+
+				output = Utility.gson.toJson(null);// "Key id combination not correct. For this key expected id: "+
 																		// u.id+" but got: "+id);
 			}
 			else {
 				if ("get".equals(action)) {
-					output = gson.toJson(u);
+					output = Utility.gson.toJson(u);
 				}
 				else if ("update".equals(action)) {
 					// email
@@ -92,16 +83,16 @@ public class UserServlet extends HttpServlet {
 							u.location = loc;
 						}
 						catch (NumberFormatException ex) {
-							output = gson.toJson(false);
+							output = Utility.gson.toJson(false);
 						}
 					}
 					if (output == null) {
 						ofy.put(u);
-						output = gson.toJson(true);
+						output = Utility.gson.toJson(true);
 					}
 				}
 				else {
-					output = gson.toJson(false);
+					output = Utility.gson.toJson(false);
 				}
 			}
 		}

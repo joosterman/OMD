@@ -8,30 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.omd.User;
+import org.omd.Utility;
 import org.omd.Visit;
 
-import com.google.gson.Gson;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
 public class VisitedServlet extends HttpServlet {
-	
+	private static final long serialVersionUID = 3425836810054159996L;
 	private Objectify ofy = ObjectifyService.begin();
-	private Gson gson = new Gson();
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// initialize
-		response.setContentType("application/json; charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		// Disable cache, also for IE
-		// Set to expire far in the past.
-		response.setHeader("Expires", "Sat, 6 May 1995 12:00:00 GMT");
-		// Set standard HTTP/1.1 no-cache headers.
-		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-		// Set IE extended HTTP/1.1 no-cache headers (use addHeader).
-		response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-		// Set standard HTTP/1.0 no-cache header.
-		response.setHeader("Pragma", "no-cache");
+		Utility.setNoCacheJSON(response);
 		
 		String action = request.getParameter("action");
 		String key = request.getParameter("key");
@@ -66,7 +54,7 @@ public class VisitedServlet extends HttpServlet {
 			else{
 				//write out the visit object or null if not exists
 				Visit v = ofy.query(Visit.class).filter("userID",userID).filter("locationID", locationID).get();
-				response.getWriter().write(gson.toJson(v));
+				response.getWriter().write(Utility.gson.toJson(v));
 			}
 		}
 		else if("set".equals(action)){

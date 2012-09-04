@@ -1,14 +1,16 @@
 package org.omd.servlet;
 
 import java.io.IOException;
-import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.omd.Comment;
 import org.omd.User;
-import com.google.gson.Gson;
+import org.omd.Utility;
+
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
@@ -21,45 +23,30 @@ public class CommentServlet extends HttpServlet {
 	private static final long serialVersionUID = 8828056617136222338L;
 	final String success = "success";
 	private static Objectify ofy = ObjectifyService.begin();
-	private static Gson gson = new Gson();
-	private int flaggedThreshold = 10;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// initialize
-		response.setContentType("application/json; charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		// Disable cache, also for IE
-		// Set to expire far in the past.
-		response.setHeader("Expires", "Sat, 6 May 1995 12:00:00 GMT");
-		// Set standard HTTP/1.1 no-cache headers.
-		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-		// Set IE extended HTTP/1.1 no-cache headers (use addHeader).
-		response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-		// Set standard HTTP/1.0 no-cache header.
-		response.setHeader("Pragma", "no-cache");
+		// initialize response object
+		Utility.setNoCacheJSON(response);
 
 		// load parameters
 		String action = request.getParameter("action");
-		Long locationID, userID;
-		String s_locationID = request.getParameter("locationID");
-		String s_userID = request.getParameter("userID");
+		Long locationID = Utility.parseLong(request.getParameter("locationID"));
+		Long userID = Utility.parseLong(request.getParameter("userID"));
 		String key = request.getParameter("key");
 		String comment = request.getParameter("comment");
-		try {
-			locationID = Long.valueOf(s_locationID);
-		}
-		catch (NumberFormatException ex) {
-			locationID = null;
-		}
-		try {
-			userID = Long.valueOf(s_userID);
-		}
-		catch (NumberFormatException ex) {
-			userID = null;
-		}
+		Long commentID = Utility.parseLong(request.getParameter("commentID"));
 
-		// result object
-		Object result = null;
+		// load user if able
+		User u = null;
+		if (userID != null && key != null)
+			u = ofy.query(User.class).filter("id", userID).filter("key", key).get();
+
+		// load user location comment if able
+		Comment c = null;
+		if (u != null && locationID != null)
+			c = ofy.query(Comment.class).filter("userID", userID).filter("locationID", locationID).get();
+		else if (commentID != null)
+			c = ofy.find(Comment.class, commentID);
 
 		// switch per action
 		if ("get".equals(action)) {
@@ -80,66 +67,61 @@ public class CommentServlet extends HttpServlet {
 				// return all
 				comments = ofy.query(Comment.class);
 			}
-
-			result = comments.list();
+			response.getWriter().write(Utility.gson.toJson(comments.list()));
 		}
 		else if ("set".equals(action)) {
 			// check if we have all the data
-			if (locationID != null && userID != null && comment != null && comment.trim().length() > 0 && key != null) {
-				// check if the user exists (ID/key combination)
-				User u = ofy.query(User.class).filter("id", userID).filter("key", key).get();
-				if (u != null) {
-					// check if the user already posted a comment for this
-					// location, and overwrite that one
-					Comment c = ofy.query(Comment.class).filter("userID", userID).filter("locationID", locationID).get();
-					Comment cnew = new Comment();
-					if (c != null) {
-						// overwrite
-						cnew.id = c.id;
-						cnew.adminApproved = null;
-						cnew.flagged = 0;
-						cnew.date = null;
-					}
-					cnew.comment = comment;
-					cnew.userID = userID;
-					cnew.locationID = locationID;
-					// store comment
-					ofy.put(cnew);
-					result = success;
+			if (u != null && locationID != null && comment != null && comment.trim().length() > 0) {
+				// check if the user already posted a comment for this
+				// location, and overwrite that one
+				Long id = null;
+				if (c != null) {
+					id = c.id;
 				}
+				// overwrite
+				c = new Comment();
+				c.id = id;
+				c.comment = comment;
+				c.userID = userID;
+				c.locationID = locationID;
+				// store comment
+				ofy.put(c);
+				// send OK
+				response.setStatus(HttpServletResponse.SC_OK);
+			}
+			else {
+				// wrong params
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
 		}
 		else if ("delete".equals(action)) {
 			// user can only delete their own comments
 			// check if we have all the data
-			if (locationID != null && userID != null && key != null) {
-				// check if the user exists
-				User u = ofy.query(User.class).filter("id", userID).filter("key", key).get();
-				if (u != null) {
-					// check if a comment exists
-					Comment c = ofy.query(Comment.class).filter("userID", userID).filter("locationID", locationID).get();
-					if (c != null) {
-						ofy.delete(c);
-						result = success;
-					}
+			if (u != null && locationID != null) {
+				// either it does not exist or we delete it
+				if (c != null) {
+					ofy.delete(c);
 				}
+				// send OK
+				response.setStatus(HttpServletResponse.SC_OK);
 			}
+			else {
+				// wrong params
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
+
 		}
 		else if ("flag".equals(action)) {
-			String s_commentID = request.getParameter("commentID");
-			Long commentID = null;
-			try {
-				commentID = Long.parseLong(s_commentID);
+			if (commentID != null && c != null) {
+				c.flagged++;
+				ofy.put(c);
+				// send OK
+				response.setStatus(HttpServletResponse.SC_OK);
 			}
-			catch (Exception ex) {}
-			if (commentID != null) {
-				Comment c = ofy.find(Comment.class, commentID);
-				if (c != null) {
-					c.flagged++;
-					ofy.put(c);
-				}
+			else {
+				// wrong params
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
 		}
-		response.getWriter().write(gson.toJson(result));
 	}
 }

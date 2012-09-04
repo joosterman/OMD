@@ -9,26 +9,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.omd.Location;
 import org.omd.LocationsSort;
+import org.omd.Utility;
 
-import com.google.gson.Gson;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
 public class LocationsServlet extends HttpServlet {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -8884792081307234167L;
+	private Objectify ofy = ObjectifyService.begin();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		response.setContentType("application/json; charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");		
-		// initialize
-		Objectify ofy = ObjectifyService.begin();
-		Gson gson = new Gson();
+		Utility.setNoCacheJSON(response);
+		
+
 		// check for parameters
 		String locID = request.getParameter("locationID");
 		// return one
@@ -41,7 +38,7 @@ public class LocationsServlet extends HttpServlet {
 				id = -1;
 			}
 			Location loc = ofy.query(Location.class).filter("id", id).get();
-			response.getWriter().write(gson.toJson(loc));
+			response.getWriter().write(Utility.gson.toJson(loc));
 		}
 		// return all
 		else {
@@ -55,7 +52,7 @@ public class LocationsServlet extends HttpServlet {
 				}
 
 			});
-			String result = gson.toJson(locs);
+			String result = Utility.gson.toJson(locs);
 			response.getWriter().write(result);
 		}
 	}
