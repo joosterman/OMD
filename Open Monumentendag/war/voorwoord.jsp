@@ -1,6 +1,6 @@
 <div data-role="page" id="voorwoord">
 	<div data-theme="a" data-role="header" data-backbtn="true">
-		<h3>Voorwoord</h3>
+		<h3>OMD Delft</h3>
 		<a href="/#home" data-icon="back">Back</a>
 		<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>
 	</div>
