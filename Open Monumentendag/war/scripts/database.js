@@ -184,7 +184,7 @@ function parseLocationImages(locations) {
 			}
 	}
 	$("#imageCount").text("("+imageCount+")");
-	if (systemImages.length > 0 || userImages.length > 0) {
+	if (imageCount > 0) {
 		galleryList.append(result);
 		$("#Gallery a").photoSwipe({captionAndToolbarAutoHideDelay: 0});
 	} else {
