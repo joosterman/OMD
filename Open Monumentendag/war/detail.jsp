@@ -14,8 +14,8 @@
 			<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 				<a href="#" data-role="button" data-icon="custom-like" data-iconpos="notext" id="like_btn">Like</a> <a href="#"
 					data-role="button" data-icon="custom-dislike" data-iconpos="notext" id="dislike_btn">Dislike</a> <a id="tweetLink"
-					href="https://twitter.com/intent/tweet?text=%23omd12" data-role="button">Tweet</a>
-					<input type="checkbox" name="visited" id="visited" class="custom" /> <label for="visited">Bezocht</label>
+					href="https://twitter.com/intent/tweet?text=%23omd12" data-role="button">Tweet</a> <input type="checkbox"
+					name="visited" id="visited" class="custom" /> <label for="visited">Bezocht</label>
 			</div>
 			<div id="like_counts">
 				<div id="dislike_count">0</div>
@@ -115,6 +115,13 @@
 		</div>
 	</div>
 </div>
-<div data-role="popup" id="flagResponse" data-theme="e">
-	<p>Bedankt dat u dit aangeeft. Wij gaan er naar kijken.</p>
+<div data-role="page" id="flagResponse" data-theme="e">
+	<div data-theme="a" data-role="header" id="detailHeader">
+		<h3>Een ongepaste reactie?</h3>
+	</div>
+	<div data-role="content">
+		<p>Reactie: <i><span id="flaggedComment">Als u het aangeeft dan gaan wij er naar kijken.</span></i></p>
+		<a id="flagComment" onclick="flagComment()" href="" data-role="button" data-rel="back">Ongepast</a> 
+		<a id="" href="" data-role="button"	data-rel="back">Valt wel mee</a>
+	</div>
 </div>

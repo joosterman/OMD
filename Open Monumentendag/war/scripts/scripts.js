@@ -138,9 +138,12 @@ function loadMessages() {
 
 }
 
-function flagComment(id) {
-	$.ajax("/comment?action=flag&commentID="+id);
-	$('#flagResponse').popup("open");
+function setFlaggedComment(text) {
+	$("#flaggedComment").text(text);
+}
+function flagComment(){
+	var commentID = $.mobile.pageData.commentID;
+	$.ajax("/comment?action=flag&commentID="+commentID);
 }
 
 function initButtons(id) {
@@ -226,7 +229,8 @@ $(document)
 		$('.googleLogout').click(function() {
 			updateEmail("");
 		});
-
+		
+		//act on all pages
 		$("[data-role='page']").live("pagebeforeshow", function() {
 			checkLoggedInAndShowHideBlocks();
 			loadMessages();
@@ -242,14 +246,18 @@ $(document)
 				$("#loginUrl").attr("href", data);
 			});
 		});
-
+		
+		$("#flagResponse").live('pagehide',function(){
+			$("#locCommentBlock").trigger("expand");
+		});
+		
+		
+		
+		$("#userUpload").live('pagehide',function(){
+			$("#locImageBlock").trigger("expand");
+		});
+		
 		$('#detail').live('pageshow', function(event, ui) {
-			//flag 
-			$('#flagResponse').popup();
-			$('#flagResponse').click(function(){
-				$('#flagResponse').popup("close");
-			});
-			
 			// store comment option 1
 			$("#comment").keypress(function(e) {
 				if (e.which === 13) {
@@ -260,6 +268,7 @@ $(document)
 			$("#submitComment").click(function() {
 				storeComment();
 			});
+			
 			// delete current comment
 			$("#deleteComment").click(function() {
 				$.getJSON("/comment", {
@@ -333,9 +342,7 @@ $(document)
 									var li = "<li>";
 									li += "<h3 id='li" + index + "'></h3>";
 									li += "<p>" + new Date(value.date).toLocaleDateString() + "</p>";
-									li += "<p class='ui-li-aside'><a href='' onclick='flagComment("
-										+ value.id
-										+ ");' alt='Meld reactie als ongepast' title='Meld reactie als ongepast'><img src='img/exclamation-icon-18px.png' /></a></p>";
+									li += "<p class='ui-li-aside'><a href='#flagResponse?commentID="+value.id+"' data-rel='dialog' onclick='setFlaggedComment(\""+value.comment+"\")' alt='Meld reactie als ongepast' title='Meld reactie als ongepast'><img src='img/exclamation-icon-18px.png' /></a></p>";
 									li += "</li>";
 									allc.append(li);
 									$("#li" + index).text(value.comment);
