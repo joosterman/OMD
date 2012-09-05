@@ -90,8 +90,10 @@
 				</div>
 			</div>
 			<div data-role="collapsible" id="locLinkBlock">
-				<h3>Links (<span id="linkCount"></span>)</h3>
-				<ul data-role="listview" data-theme = "c" data-inset="true" id="allLinks"></ul>
+				<h3>
+					Links (<span id="linkCount"></span>)
+				</h3>
+				<ul data-role="listview" data-theme="c" data-inset="true" id="allLinks"></ul>
 			</div>
 		</div>
 	</div>
@@ -102,10 +104,9 @@
 	</div>
 	<div data-role="content">
 		<div id="noFileUpload">
-			<p>Helaas ondersteunt uw browser het uploaden van bestanden niet.</p>
-			<p>
-				U kunt uw afbeeldingen ook naar ons <a href="mailto:">emailen</a>.
-			</p>
+			<p>Helaas ondersteunt uw browser het uploaden van bestanden niet, maar als u de afbeeldingen op twitter zet (inclusief #OMDDelft)
+				zorgen wij dat ze geplaatst worden.</p>
+
 		</div>
 		<div id="fileUpload">
 			<form id="userUploadForm" data-ajax="false" action='' method="POST" enctype="multipart/form-data">

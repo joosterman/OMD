@@ -53,7 +53,6 @@ function updateEmail(e) {
 	setProperties({
 		email : e
 	});
-
 }
 
 function updateLocation(latitude, longitude) {
@@ -99,7 +98,7 @@ function setProperties(data) {
 }
 
 function isLoggedIn() {
-	if(user===null || typeof user.email === "undefined" || user.email !== null || user.email !== "" )
+	if(user===null || typeof user.email === "undefined" || user.email === null || user.email === "" )
 		return false;
 	else
 		return true;

@@ -9,7 +9,8 @@
 		<div class="loggedIn"><p>U bent ingelogd! U kunt nu reacties plaatsen en afbeeldingen toevoegen aan locaties.</p>
 		</div>
 		<div class="notLoggedIn">
-		<p>De voordelen van inloggen zijn dat u reacties kunt plaatsen en afbeeldingen kunt toevoegen aan locaties.</p>
+			<p>Als u inlogd kunt u reacties plaatsen en afbeeldingen toevoegen aan locaties. Omdat we blij zijn met uw bijdragen plaatsen we deze
+				niet alleen hier maar ook op <a href="http://wikidelft.nl">WikiDelft</a>. Natuurlijk anoniem, zonder uw naam en email.</p>
 		</div>
 		<%
 			//case 1: not logged in: show google and FB buttons
