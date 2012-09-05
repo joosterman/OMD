@@ -50,7 +50,7 @@
 
 		<%
 			//show comments
-			List<Comment> comments = ofy.query(Comment.class).filter("adminApproved", null).order("-flagged").list();
+			List<Comment> comments = ofy.query(Comment.class).filter("adminApproved", null).list();
 			List<Location> locations = ofy.query(Location.class).list();
 			Location l;
 			for (Comment c : comments) {
