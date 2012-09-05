@@ -180,7 +180,7 @@ function parseLocationImages(locations) {
 	}
 	for (i = 0; i < userImages.length; i++) {
 			if (userImages[i].imageURL != undefined && userImages[i].adminApproved!==false && (userImages[i].flagged < 2 || userImages[i].adminApproved)){
-				result += '<li><a href="' + userImages[i].imageURL + "=s" + bodyWidth*2 +'"><img src="' + userImages[i].imageURL + '=s' + Math.floor(bodyWidth/3) + '-c" alt="User image" /></a></li>';
+				result += '<li><a href="' + userImages[i].imageURL + "=s" + bodyWidth*2 +'"><img src="' + userImages[i].imageURL + '=s' + Math.floor(bodyWidth/3) + '-c" alt="Gebruikersfoto" /></a></li>';
 			imageCount++;
 			}
 	}
