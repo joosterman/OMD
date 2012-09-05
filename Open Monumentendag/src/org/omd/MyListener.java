@@ -23,6 +23,7 @@ public class MyListener implements ServletContextListener {
 		ObjectifyService.register(UserImage.class);
 		ObjectifyService.register(Like.class);
 		ObjectifyService.register(Visit.class);
+		ObjectifyService.register(Link.class);
 		
 	}
 }

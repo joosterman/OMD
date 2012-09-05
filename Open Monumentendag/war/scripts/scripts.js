@@ -230,7 +230,7 @@ $(document)
 			updateEmail("");
 		});
 		
-		//act on all pages
+		// act on all pages
 		$("[data-role='page']").live("pagebeforeshow", function() {
 			checkLoggedInAndShowHideBlocks();
 			loadMessages();
@@ -282,7 +282,7 @@ $(document)
 					$("#deleteComment").hide();
 				});
 			});
-			//change visited state
+			// change visited state
 			$("#visited").change(function(){
 				var visited = $("#visited").prop("checked");
 				$.getJSON("/visit",
@@ -299,6 +299,30 @@ $(document)
 		$('#detail')
 			.live('pagebeforeshow', function(event, ui) {
 				initButtons($.mobile.pageData.id);
+				
+				// load links
+				$.getJSON("/link",{locationID:$.mobile.pageData.id},function(data){
+					var list = $("#allLinks");
+					list.empty();
+					if(data!==null && data.length>0){
+						$.each(data,function(index,value){
+							// write listitem
+							var li = "<li>";
+							li+="<a href='"+value.linkURL+"'>"
+							li += "<h3>"+value.linkText+"</h3>";
+							li += "<p>" + value.linkDescription+ "</p>";
+							li+= "</a>"
+							li += "</li>";
+							list.append(li);
+						});
+						list.listview("refresh");
+						$("#linkCount").text(data.length);
+						$("#locLinkBlock").show();
+					}
+					else{
+						$("#locLinkBlock").hide();
+					}
+				});
 				// load current comment
 				$.getJSON("/comment", {
 					action : "get",
@@ -342,7 +366,14 @@ $(document)
 									var li = "<li>";
 									li += "<b><span id='li" + index + "'></span></b>";
 									li += "<p>" + new Date(value.date).toLocaleDateString() + "</p>";
-									//li += "<p class='ui-li-aside'><a href='#flagResponse?commentID="+value.id+"' data-rel='dialog' onclick='setFlaggedComment(\""+value.comment+"\")' alt='Meld reactie als ongepast' title='Meld reactie als ongepast'><img src='img/exclamation-icon-18px.png' /></a></p>";
+									// li += "<p class='ui-li-aside'><a
+									// href='#flagResponse?commentID="+value.id+"'
+									// data-rel='dialog'
+									// onclick='setFlaggedComment(\""+value.comment+"\")'
+									// alt='Meld reactie als ongepast'
+									// title='Meld reactie als ongepast'><img
+									// src='img/exclamation-icon-18px.png'
+									// /></a></p>";
 									li += "<div class='ui-li-aside'><a href='#flagResponse?commentID="+value.id+"' data-rel='dialog' onclick='setFlaggedComment(\""+value.comment+"\")' alt='Meld reactie als ongepast' title='Meld reactie als ongepast'><img src='img/exclamation-icon-18px.png' /></a></div>";
 									li += "</li>";
 									allc.append(li);
@@ -355,7 +386,7 @@ $(document)
 						// reload list
 						allc.listview("refresh");
 					});
-				//load visited state
+				// load visited state
 				$.getJSON("/visit", 
 						{
 							userID: user.id,

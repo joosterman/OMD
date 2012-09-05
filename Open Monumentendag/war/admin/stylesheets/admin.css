@@ -30,3 +30,8 @@ clear:both;
 	list-style-type: none;
 	display:inline;	
 }
+
+.inputs input{
+	width: 300px;
+	
+}
