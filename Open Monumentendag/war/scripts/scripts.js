@@ -402,7 +402,7 @@ $(document)
 																					var li = "<li>";
 																					li += "<a rel='external' href='"
 																							+ value.linkURL
-																							+ "' target='_blank'>";
+																							+ "'>";
 																					li += "<h3>"
 																							+ value.linkText
 																							+ "</h3>";
