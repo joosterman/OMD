@@ -17,11 +17,8 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
 public class LikeServlet extends HttpServlet {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8640329679546798112L;
-	private static Objectify ofy = ObjectifyService.begin();
+	private Objectify ofy = ObjectifyService.begin();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Utility.setNoCacheJSON(response);
@@ -29,22 +26,21 @@ public class LikeServlet extends HttpServlet {
 		// Get params
 		String action = request.getParameter("action");
 		String s_status = request.getParameter("status");
-		String s_userID = request.getParameter("userID");
-		String s_locationID = request.getParameter("locationID");
 		String key = request.getParameter("key");
-		Long userID = null;
-		Long locationID = null;
+		Long userID = Utility.parseLong(request.getParameter("userID"));
+		Long locationID = Utility.parseLong( request.getParameter("locationID"));
+		
+		// load user if able
 		User user = null;
-		LikeStatus status = null;
-		try {
-			locationID = Long.parseLong(s_locationID);
-			userID = Long.parseLong(s_userID);
-			// get the user
+		if (userID != null && key != null)
 			user = ofy.query(User.class).filter("id", userID).filter("key", key).get();
-			
+		
+		//load likestatus if able
+		LikeStatus status = null;
+		try{
 			status = LikeStatus.valueOf(s_status);
 		}
-		catch (Exception ex) {}
+		catch(Exception ex){}
 
 		// switch on action
 		if ("set".equals(action)) {
@@ -89,7 +85,6 @@ public class LikeServlet extends HttpServlet {
 				response.getWriter().write(Utility.gson.toJson(ls));
 			}
 		}
-
 	}
 
 	private class Likes {

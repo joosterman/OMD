@@ -17,11 +17,7 @@ ImagesService imagesService = ImagesServiceFactory.getImagesService();
 <%
 //sort locations based on toplocation and number
 List<Location> locs = ofy.query(Location.class).list();
-Collections.sort(locs, new Comparator<Location>() {
-	public int compare(Location o1, Location o2) {
-		return LocationsSort.compareLocations(o1, o2);
-	}
-});
+Collections.sort(locs, new LocationsSort());
 %>
 
 <div data-role="page" id="locations">

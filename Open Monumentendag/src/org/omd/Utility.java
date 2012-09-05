@@ -2,29 +2,40 @@ package org.omd;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 
 public class Utility {
 
 	public static final Gson gson = new Gson();
-	public static final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-	public static final ImagesService imagesService = ImagesServiceFactory.getImagesService();
-	public static final UserService userService = UserServiceFactory.getUserService();
 	
 	private Utility(){}
+	
+	public static Boolean parseBoolean(String s){
+		try{
+			Boolean b= new Boolean(s);
+			return b;
+		}
+		catch(Exception ex){
+			return null;
+		}
+		
+	}
+	public static Float parseFloat(String s){
+		try{
+			Float f= new Float(s);
+			return f;
+		}
+		catch(Exception ex){
+			return null;
+		}
+	}
 	
 	public static Long parseLong(String s){
 		try{
 			Long l = new Long(s);
 			return l;
 		}
-		catch(NumberFormatException ex){
+		catch(Exception ex){
 			return null;
 		}
 	}
@@ -34,7 +45,7 @@ public class Utility {
 			Integer i = new Integer(s);
 			return i;
 		}
-		catch(NumberFormatException ex){
+		catch(Exception ex){
 			return null;
 		}
 	}
@@ -43,13 +54,14 @@ public class Utility {
 			Double d = new Double(s);
 			return d;
 		}
-		catch(NumberFormatException ex){
+		catch(Exception ex){
 			return null;
 		}
 	}
 
 	
 	public static void setNoCacheJSON(HttpServletResponse response){
+		//set to return JSON
 		response.setContentType("application/json; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		// Disable cache, also for IE

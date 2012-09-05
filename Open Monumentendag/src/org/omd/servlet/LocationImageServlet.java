@@ -17,29 +17,22 @@ import com.googlecode.objectify.ObjectifyService;
 
 public class LocationImageServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7565297590913255950L;
 	private Objectify ofy = ObjectifyService.begin();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Utility.setNoCacheJSON(response);
 
-		// check for parameters
-		String locID = request.getParameter("locationID");
-
-		int id;
-		try {
-			id = Integer.parseInt(locID);
-			final List<LocationImage> is = ofy.query(LocationImage.class).filter("locationID", id).list();
-			final List<UserImage> uis = ofy.query(UserImage.class).filter("locationID", id).list();
+		Long locationID = Utility.parseLong(request.getParameter("locationID"));
+		if(locationID!=null){
+			List<LocationImage> is = ofy.query(LocationImage.class).filter("locationID", locationID).list();
+			List<UserImage> uis = ofy.query(UserImage.class).filter("locationID", locationID).list();
 			AllImages ai = new AllImages();
 			ai.userImages = uis;
 			ai.systemImages = is;			
 			response.getWriter().write(Utility.gson.toJson(ai));
 		}
-		catch (Exception ex) {
+		else{
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}

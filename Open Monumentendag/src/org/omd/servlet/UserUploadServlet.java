@@ -14,7 +14,11 @@ import org.omd.UserImage;
 import org.omd.Utility;
 
 import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.blobstore.UploadOptions;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
@@ -26,6 +30,8 @@ public class UserUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 3797112498898340101L;
 	private UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytesPerBlob(4 * 1024 * 1024);
 	private Objectify ofy = ObjectifyService.begin();
+	private ImagesService imagesService = ImagesServiceFactory.getImagesService();
+	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
 	/**
 	 * Handles the upload of an image by a user
@@ -35,7 +41,7 @@ public class UserUploadServlet extends HttpServlet {
 		//get parameters and check validity
 		
 		// Is a blob uploaded?
-		Map<String, List<BlobKey>> blobs = Utility.blobstoreService.getUploads(request);
+		Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
 		List<BlobKey> blobKeys = blobs.get("userImage");
 		if (blobKeys == null || blobKeys.size() == 0) correct = false;
 		BlobKey blobKey = blobKeys.get(0);
@@ -62,7 +68,7 @@ public class UserUploadServlet extends HttpServlet {
 		//check if the file is a image
 		try{
 			ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(blobKey);				
-			Utility.imagesService.getServingUrl(opts);
+			imagesService.getServingUrl(opts);
 		}
 		catch(Exception ex){
 			correct = false;
@@ -78,8 +84,8 @@ public class UserUploadServlet extends HttpServlet {
 			ui.userID = userID;
 			ui.blobKey = blobKey;
 			ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(blobKey);				
-			Utility.imagesService.getServingUrl(opts);
-			ui.imageURL = Utility.imagesService.getServingUrl(opts);
+			imagesService.getServingUrl(opts);
+			ui.imageURL = imagesService.getServingUrl(opts);
 			ofy.put(ui);
 			response.sendRedirect(String.format("%s?id=%s",path,s_locationID));
 		}
@@ -90,14 +96,20 @@ public class UserUploadServlet extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String path = request.getParameter("path");
-		String userID = request.getParameter("userID");
-		String locationID = request.getParameter("locationID");
+		Long userID = Utility.parseLong(request.getParameter("userID"));
+		Long locationID = Utility.parseLong(request.getParameter("locationID"));
 		String key = request.getParameter("key");
-		if (path == null || userID == null || locationID == null) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		
+		// load user if able
+		User user = null;
+		if (userID != null && key != null)
+			user = ofy.query(User.class).filter("id", userID).filter("key", key).get();
+		
+		if (path == null || user == null || locationID == null) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		else {
-			String url = Utility.blobstoreService.createUploadUrl(
+			String url = blobstoreService.createUploadUrl(
 					String.format("/userUpload?key=%s&userID=%s&locationID=%s&path=%s", key, userID, locationID, path), uploadOptions);
 			response.getWriter().write(Utility.gson.toJson(url));
 		}

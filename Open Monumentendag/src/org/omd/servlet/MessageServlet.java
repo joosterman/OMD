@@ -22,12 +22,9 @@ public class MessageServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Utility.setNoCacheJSON(response);
 		
-		//actions
-		String action = request.getParameter("action");
-		List<Message> output = null;
 		//return all messages
-		output = ofy.query(Message.class).list();
-		response.getWriter().write(Utility.gson.toJson(output));
+		List<Message> messages = ofy.query(Message.class).list();
+		response.getWriter().write(Utility.gson.toJson(messages));
 	}
 
 }

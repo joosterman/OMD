@@ -23,29 +23,16 @@ public class VisitedServlet extends HttpServlet {
 		
 		String action = request.getParameter("action");
 		String key = request.getParameter("key");
-		String s_userID = request.getParameter("userID");
-		String s_locationID = request.getParameter("locationID");
-		String s_visited = request.getParameter("visited");
-		Long userID = null;
-		Long locationID = null;
-		Boolean visited = null;
-		try{
-			userID = Long.parseLong(s_userID);
-		}
-		catch(Exception ex){}
-		try{
-			locationID = Long.parseLong(s_locationID);
-		}
-		catch(Exception ex){}
-		try{
-			visited = Boolean.parseBoolean(s_visited);
-		}
-		catch(Exception ex){}
-		User user = null;
-		if(userID!=null && key!=null){
-			user = ofy.query(User.class).filter("id", userID).filter("key", key).get();
-		}
+		Long userID = Utility.parseLong(request.getParameter("userID"));
+		Long locationID = Utility.parseLong(request.getParameter("locationID"));
+		Boolean visited = Utility.parseBoolean(request.getParameter("visited"));
 		
+		// load user if able
+		User user = null;
+		if (userID != null && key != null)
+			user = ofy.query(User.class).filter("id", userID).filter("key", key).get();
+
+	
 		if("get".equals(action)){
 			//for a get the location and user should be specified
 			if(user==null || locationID==null){
