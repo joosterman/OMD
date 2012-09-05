@@ -17,6 +17,7 @@ DateFormat dformat = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.
 
 <%
 	//get the message
+	String output = "";
 	String message = request.getParameter("message");
 	if(message !=null && !message.trim().equals("")){
 		String author = request.getParameter("author");
@@ -30,6 +31,7 @@ DateFormat dformat = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.
 		m.dateCreated = new Date();
 		m.content = message;
 		ofy.put(m);
+		output = "<h3>Bericht verstuurd!</h3>";
 	}
 	
 %>
@@ -47,6 +49,7 @@ xt/javascript">
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
+	<%=output %>
 	<form action="" method="post">
 		<table>
 			<tr>

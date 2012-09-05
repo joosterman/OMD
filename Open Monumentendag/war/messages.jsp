@@ -5,5 +5,6 @@
 	<div data-role="content">
 		<ul id="messageList" data-role="listview" data-inset="true">
 		</ul>
+		<p id="noMessages">Er zijn op dit moment geen berichten.</p>
 	</div>
 </div>
