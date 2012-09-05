@@ -43,7 +43,7 @@ public class UserUploadServlet extends HttpServlet {
 		Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
 		List<BlobKey> blobKeys = blobs.get("userImage");
 		BlobKey blobKey = null;
-		if (blobKeys == null || blobKeys.size() == 0)
+		if (blobKeys != null && blobKeys.size() > 0)
 			blobKey = blobKeys.get(0);
 		// is there a return path?
 		String path = request.getParameter("path");
