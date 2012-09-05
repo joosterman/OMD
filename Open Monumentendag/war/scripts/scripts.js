@@ -432,7 +432,7 @@ $(document)
 		});
 
 		$("#social").live("pagebeforeshow", function(event, ui) {
-			loadTweets('delft');
+			loadTweets('#omd12');
 		});
 
 		$("#routenoord")
