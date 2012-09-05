@@ -156,6 +156,7 @@ function parseLocationImages(locations) {
 	//console.log(locations);
 	var systemImages = locations['systemImages'];
 	var userImages = locations['userImages'];
+	var primarySet = false;
 	var galleryList = $("#Gallery");
 	galleryList.empty();
 
@@ -167,6 +168,7 @@ function parseLocationImages(locations) {
 			$('#locationImageURL').html('<a href="' + systemImages[i].imageURL + "=s" + bodyWidth*2 + '"><img src="' + systemImages[i].imageURL + "=s" + bodyWidth
 				+ '" alt="' + systemImages[i].filename + '" id="primaryImage"/></a>');
 			$("#locationImageURL a").photoSwipe({captionAndToolbarAutoHideDelay: 0});
+			primarySet = true;
 		} else {
 			if (systemImages[i].imageURL != undefined){
 				result += '<li><a href="' + systemImages[i].imageURL + "=s" + bodyWidth*2 +'"><img src="' + systemImages[i].imageURL + '=s' + Math.floor(bodyWidth/3) + '-c" alt="'
@@ -187,7 +189,8 @@ function parseLocationImages(locations) {
 	if (imageCount > 0) {
 		galleryList.append(result);
 		$("#Gallery a").photoSwipe({captionAndToolbarAutoHideDelay: 0});
-	} else {
+	}
+	if(!primarySet){
 		// Remove old image if no new image is found
 		$('#locationImageURL').html('');
 	}
