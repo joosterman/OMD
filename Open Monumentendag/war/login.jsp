@@ -9,9 +9,10 @@
 		<div class="loggedIn"><p>U bent ingelogd! U kunt nu reacties plaatsen en afbeeldingen toevoegen aan locaties.</p>
 		</div>
 		<div class="notLoggedIn">
-			<p>Als u inlogd kunt u reacties plaatsen en afbeeldingen toevoegen aan locaties. Omdat we blij zijn met uw bijdragen plaatsen we deze
-				niet alleen hier maar ook op <a href="http://wikidelft.nl">WikiDelft</a>. Natuurlijk anoniem, zonder uw naam en email.</p>
+			<p>Als u inlogd kunt u reacties plaatsen en afbeeldingen toevoegen aan locaties.</p>
 		</div>
+		<p>Omdat we blij zijn met uw bijdragen plaatsen we deze
+				niet alleen hier maar ook op <a href="http://wikidelft.nl">WikiDelft</a>. Natuurlijk anoniem, zonder uw naam en email.</p>
 		<%
 			//case 1: not logged in: show google and FB buttons
 			//case 2: logged in with google: show loggedin email and logout link
