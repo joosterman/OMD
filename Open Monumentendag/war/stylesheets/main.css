@@ -6,21 +6,22 @@
 	text-align: right;
 }
 
-div#home
-{
-	background-image: url("http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU");	
+div#home {
+	background-image:
+		url("http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU");
 	background-repeat: no-repeat;
-	background-size: 100%; 	
+	background-size: 100%;
 }
 
-#allComments .ui-li-aside
-{
-	width:3%;
+#allComments .ui-li-aside {
+	width: 3%;
 }
-#allComments .ui-li-desc
-{
+
+#allComments .ui-li-desc {
 	margin: 0.5em 0 .6em;
-}​
+}
+
+​
 
 
 .ui-icon-custom-message {
@@ -104,13 +105,13 @@ img.logo {
 	overflow: hidden;
 }
 
-#like{
-	margin: 0px auto;
+#like {
+	margin: 3px auto;
 	width: 270px;
 	height: 36px;
 }
 
-#like_counts{
+#like_counts {
 	margin-right: 65px;
 }
 
@@ -121,11 +122,11 @@ img.logo {
 	text-align: center;
 }
 
-#like_count{
+#like_count {
 	color: green;
 }
 
-#dislike_count{
+#dislike_count {
 	color: red;
 }
 
@@ -238,64 +239,74 @@ img.logo {
  * Groen:  #4C9C3E
  * Geel:   #f8dc00
  */
- 
- #jstwitter {
-    font-family: georgia;
-    font-size: 12px;
-    color: #333333;
-    padding: 10px 10px 0 10px;
-    margin:0 auto;
-    background:#fff;
+#jstwitter {
+	font-family: georgia;
+	font-size: 12px;
+	color: #333333;
+	padding: 10px 10px 0 10px;
+	margin: 0 auto;
+	background: #fff;
 }
- 
+
 #jstwitter h1 {
-    text-align:center;
-    margin-top:5px;
+	text-align: center;
+	margin-top: 5px;
 }
- 
+
 #jstwitter .tweet {
-    margin: 0 auto 15px auto;
-    padding: 0 0 15px 0;
-    border-bottom: 1px dotted #ccc;
+	margin: 0 auto 15px auto;
+	padding: 0 0 15px 0;
+	border-bottom: 1px dotted #ccc;
 }
- 
+
 #jstwitter .tweet a {
-    text-decoration: none;
-    color: #03a8e5;
+	text-decoration: none;
+	color: #03a8e5;
 }
- 
+
 #jstwitter .tweet a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
- 
+
 #jstwitter .tweet .text {
-    display:block;
-}
- 
-#jstwitter .tweet .time, #jstwitter .tweet .user {
-    font-style: italic;
-    color: #666666;
+	display: block;
 }
 
-#jstwitter .user a{
-    font-style: italic;
-    color: #666666;
+#jstwitter .tweet .time,#jstwitter .tweet .user {
+	font-style: italic;
+	color: #666666;
 }
- 
+
+#jstwitter .user a {
+	font-style: italic;
+	color: #666666;
+}
+
 #jstwitter .tweet:last-child {
-    border:0;
+	border: 0;
 }
 
-.ps-caption{
-    opacity:0.8 !important;
-    display:block !important;
+.ps-caption {
+	opacity: 0.8 !important;
+	display: block !important;
 }
 
-.ps-toolbar{
-    opacity:0.8 !important;
-    display:table !important;
+.ps-toolbar {
+	opacity: 0.8 !important;
+	display: table !important;
 }
 
-div.ui-slider-switch.ui-slider-mini { width: 115px; }
-.ui-listview-filter .ui-input-search { width: 74% }
-#flipswitch{ position: absolute; top: 49px; right: 0px; width: 120px;}
+div.ui-slider-switch.ui-slider-mini {
+	width: 115px;
+}
+
+.ui-listview-filter .ui-input-search {
+	width: 74%
+}
+
+#flipswitch {
+	position: absolute;
+	top: 49px;
+	right: 0px;
+	width: 120px;
+}
