@@ -37,7 +37,7 @@ public class UserServlet extends HttpServlet {
 			if (user != null)
 				response.getWriter().write(Utility.gson.toJson(user));
 			else
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().write(Utility.gson.toJson(null));
 		}
 		else if ("update".equals(action)) {
 			if (user != null) {

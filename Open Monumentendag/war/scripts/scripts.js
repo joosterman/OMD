@@ -91,13 +91,10 @@ function setProperties(data) {
 		url = url + "&" + p + "=" + data[p];
 	}
 	$.getJSON(url, function(data) {
-		if (data) {
-			// console.log("User updated on server");
-			checkLoggedInAndShowHideBlocks();
-			persistUser(user);
-		} else {
-			console.warn("User could not be updated on server");
-		}
+		// console.log("User updated on server");
+		checkLoggedInAndShowHideBlocks();
+		persistUser(user);
+		
 	});
 }
 
