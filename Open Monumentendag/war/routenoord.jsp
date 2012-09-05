@@ -5,7 +5,6 @@
 		<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>
 	</div>
 	<div data-role="content" style="padding: 0;">
-		<p><strong>Lengte:</strong> 4.1km<br/><strong>Duur:</strong> ~1,5 uur (incl. bezoek locaties)</p>
 		<div data-role="collapsible-set" data-theme="c" data-content-theme="d" data-mini="true" id="rnlist">
 			<div data-role="collapsible">
 				<h3>A - Nieuwe Plantage</h3>

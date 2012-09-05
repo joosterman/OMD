@@ -18,4 +18,9 @@
 			</li>
 		</ul>
 	</div>
+	<div class="ui-body ui-body-c">
+		<strong>Route Noord</strong> 2.8km<br/>
+		<strong>Route Zuid</strong> 4.1km<br/>
+		Beide routes duren ongeveer 1,5 uur (incl. bezoek locaties)
+	</div>
 </div>
