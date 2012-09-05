@@ -74,7 +74,7 @@ public class UserUploadServlet extends HttpServlet {
 		}
 		catch (Exception ex) {
 		}
-		response.sendRedirect(String.format("%s?id=%s", path, locationID));
+		response.sendRedirect(String.format("#detail?id=%s", locationID));
 
 	}
 
