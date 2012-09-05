@@ -6,6 +6,15 @@
 	text-align: right;
 }
 
+#allComments .ui-li-aside
+{
+	width:3%;
+}
+#allComments .ui-li-desc
+{
+	margin: 0.5em 0 .6em;
+}​
+
 div#home
 {
 	background-image: url("http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU");	

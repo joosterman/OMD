@@ -340,9 +340,10 @@ $(document)
 								if (value.userID !== user.id) {
 									// write listitem
 									var li = "<li>";
-									li += "<h3 id='li" + index + "'></h3>";
+									li += "<b><span id='li" + index + "'></span></b>";
 									li += "<p>" + new Date(value.date).toLocaleDateString() + "</p>";
-									li += "<p class='ui-li-aside'><a href='#flagResponse?commentID="+value.id+"' data-rel='dialog' onclick='setFlaggedComment(\""+value.comment+"\")' alt='Meld reactie als ongepast' title='Meld reactie als ongepast'><img src='img/exclamation-icon-18px.png' /></a></p>";
+									//li += "<p class='ui-li-aside'><a href='#flagResponse?commentID="+value.id+"' data-rel='dialog' onclick='setFlaggedComment(\""+value.comment+"\")' alt='Meld reactie als ongepast' title='Meld reactie als ongepast'><img src='img/exclamation-icon-18px.png' /></a></p>";
+									li += "<div class='ui-li-aside'><a href='#flagResponse?commentID="+value.id+"' data-rel='dialog' onclick='setFlaggedComment(\""+value.comment+"\")' alt='Meld reactie als ongepast' title='Meld reactie als ongepast'><img src='img/exclamation-icon-18px.png' /></a></div>";
 									li += "</li>";
 									allc.append(li);
 									$("#li" + index).text(value.comment);
