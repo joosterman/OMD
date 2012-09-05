@@ -325,7 +325,7 @@ $(document)
 						$.each(data,function(index,value){
 							// write listitem
 							var li = "<li>";
-							li+="<a href='"+value.linkURL+"'>"
+							li+="<a href='"+value.linkURL+"' target='_blank'">"
 							li += "<h3>"+value.linkText+"</h3>";
 							li += "<p>" + value.linkDescription+ "</p>";
 							li+= "</a>"
