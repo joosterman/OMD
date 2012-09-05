@@ -105,9 +105,9 @@ img.logo {
 }
 
 #like{
-	position: absolute;
-	right: 10px;
-	top: 80px;
+	margin: 0px auto;
+	width: 270px;
+	height: 36px;
 }
 
 #like_counts{

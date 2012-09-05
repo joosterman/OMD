@@ -9,18 +9,6 @@
 			data-rel="dialog" data-role="button" data-transition="slidedown" data-mini="true" href="#messages" id="msgBtnDetail">0 Berichten</a>
 	</div>
 	<div data-role="content">
-		<div id="like">
-			<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-				<a href="#" data-role="button" data-icon="custom-like" data-iconpos="notext" id="like_btn">Like</a> <a href="#" data-role="button"
-					data-icon="custom-dislike" data-iconpos="notext" id="dislike_btn">Dislike</a> <a id="tweetLink"
-					href="https://twitter.com/intent/tweet?text=%23OMDDelft" data-role="button">Tweet</a> <input type="checkbox" name="visited"
-					id="visited" class="custom" /> <label for="visited">Bezocht</label>
-			</div>
-			<div id="like_counts">
-				<div id="dislike_count">0</div>
-				<div id="like_count">0</div>
-			</div>
-		</div>
 		<div id="title">
 			<h3 class="locationName"></h3>
 			<p id="locationStreet"></p>
@@ -31,6 +19,25 @@
 			<div id="locationWheelChair">
 				<img src="img/wheelchair.png" width="40" height="40" alt="Rolstoel vriendelijk" />
 			</div>
+		</div>
+		<div id="like">
+		<div style='width: 100px; float:right;'>
+				<input type="checkbox" name="visited"
+					id="visited" class="custom" data-inline="true" data-mini="true" /> <label for="visited">Bezocht</label>
+			</div>
+			<div style='width: 170px; float:right;'>
+				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+					<a href="#" data-role="button" data-icon="custom-like" id="like_btn">
+						<span id="like_count">0</span>
+					</a>
+					<a href="#" data-role="button" data-icon="custom-dislike" id="dislike_btn">
+						<span id="dislike_count">0</span>
+					</a>
+					<a id="tweetLink"
+						href="https://twitter.com/intent/tweet?text=%23OMDDelft" target="_blank"data-role="button">Tweet</a>
+				</div>
+			</div>	
+			
 		</div>
 		<div data-role="collapsible-set" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inset="false" data-theme="c"
 			data-content-theme="d">
