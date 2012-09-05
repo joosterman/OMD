@@ -44,13 +44,13 @@
 	</div>
 	<div data-role="content">
 		<h4>Over de makers</h4>
-		<p>Deze webapp is gemaakt door Jasper & Bas (<a href="mailto:info@monudelft.nl">info@monudelft.nl</a>)</p>
+		<p>Deze webapp is gemaakt door Jasper & Bas. Voor info, tips en klachten mail <a href="mailto:jasper.oosterman+omd@gmail.com">ons</a>.</p>
 		<h4>Hoofdsponsor</h4>
 		<p>Rabobank is hoofdsponsor van de Open Monumentendag.</p>
 		<img class="logo" alt="Logo van de Open Monumentendag" src="<%=omdUrl%>"> <img class="logo"
 			alt="Logo van hoofdsponsor Rabobank" src="<%=raboUrl%>">
 		<h4>Dankwoord</h4>
-		Deze webapp is gefinancierd door de ANWB
+		Deze webapp is gefinancierd door de ANWB.
 	</div>
 
 </div>
