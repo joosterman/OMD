@@ -50,7 +50,7 @@
 
 		<%
 			//show comments
-			List<UserImage> uis = ofy.query(UserImage.class).filter("adminApproved", null).order("-flagged").list();
+			List<UserImage> uis = ofy.query(UserImage.class).filter("adminApproved", null).list();
 			List<Location> locations = ofy.query(Location.class).list();
 			Location l;
 			for (UserImage ui : uis) {

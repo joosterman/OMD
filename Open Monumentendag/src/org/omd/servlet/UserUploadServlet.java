@@ -3,6 +3,7 @@ package org.omd.servlet;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,63 +33,49 @@ public class UserUploadServlet extends HttpServlet {
 	private Objectify ofy = ObjectifyService.begin();
 	private ImagesService imagesService = ImagesServiceFactory.getImagesService();
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+	private Logger logger = java.util.logging.Logger.getLogger("UserUpload");
 
 	/**
 	 * Handles the upload of an image by a user
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		boolean correct = true;
-		//get parameters and check validity
-		
 		// Is a blob uploaded?
 		Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
 		List<BlobKey> blobKeys = blobs.get("userImage");
-		if (blobKeys == null || blobKeys.size() == 0) correct = false;
-		BlobKey blobKey = blobKeys.get(0);
+		BlobKey blobKey = null;
+		if (blobKeys == null || blobKeys.size() == 0)
+			blobKey = blobKeys.get(0);
 		// is there a return path?
 		String path = request.getParameter("path");
-		if (path == null) correct = false;
+		logger.warning("return path:"+ path);
 		String key = request.getParameter("key");
-		// Are the ID parameters correct
-		String s_userID = request.getParameter("userID");
-		String s_locationID = request.getParameter("locationID");
-		Long userID = null;
-		Long locationID = null;
-		try {
-			userID = Long.parseLong(s_userID);
-			locationID = Long.parseLong(s_locationID);
-		}
-		catch (NumberFormatException ex) {
-			correct = false;
-		}
-		// does user exist?
-		User u = ofy.query(User.class).filter("id", userID).filter("key", key).get();
-		if (u == null) correct = false;
-		
-		//check if the file is a image
-		try{
-			ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(blobKey);				
-			imagesService.getServingUrl(opts);
-		}
-		catch(Exception ex){
-			correct = false;
-		}
+		Long userID = Utility.parseLong(request.getParameter("userID"));
+		Long locationID = Utility.parseLong(request.getParameter("locationID"));
 
-		//send error or upload 
-		if (!correct) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		// get user if able
+		User u = null;
+		if (userID != null && key != null)
+			u = ofy.query(User.class).filter("id", userID).filter("key", key).get();
+
+		// check if the file is a image
+		try {
+			if (u != null && locationID != null && blobKey != null) {
+				ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(blobKey);
+				String url = imagesService.getServingUrl(opts);
+
+				UserImage ui = new UserImage();
+				ui.locationID = locationID;
+				ui.userID = userID;
+				ui.blobKey = blobKey;
+				ui.imageURL = url;
+				ofy.put(ui);
+			}
+
 		}
-		else {
-			UserImage ui = new UserImage();
-			ui.locationID = locationID;
-			ui.userID = userID;
-			ui.blobKey = blobKey;
-			ServingUrlOptions opts = ServingUrlOptions.Builder.withBlobKey(blobKey);				
-			imagesService.getServingUrl(opts);
-			ui.imageURL = imagesService.getServingUrl(opts);
-			ofy.put(ui);
-			response.sendRedirect(String.format("%s?id=%s",path,s_locationID));
+		catch (Exception ex) {
 		}
+		response.sendRedirect(String.format("%s?id=%s", path, locationID));
+
 	}
 
 	/**
@@ -99,18 +86,17 @@ public class UserUploadServlet extends HttpServlet {
 		Long userID = Utility.parseLong(request.getParameter("userID"));
 		Long locationID = Utility.parseLong(request.getParameter("locationID"));
 		String key = request.getParameter("key");
-		
+
 		// load user if able
 		User user = null;
 		if (userID != null && key != null)
 			user = ofy.query(User.class).filter("id", userID).filter("key", key).get();
-		
+
 		if (path == null || user == null || locationID == null) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		else {
-			String url = blobstoreService.createUploadUrl(
-					String.format("/userUpload?key=%s&userID=%s&locationID=%s&path=%s", key, userID, locationID, path), uploadOptions);
+			String url = blobstoreService.createUploadUrl(String.format("/userUpload?key=%s&userID=%s&locationID=%s&path=%s", key, userID, locationID, path), uploadOptions);
 			response.getWriter().write(Utility.gson.toJson(url));
 		}
 
