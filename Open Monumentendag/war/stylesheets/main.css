@@ -294,4 +294,8 @@ img.logo {
 .ps-toolbar{
     opacity:0.8 !important;
     display:table !important;
-}   
+}
+
+div.ui-slider-switch.ui-slider-mini { width: 115px; }
+.ui-listview-filter .ui-input-search { width: 74% }
+#flipswitch{ position: absolute; top: 49px; right: 0px; width: 120px;}

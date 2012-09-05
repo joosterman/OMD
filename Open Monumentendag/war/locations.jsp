@@ -27,6 +27,12 @@ Collections.sort(locs, new LocationsSort());
 		<a class="ui-btn-right messagesLink" data-icon="custom-message" data-rel="dialog" data-role="button" data-transition = "slidedown" data-mini="true" href="#messages">0 Berichten</a>
 	</div>
 	<div id="allLocations" data-role="content" class="ui-content">
+		<div id="flipswitch">
+			<select name="flip-mini" id="flip-mini" data-role="slider" data-mini="true">
+				<option value="off">Alles</option>
+				<option value="on">Onbezocht</option>
+			</select>
+		</div>
 		<ul class="locationsList ui-listview" data-role="listview" data-filter="true" data-filter-placeholder="Zoek een locatie...">
 			<li data-role="list-divider" class="yellowBackground">Algemeen</li>
 			<%	for (Location l : locs) { 	%>

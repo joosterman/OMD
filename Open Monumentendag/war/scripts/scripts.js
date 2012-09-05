@@ -256,6 +256,24 @@ $(document)
 			$("#locImageBlock").trigger("expand");
 		});
 		
+		$('#locations').live('pageshow', function(event, ui) {
+			
+			var bodyWidth = Math.floor($(window).width())-130;
+			$('.ui-listview-filter .ui-input-search').css('width',bodyWidth+'px');
+			
+			//TO DEFINE SLIDER AND EVENTS
+			$('#flip-mini').slider().bind({
+							slidestart  : function(event,ui) {},
+							slidechange : function(event,ui) {},
+							slidestop   : function(event,ui) {updateLocationsList($('#flip-mini').val())},
+			});
+			
+			//TO TRIGGER EVENTS
+			$('#flip-mini').trigger('slidestart');
+			$('#flip-mini').trigger('slidechange');
+			$('#flip-mini').trigger('slidestop');
+		});
+		
 		$('#detail').live('pageshow', function(event, ui) {
 			// store comment option 1
 			$("#comment").keypress(function(e) {
@@ -722,5 +740,34 @@ function displayError(error) {
 		default:
 			locationElement.innerHTML = "Who knows what happened...";
 			break;
+	}
+}
+
+
+function updateLocationsList(val){
+	if(val === "on"){
+		hideLocations();
+	}else{
+		showLocations();
+	}
+}
+
+function hideLocations(){
+	$.getJSON("/visit", {
+		action : "get",
+		userID : user.id,
+		key : user.key
+	}, function(data) {
+		for (i = 0; i < data.length; i++) {
+			$('#location-' + data[i].locationID).hide();
+		}
+	});
+}
+
+function showLocations(){
+	var locationArray = $.evalJSON(localStorage.getItem("locArray"));
+	for (i = 0; i < locationArray.length; i++) {
+		var location = $.evalJSON(localStorage.getItem(locationArray[i].location));
+		$('#location-' + location.id).show();
 	}
 }
