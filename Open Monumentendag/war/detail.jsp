@@ -34,7 +34,7 @@
 						<span id="dislike_count">0</span>
 					</a>
 					<a id="tweetLink"
-						href="https://twitter.com/intent/tweet?text=%23OMDDelft" rel="external" data-role="button">Tweet</a>
+						href="https://twitter.com/intent/tweet?text=%23OMDDelft" rel="external" data-role="button" target="_blank">Tweet</a>
 				</div>
 			</div>	
 			
