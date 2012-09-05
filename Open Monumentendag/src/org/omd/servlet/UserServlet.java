@@ -32,6 +32,9 @@ public class UserServlet extends HttpServlet {
 			user = ofy.query(User.class).filter("id", userID).filter("key", key).get();
 
 		if ("new".equals(action)) {
+			User u = new User();
+			ofy.put(u);
+			response.getWriter().write(Utility.gson.toJson(u));
 		}
 		else if ("get".equals(action)) {
 			if (user != null)

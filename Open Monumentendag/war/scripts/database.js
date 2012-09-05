@@ -230,8 +230,8 @@ function setMarkers() {
 
 		if (location.latitude != undefined && location.longitude != undefined) {
 			// if(location.latude > 1 && location.longitude > 1){
-			console.log("Setting marker!");
-			console.log(location.topLocation);
+			//console.log("Setting marker!");
+			//console.log(location.topLocation);
 
 			setMarker('#map_canvas', location.id, location.name, location.latitude, location.longitude, location.topLocation, '<strong>'
 				+ location.name + '</strong></br>' + location.street + '<br/>Zaterdag: ' + location.openingHoursSaturday + '<br/>Zondag: '

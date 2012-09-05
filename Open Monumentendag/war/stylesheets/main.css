@@ -6,6 +6,13 @@
 	text-align: right;
 }
 
+div#home
+{
+	background-image: url("http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU");	
+	background-repeat: no-repeat;
+	background-size: 100%; 	
+}
+
 #allComments .ui-li-aside
 {
 	width:3%;
@@ -15,13 +22,7 @@
 	margin: 0.5em 0 .6em;
 }​
 
-div#home
-{
-	background-image: url("http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU");	
-	background-repeat:no-repeat;
-	background-size: 100%; 
-	
-}
+
 .ui-icon-custom-message {
 	background-image: url("../img/ic_action_mail.png");
 	background-size: 18px 18px;

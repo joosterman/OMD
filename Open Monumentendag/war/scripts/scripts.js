@@ -76,7 +76,7 @@ function checkLoggedInAndShowHideBlocks() {
 }
 
 function setProperties(data) {
-	if (typeof user === "undefined" || typeof user.id === "undefined" || user.id === null) {
+	if (user===null || typeof user.id === "undefined" || user.id === null) {
 		// console.warn("User is still null, update is queued.");
 		updates.push(data);
 		return;
@@ -99,7 +99,10 @@ function setProperties(data) {
 }
 
 function isLoggedIn() {
-	return typeof user.email !== "undefined" && user.email !== null && user.email !== "";
+	if(user===null || typeof user.email === "undefined" || user.email !== null || user.email !== "" )
+		return false;
+	else
+		return true;
 
 }
 
@@ -377,6 +380,7 @@ $(document)
 				$('#home')
 					.css('background-image', 'url(http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU=s'
 						+ Math.floor($("body").width() * 0.8) + ')');
+				$('#home').css("background-size","100%");
 				// ask location permission on first screen
 				if (navigator.geolocation) {
 					// console.log("found gps");
