@@ -9,18 +9,15 @@
 			<li>
 				<a href="/#routenoord">
 				<h3><font style="white-space:normal;">Route Noord</font></h3>
+				<p>4.1km - Duratie ongeveer 1,5 uur (incl. bezoek locaties)</p>
 				</a>
 			</li>
 			<li>
 				<a href="/#routezuid">
 				<h3><font style="white-space:normal;">Route Zuid</font></h3>
+				<p>2.8km - Duratie ongeveer 1,5 uur (incl. bezoek locaties)</p>
 				</a>
 			</li>
 		</ul>
-	</div>
-	<div class="ui-body ui-body-c">
-		<strong>Route Noord</strong> 2.8km<br/>
-		<strong>Route Zuid</strong> 4.1km<br/>
-		Beide routes duren ongeveer 1,5 uur (incl. bezoek locaties)
 	</div>
 </div>
