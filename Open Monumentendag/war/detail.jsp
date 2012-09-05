@@ -14,7 +14,7 @@
 			<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 				<a href="#" data-role="button" data-icon="custom-like" data-iconpos="notext" id="like_btn">Like</a> <a href="#"
 					data-role="button" data-icon="custom-dislike" data-iconpos="notext" id="dislike_btn">Dislike</a> <a id="tweetLink"
-					href="https://twitter.com/intent/tweet?text=%23omd12" data-role="button">Tweet</a> <input type="checkbox"
+					href="https://twitter.com/intent/tweet?text=%23OMDDelft" data-role="button">Tweet</a> <input type="checkbox"
 					name="visited" id="visited" class="custom" /> <label for="visited">Bezocht</label>
 			</div>
 			<div id="like_counts">

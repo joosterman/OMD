@@ -52,7 +52,7 @@
 				<a data-role="button" data-transition="fade" href="#wandel"> Wandelen </a>
 			</div>
 			<div class="ui-block-b">
-				<a data-role="button" data-transition="fade" href="#social"> #omd12 </a>
+				<a data-role="button" data-transition="fade" href="#social"> #OMDDelft </a>
 			</div>
 		</div>
 		<div class="ui-grid-solo">

@@ -139,7 +139,7 @@ function loadLocation(id) {
 	$("#userUploadLink").attr("href","/#userUpload?id="+id);
 	
 	//set twitter link
-	$("#tweetLink").attr("href","https://twitter.com/intent/tweet?text="+location.name+" %23omd12");
+	$("#tweetLink").attr("href","https://twitter.com/intent/tweet?text="+location.name+" %23OMDDelft");
 	
 	//set login link
 	$(".loginLink").attr("href","/#login?returnUrl="+encodeURIComponent("/#detail?id="+location.id));
