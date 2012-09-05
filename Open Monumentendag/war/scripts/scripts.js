@@ -4,7 +4,7 @@ var user = new Object();
 var updates = [];
 
 var prevLiked = false;
-
+var DEBUG = false;
 function initializeUser() {
 	// get persisted or new user
 	var pUser = getPersistedUser();
@@ -325,10 +325,10 @@ $(document)
 						$.each(data,function(index,value){
 							// write listitem
 							var li = "<li>";
-							li+="<a href='"+value.linkURL+"' target='_blank'">"
+							li +="<a href='"+value.linkURL+"' target='_blank'>";
 							li += "<h3>"+value.linkText+"</h3>";
 							li += "<p>" + value.linkDescription+ "</p>";
-							li+= "</a>"
+							li += "</a>"
 							li += "</li>";
 							list.append(li);
 						});
@@ -720,26 +720,28 @@ Number.prototype.toRad = function() {
 
 function displayError(error) {
 
-	// get a reference to the HTML element for writing result
-	var locationElement = document.getElementById("mapinfo");
-
-	// find out which error we have, output message accordingly
-	switch (error.code) {
-		case error.PERMISSION_DENIED:
-			locationElement.innerHTML = "Permission was denied";
-			break;
-		case error.POSITION_UNAVAILABLE:
-			locationElement.innerHTML = "Location data not available";
-			break;
-		case error.TIMEOUT:
-			locationElement.innerHTML = "Location request timeout";
-			break;
-		case error.UNKNOWN_ERROR:
-			locationElement.innerHTML = "An unspecified error occurred";
-			break;
-		default:
-			locationElement.innerHTML = "Who knows what happened...";
-			break;
+	if(DEBUG){
+		// get a reference to the HTML element for writing result
+		var locationElement = document.getElementById("mapinfo");
+	
+		// find out which error we have, output message accordingly
+		switch (error.code) {
+			case error.PERMISSION_DENIED:
+				locationElement.innerHTML = "Permission was denied";
+				break;
+			case error.POSITION_UNAVAILABLE:
+				locationElement.innerHTML = "Location data not available";
+				break;
+			case error.TIMEOUT:
+				locationElement.innerHTML = "Location request timeout";
+				break;
+			case error.UNKNOWN_ERROR:
+				locationElement.innerHTML = "An unspecified error occurred";
+				break;
+			default:
+				locationElement.innerHTML = "Who knows what happened...";
+				break;
+		}
 	}
 }
 
