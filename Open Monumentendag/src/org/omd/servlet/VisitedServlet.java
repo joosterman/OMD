@@ -1,16 +1,14 @@
 package org.omd.servlet;
 
 import java.io.IOException;
-
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.omd.User;
 import org.omd.Utility;
 import org.omd.Visit;
-
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -35,8 +33,12 @@ public class VisitedServlet extends HttpServlet {
 	
 		if("get".equals(action)){
 			//for a get the location and user should be specified
-			if(user==null || locationID==null){
+			if(user==null && locationID==null){
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
+			else if(user!=null && locationID==null){
+				List<Visit> visits = ofy.query(Visit.class).filter("userID", userID).list();
+				response.getWriter().write(Utility.gson.toJson(visits));
 			}
 			else{
 				//write out the visit object or null if not exists

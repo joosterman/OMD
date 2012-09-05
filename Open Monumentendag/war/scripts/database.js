@@ -76,10 +76,10 @@ function loadLocation(id) {
 
 	if (location.tourAvailable)
 		$('#locationInformation').append("<br/>Op deze locatie worden rondleidingen gegeven.");
-
+/*
 	if (location.topLocation)
 		$('#locationInformation').append("<br/>Dit is een toplocatie.");
-
+*/
 	if ($('#locationInformation').html() == "") {
 		$('#locationInformationLabel').hide();
 	} else {
