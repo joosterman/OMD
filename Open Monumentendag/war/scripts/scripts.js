@@ -688,7 +688,7 @@ $(document)
 														52.01625506283269,
 														4.350918531417847));
 										$("#map_canvas_rn").gmap("option",
-												"zoom", 16);
+												"zoom", 15);
 										$("#map_canvas_rn").gmap("option",
 												"streetViewControl", false);
 
@@ -851,7 +851,7 @@ $(document)
 														52.00631927080595,
 														4.371507167816162));
 										$("#map_canvas_rz").gmap("option",
-												"zoom", 16);
+												"zoom", 15);
 										$("#map_canvas_rz").gmap("option",
 												"streetViewControl", false);
 
