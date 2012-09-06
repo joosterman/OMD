@@ -50,7 +50,9 @@
 		<img class="logo" alt="Logo van de Open Monumentendag" src="<%=omdUrl%>"> <img class="logo"
 			alt="Logo van hoofdsponsor Rabobank" src="<%=raboUrl%>">
 		<h4>Dankwoord</h4>
-		Deze webapp is gefinancierd door de ANWB.
+		Deze webapp is gefinancierd door het ANWB Fonds.
+		<img class="logo"
+			alt="Logo ANWB Fonds" src="img/anwb_fonds.png" style="width: 40%; padding-left:25%;">
 	</div>
 
 </div>
