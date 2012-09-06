@@ -822,6 +822,8 @@ $(document)
 																		.last()
 																		.height()));
 										$("#map_canvas_rn").gmap("refresh");
+										$('#routenoord').find('.ui-block-a').css('width','160px');
+										$('#routenoord').find('.ui-block-b').css('width',Math.floor($(window).width()) - 215);
 									});
 
 					$("#routezuid")
@@ -929,7 +931,7 @@ $(document)
 														4.37055230140686) ];
 										drawPolyLine('#map_canvas_rz',
 												coordinates);
-
+										
 									});
 
 					$("#routezuid")
@@ -946,6 +948,9 @@ $(document)
 																		.last()
 																		.height()));
 										$("#map_canvas_rz").gmap("refresh");
+										
+										$('#routezuid').find('.ui-block-a').css('width','150px');
+										$('#routezuid').find('.ui-block-b').css('width',Math.floor($(window).width()) - 190);
 									});
 
 				});
