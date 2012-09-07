@@ -16,9 +16,21 @@ function persistUser(user) {
 }
 
 function cacheLocations() {
+	var dateNew = new Date().getTime();
+	var dateOld = Number(localStorage.getItem("refreshTimeStamp"));
+	
+	
+	if(dateOld === 0 || dateNew - dateOld > 1000*3600*8){
+		//Clear local Array if dates are more then 8 hours apart
+		localStorage.setItem("locArray","");
+	}
+	
+	
 	var locArray = localStorage.getItem("locArray"); 
 	if ( locArray === null || locArray===""  ) {
 		var jsonObj = getSyncJSON("/data", {}, parseLocations);
+		//Set time for this update
+		localStorage.setItem("refreshTimeStamp",new Date().getTime());
 	}
 }
 
