@@ -152,6 +152,9 @@ function loadLocationImages(id) {
 }
 
 function parseLocationImages(locations) {
+	// Remove old image
+	$('#locationImageURL').html('');
+	
 	var imageCount = 0;
 	//console.log(locations);
 	var systemImages = locations['systemImages'];
