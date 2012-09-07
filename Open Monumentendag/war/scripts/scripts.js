@@ -281,9 +281,19 @@ $(document)
 			$('#flip-mini').trigger('slidestart');
 			$('#flip-mini').trigger('slidechange');
 			$('#flip-mini').trigger('slidestop');
+			
+			var sliderval = $('#flip-mini').val();
+			updateLocationsList(sliderval);
 		});
 
 		$('#detail').live('pageshow', function(event, ui) {
+			$.getJSON("/view", {
+				userID : user.id,
+				locationID : $.mobile.pageData.id,
+				key : user.key
+			}, function() {			
+			});
+			
 			// store comment option 1
 			$("#comment").keypress(function(e) {
 				if (e.which === 13) {
@@ -778,15 +788,16 @@ function hideLocations() {
 		key : user.key
 	}, function(data) {
 		for (i = 0; i < data.length; i++) {
-			$('#location-' + data[i].locationID).hide();
+			$('#location-' + data[i].locationID).addClass("ui-screen-hidden omd_search");
 		}
 	});
 }
 
 function showLocations() {
-	var locationArray = $.evalJSON(localStorage.getItem("locArray"));
-	for (i = 0; i < locationArray.length; i++) {
+	//var locationArray = $.evalJSON(localStorage.getItem("locArray"));
+	$(".omd_search").removeClass("ui-screen-hidden omd_search");
+	/*for (i = 0; i < locationArray.length; i++) {
 		var location = $.evalJSON(localStorage.getItem(locationArray[i].location));
-		$('#location-' + location.id).show();
-	}
+		$('#location-' + location.id).removeClass("ui-screen-hidden");
+	}*/
 }

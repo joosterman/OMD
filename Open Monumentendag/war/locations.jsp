@@ -33,7 +33,7 @@ Collections.sort(locs, new LocationsSort());
 				<option value="on">Onbezocht</option>
 			</select>
 		</div>
-		<ul class="locationsList ui-listview" data-role="listview" data-filter="true" data-filter-placeholder="Zoek een locatie...">
+		<ul id="locationList" class="locationsList ui-listview" data-role="listview" data-filter="true" data-filter-placeholder="Zoek een locatie...">
 			<li data-role="list-divider" class="yellowBackground">Algemeen</li>
 			<%	for (Location l : locs) { 	%>
 				<% if(l.name.equals("Agnetapark")){ %>
