@@ -151,10 +151,7 @@ function loadLocationImages(id) {
 	var jsonObj = $.getJSON("/images?locationID=" + id, {}, parseLocationImages);
 }
 
-function parseLocationImages(locations) {
-	// Remove old image
-	$('#locationImageURL').html('');
-	
+function parseLocationImages(locations) {	
 	var imageCount = 0;
 	//console.log(locations);
 	var systemImages = locations['systemImages'];

@@ -11,6 +11,8 @@
 <link href='*' rel='apple-touch-startup-image' />
 <link href='*' rel='icon' type='image/png' />-->
 <meta content='True' name='HandheldFriendly' />
+<meta name="description" content="Mobiele applicatie voor de Open Monumentendag Delft 2012" />
+<meta name="keywords" content="Open Monumentendag Delft, OMD, Monumenten, Groen van Toen, informatie, applicatie, webapp, gps, mobile, mobiel, 2012 " />
 <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <link rel="shortcut icon" href="/favicon.ico">
