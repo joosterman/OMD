@@ -9,6 +9,7 @@ function loadTweets(query){
 }
 
 function parseTweets(tweets){
+	$('#jstwitter').empty();
 	var html = '<div class="tweet"><!--<img style="float:left; border: 1px solid; overflow:hidden;" src="PROFILE_PIC" />--><span class="text">TWEET_TEXT</span><span class="time">AGO</span> by <span class="user">USER</span></div>';
     
 
