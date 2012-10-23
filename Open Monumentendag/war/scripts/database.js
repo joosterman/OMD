@@ -15,6 +15,23 @@ function persistUser(user) {
 	}
 }
 
+function setHasSeenIntro()
+{
+	if (supports_local_storage) {
+		localStorage.setItem("hasSeenIntro","1");
+	}
+}
+function hasSeenIntro(){
+	if (supports_local_storage) {
+		var seen = localStorage.getItem("hasSeenIntro");
+		return seen && seen==="1";
+	}
+	else
+	{
+		return true
+	}
+}
+
 function cacheLocations() {
 	var dateNew = new Date().getTime();
 	var dateOld = Number(localStorage.getItem("refreshTimeStamp"));

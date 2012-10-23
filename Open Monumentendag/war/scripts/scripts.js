@@ -240,8 +240,18 @@ $(document)
 		$("[data-role='page']").live("pagebeforeshow", function() {
 			checkLoggedInAndShowHideBlocks();
 			loadMessages();
+			
 		});
-
+		
+		$("[data-role='page']").live("pageshow", function() {
+			if(!hasSeenIntro()){
+				setHasSeenIntro();
+				setTimeout(function(){
+					$.mobile.changePage("#intro",{role:"dialog"});	
+				},1000);		
+			}
+		});
+		
 		$('#messages').live('pagebeforeshow', function(event, ui) {
 			$("#messageList").listview("refresh");
 		});
@@ -446,7 +456,7 @@ $(document)
 			});
 
 		$('#home')
-			.live('pageshow', function(event, ui) {
+			.live('pageshow', function(event, ui) {				
 				$('#home')
 					.css('background-image', 'url(http://lh4.ggpht.com/UVhVjsJLUqNP8dPnCfiuLZ2SF99NtQWmKUEJ3O_szFk7MBQ0sVGUz_dNMVLo5FBXCVBxwi1Nomr45DOXDWS7K2Jc0UME4TwU=s'
 						+ Math.floor($("body").width() * 0.8) + ')');
